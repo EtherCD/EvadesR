@@ -1,0 +1,13 @@
+@import "tailwindcss";
+
+:root {
+	font-family: "Advent Pro";
+
+	--co: #fff;
+	--bg: #003333;
+	--window-bg: #007777;
+	--spacing: 20px;
+
+	color: var(--co);
+	background-color: var(--bg);
+}
