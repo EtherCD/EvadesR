@@ -1,5 +1,5 @@
 import { networkEvents } from "../services/events/network";
-import { AreaInit, ChatMessage, PackedPlayer } from "../shared/game/types";
+import { AreaInit, ChatMessage, PackedEntity, PackedPlayer } from "../shared/game/types";
 
 export const sendToNetwork = {
 	message: (m: ChatMessage) => {
@@ -22,5 +22,8 @@ export const sendToNetwork = {
 	},
 	areaInit: (id: number, ai: AreaInit) => {
 		networkEvents.emit("direct", { id, value: { ai } });
+	},
+	updateEntities: (id: number, ue: Partial<PackedEntity>) => {
+		networkEvents.emit("direct", { id, value: { ue } });
 	},
 };

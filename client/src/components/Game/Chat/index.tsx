@@ -14,7 +14,16 @@ export function Chat() {
 						</div>
 					))}
 				</div>
-				<input type="text" placeholder="Hey! Chat here..." maxLength={4000} autocomplete="off" onFocus={onFocus} onBlur={onBlur} ref={inputRef} />
+				<input
+					type="text"
+					placeholder="Hey! Chat here..."
+					maxLength={4000}
+					autocomplete="off"
+					onFocus={onFocus}
+					onBlur={onBlur}
+					ref={inputRef}
+					class={"bg-white text-black p-0.5 font-[Open Sans]"}
+				/>
 			</div>
 		</>
 	);

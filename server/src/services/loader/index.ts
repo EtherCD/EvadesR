@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { Env } from "../env";
+import { DatabaseSync } from "node:sqlite";
 import { World } from "../../core/world";
 
 const pathToWorlds = path.join("./", Env.storagePath, Env.worldsPath);

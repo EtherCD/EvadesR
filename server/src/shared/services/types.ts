@@ -22,3 +22,8 @@ export interface RawEntity {
 	speed: number;
 	count: number;
 }
+
+export interface DatabaseResponse {
+	success: boolean;
+	reason: string;
+}

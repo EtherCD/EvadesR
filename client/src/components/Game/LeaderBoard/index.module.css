@@ -13,7 +13,7 @@
 	color: #f9f9f9;
 	text-align: center;
 	white-space: nowrap;
-	font: 700 20px Tahoma, Verdana, Segoe, sans-serif;
+	font: 700 20px "Open Sans", Verdana, Segoe, sans-serif;
 	display: inline-block;
 }
 
@@ -21,7 +21,7 @@
 	text-align: center;
 	text-overflow: ellipsis;
 	white-space: nowrap;
-	font: 18px Tahoma, Verdana, Segoe, sans-serif;
+	font: 18px "Open Sans", Verdana, Segoe, sans-serif;
 	overflow: hidden;
 }
 
@@ -29,7 +29,7 @@
 	width: 100%;
 	text-align: center;
 	margin-top: 5px;
-	font: 18px Tahoma, Verdana, Segoe, sans-serif;
+	font: 18px "Open Sans", Verdana, Segoe, sans-serif;
 	display: inline-block;
 }
 
@@ -37,12 +37,12 @@
 	text-align: center;
 	text-overflow: ellipsis;
 	white-space: nowrap;
-	font: 14px Tahoma, Verdana, Segoe, sans-serif;
+	font: 14px "Open Sans", Verdana, Segoe, sans-serif;
 	overflow: hidden;
 }
 
 .leaderboardLine span {
 	text-align: center;
 	white-space: nowrap;
-	font: 14px Tahoma, Verdana, Segoe, sans-serif;
+	font: 14px "Open Sans", Verdana, Segoe, sans-serif;
 }

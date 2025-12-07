@@ -17,5 +17,6 @@ export const Env = {
 	storagePath: getEnv("STORAGE_PATH", "storage"),
 	worldsPath: getEnv("WORLDS_PATH", "worlds"),
 	logPath: getEnv("LOG_PATH", "logs"),
+	databaseFile: getEnv("DATABASE_FILE", "database.sqlite"),
 	dev: getEnv("NODE_ENV", "dev") === "dev",
 };

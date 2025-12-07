@@ -5,6 +5,7 @@ import { PackedEntity, Update } from "../../shared/game/types";
 import { RawArea, RawEntity } from "../../shared/services/types";
 import { Entity } from "../objects/entity";
 import { Player } from "../objects/player";
+import { sendToNetwork } from "../send";
 
 export class Area {
 	entities: Record<number, Entity> = {};

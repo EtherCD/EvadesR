@@ -59,7 +59,7 @@ export class Player {
 		if (this.died) {
 			ctx.fillStyle = "red";
 			ctx.globalAlpha = 1;
-			ctx.font = 14 * Camera.s + "px Tahoma, Verdana, Segoe, sans-serif";
+			ctx.font = 14 * Camera.s + 'px "Open  Sans", Verdana, Segoe, sans-serif';
 			ctx.textAlign = "center";
 			ctx.fillText(this.dt + "", pos.x, pos.y + 14 / 2);
 		}
@@ -77,7 +77,7 @@ export class Player {
 		ctx.beginPath();
 		ctx.fillStyle = "black";
 		ctx.textAlign = "center";
-		ctx.font = 12 * Camera.s + "px Tahoma, Verdana, Segoe, sans-serif";
+		ctx.font = 12 * Camera.s + 'px "Open  Sans", Verdana, Segoe, sans-serif';
 		ctx.fillText(this.name, pos.x, pos.y - (this.radius + 11) * Camera.s);
 		ctx.closePath();
 	}

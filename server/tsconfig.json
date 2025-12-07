@@ -3,7 +3,7 @@
 		"target": "es2024",
 		"experimentalDecorators": true,
 		"module": "commonjs",
-		"rootDir": "src",
+		"rootDirs": ["./src"],
 		"outDir": "./dist",
 		"esModuleInterop": true,
 		"forceConsistentCasingInFileNames": true,

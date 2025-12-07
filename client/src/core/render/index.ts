@@ -54,7 +54,7 @@ export class Render {
 
 		this.renderEffect(ctx, state, timeFix);
 
-		ctx.font = "35px Tahoma Bold, Verdana, Segoe, sans-serif";
+		ctx.font = '900 35px "Open Sans", sans-serif ';
 		ctx.textAlign = "center";
 
 		ctx.fillStyle = "#FFF";
@@ -66,7 +66,7 @@ export class Render {
 		ctx.fillText(state.area + "", Camera.w / 2, 80);
 		ctx.fillStyle = "white";
 		ctx.textAlign = "center";
-		ctx.font = "16px Arial";
+		ctx.font = '16px "Open  Sans"';
 		ctx.textAlign = "center";
 	}
 
