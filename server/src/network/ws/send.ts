@@ -1,5 +1,5 @@
 import { coreEvents } from "../../services/events/core";
-import { PlayerProps } from "../../shared/game/types";
+import { PlayerProps } from "../../shared/core/types";
 
 export const sendToCore = {
 	join(props: PlayerProps) {

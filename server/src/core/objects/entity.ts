@@ -1,5 +1,5 @@
 import distance from "../../shared/distance";
-import { EntityProps, PackedEntity, PackedPlayer, Update } from "../../shared/game/types";
+import { EntityProps, PackedEntity, PackedPlayer, Update } from "../../shared/core/types";
 import { random } from "../../shared/random";
 import { Player } from "./player";
 

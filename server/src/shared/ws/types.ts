@@ -1,4 +1,4 @@
-export interface Movement {
+export interface Input {
 	left?: boolean;
 	right?: boolean;
 	up?: boolean;
@@ -6,6 +6,8 @@ export interface Movement {
 	mouseEnable?: boolean;
 	mousePos?: [number, number];
 	shift?: boolean;
+	first?: boolean;
+	second?: boolean;
 }
 
 export type Key = "left" | "right" | "up" | "down";

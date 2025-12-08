@@ -1,195 +1,238 @@
 import { random } from "../../shared/random";
 import { gameConfig, tile } from "../../shared/config";
-import { PackedPlayer, PlayerProps, Update, UserRole } from "../../shared/game/types";
+import {
+  PackedPlayer,
+  PlayerProps,
+  Update,
+  UpdatePlayer,
+  UserRole,
+} from "../../shared/core/types";
 import distance from "../../shared/distance";
-import { Movement } from "../../shared/ws/types";
+import { Input } from "../../shared/ws/types";
+import { Ability } from "./ability";
 
 export abstract class Player {
-	name: string;
-	id: number;
-	pos: [number, number];
-	radius: number;
-	vel: [number, number];
-	acc: [number, number];
-	slide: [number, number];
-	speed: number;
-	energy: number;
-	maxEnergy: number;
-	downed: boolean;
-	regeneration: number;
-	area: number;
-	world: string;
-	angle: number;
-	dTimer: number;
+  name: string;
+  id: number;
+  pos: [number, number];
+  radius: number;
+  vel: [number, number];
+  acc: [number, number];
+  slide: [number, number];
+  speed: number;
+  energy: number;
+  maxEnergy: number;
+  downed: boolean;
+  regeneration: number;
+  area: number;
+  world: string;
+  angle: number;
+  dTimer: number;
 
-	canMove: boolean;
-	immortal: boolean;
-	aura: number;
-	auraColor: string;
-	role: UserRole;
+  canMove: boolean;
+  immortal: boolean;
+  aura: number;
+  auraColor: string;
+  role: UserRole;
 
-	constructor(props: PlayerProps) {
-		this.name = props.name;
-		this.id = props.id;
-		this.pos = [random(gameConfig.spawn.sx, gameConfig.spawn.ex), random(gameConfig.spawn.sy, gameConfig.spawn.ey)];
+  abstract firstAbility: Ability;
+  abstract secondAbility: Ability;
 
-		this.radius = gameConfig.spawn.radius;
-		this.vel = [0, 0];
-		this.acc = [0, 0];
-		this.slide = [0, 0];
-		this.speed = gameConfig.spawn.speed;
-		this.energy = gameConfig.spawn.energy;
-		this.maxEnergy = gameConfig.spawn.energy;
-		this.regeneration = gameConfig.spawn.regeneration;
-		this.downed = false;
-		this.area = gameConfig.spawn.area;
-		this.world = gameConfig.spawn.world;
-		this.angle = 0;
-		this.dTimer = 60;
+  constructor(props: PlayerProps) {
+    this.name = props.name;
+    this.id = props.id;
+    this.pos = [
+      random(gameConfig.spawn.sx, gameConfig.spawn.ex),
+      random(gameConfig.spawn.sy, gameConfig.spawn.ey),
+    ];
 
-		this.canMove = true;
-		this.immortal = false;
-		this.aura = 0;
-		this.auraColor = "";
-		this.role = UserRole.None;
-	}
+    this.radius = gameConfig.spawn.radius;
+    this.vel = [0, 0];
+    this.acc = [0, 0];
+    this.slide = [0, 0];
+    this.speed = gameConfig.spawn.speed;
+    this.energy = gameConfig.spawn.energy;
+    this.maxEnergy = gameConfig.spawn.energy;
+    this.regeneration = gameConfig.spawn.regeneration;
+    this.downed = false;
+    this.area = gameConfig.spawn.area;
+    this.world = gameConfig.spawn.world;
+    this.angle = 0;
+    this.dTimer = 60;
 
-	update({ delta, timeFix }: Update) {
-		this.regenerateEnergy(delta);
+    this.canMove = true;
+    this.immortal = false;
+    this.aura = 0;
+    this.auraColor = "";
+    this.role = UserRole.None;
+  }
 
-		let slide = [this.slide[0], this.slide[1]];
+  update(update: UpdatePlayer) {
+    const { delta, timeFix } = update;
+    this.regenerateEnergy(delta);
 
-		let dim = 1 - 0.75;
+    let slide = [this.slide[0], this.slide[1]];
 
-		slide[0] *= 1 - (1 - dim) * timeFix;
-		slide[1] *= 1 - (1 - dim) * timeFix;
+    let dim = 1 - 0.75;
 
-		this.acc[0] *= timeFix;
-		this.acc[1] *= timeFix;
+    slide[0] *= 1 - (1 - dim) * timeFix;
+    slide[1] *= 1 - (1 - dim) * timeFix;
 
-		this.acc[0] += slide[0];
-		this.acc[1] += slide[1];
+    this.acc[0] *= timeFix;
+    this.acc[1] *= timeFix;
 
-		if (Math.abs(this.acc[0]) < 0.1) this.acc[0] = 0;
-		if (Math.abs(this.acc[1]) < 0.1) this.acc[1] = 0;
+    this.acc[0] += slide[0];
+    this.acc[1] += slide[1];
 
-		this.vel = [this.acc[0], this.acc[1]];
+    if (Math.abs(this.acc[0]) < 0.1) this.acc[0] = 0;
+    if (Math.abs(this.acc[1]) < 0.1) this.acc[1] = 0;
 
-		if (this.downed || !this.canMove) {
-			this.vel[0] = 0;
-			this.vel[1] = 0;
-		}
+    this.vel = [this.acc[0], this.acc[1]];
 
-		this.pos[0] += this.vel[0] * timeFix;
-		this.pos[1] += this.vel[1] * timeFix;
+    if (this.downed || !this.canMove) {
+      this.vel[0] = 0;
+      this.vel[1] = 0;
+    }
 
-		this.pos[0] = Math.round(this.pos[0] * 100) / 100;
-		this.pos[1] = Math.round(this.pos[1] * 100) / 100;
+    this.pos[0] += this.vel[0] * timeFix;
+    this.pos[1] += this.vel[1] * timeFix;
 
-		this.slide = [this.acc[0] + 0, this.acc[1] + 0];
-		this.acc = [0, 0];
+    this.pos[0] = Math.round(this.pos[0] * 100) / 100;
+    this.pos[1] = Math.round(this.pos[1] * 100) / 100;
 
-		if (this.downed) this.dTimer -= delta / 1000;
+    this.slide = [this.acc[0] + 0, this.acc[1] + 0];
+    this.acc = [0, 0];
 
-		if (this.energy < 0) {
-			this.noEnergy();
-			this.energy = 0;
-		}
-		if (this.energy > this.maxEnergy) this.energy = this.maxEnergy;
-	}
+    if (this.downed) this.dTimer -= delta / 1000;
 
-	move(movement: Movement) {
-		let shift = movement.shift ? 0.5 : 1;
-		if (movement.left) {
-			this.acc[0] = -this.speed * shift;
-		}
-		if (movement.right) {
-			this.acc[0] = this.speed * shift;
-		}
-		if (movement.up) {
-			this.acc[1] = -this.speed * shift;
-		}
-		if (movement.down) {
-			this.acc[1] = this.speed * shift;
-		}
+    this.firstAbility.update(update);
+    this.secondAbility.update(update);
 
-		if (movement.mouseEnable && movement.mousePos) {
-			let dist = distance(0, 0, movement.mousePos![0], movement.mousePos![1]);
+    if (this.energy < 0) {
+      this.firstAbility.noEnergy();
+      this.secondAbility.noEnergy();
+      this.energy = 0;
+    }
+    if (this.energy > this.maxEnergy) this.energy = this.maxEnergy;
+  }
 
-			let speedX = movement.mousePos![0];
-			let speedY = movement.mousePos![1];
+  input(input: Input) {
+    let shift = input.shift ? 0.5 : 1;
+    if (input.left) {
+      this.acc[0] = -this.speed * shift;
+    }
+    if (input.right) {
+      this.acc[0] = this.speed * shift;
+    }
+    if (input.up) {
+      this.acc[1] = -this.speed * shift;
+    }
+    if (input.down) {
+      this.acc[1] = this.speed * shift;
+    }
 
-			if (dist > 150) {
-				speedX = movement.mousePos![0] * (150 / dist);
-				speedY = movement.mousePos![1] * (150 / dist);
-			}
+    if (input.mouseEnable && input.mousePos) {
+      let dist = distance(0, 0, input.mousePos![0], input.mousePos![1]);
 
-			this.angle = Math.atan2(speedY, speedX);
+      let speedX = input.mousePos![0];
+      let speedY = input.mousePos![1];
 
-			let mouseDist = Math.min(150, Math.sqrt(movement.mousePos![0] ** 2 + movement.mousePos![1] ** 2));
-			let distMovement = this.speed * shift;
-			distMovement *= mouseDist / 150;
+      if (dist > 150) {
+        speedX = input.mousePos![0] * (150 / dist);
+        speedY = input.mousePos![1] * (150 / dist);
+      }
 
-			this.acc[0] = distMovement * Math.cos(this.angle);
-			this.acc[1] = distMovement * Math.sin(this.angle);
-		}
-	}
+      this.angle = Math.atan2(speedY, speedX);
 
-	regenerateEnergy(timeFix: number) {
-		let addEnergy = this.regeneration * timeFix;
-		if (addEnergy > this.maxEnergy - this.energy) addEnergy = this.maxEnergy - this.energy;
-		this.energy += addEnergy;
-	}
+      let mouseDist = Math.min(
+        150,
+        Math.sqrt(input.mousePos![0] ** 2 + input.mousePos![1] ** 2)
+      );
+      let distMovement = this.speed * shift;
+      distMovement *= mouseDist / 150;
 
-	knock() {
-		this.downed = true;
-		this.dTimer = gameConfig.spawn.downedTimer;
-		this.deactivateFirstAbility();
-		this.deactivateSecondAbility();
-	}
+      this.acc[0] = distMovement * Math.cos(this.angle);
+      this.acc[1] = distMovement * Math.sin(this.angle);
+    }
 
-	res() {
-		this.downed = false;
-		this.dTimer = gameConfig.spawn.downedTimer;
-	}
+    if (input.first) {
+      this.secondAbility.activate();
+      input.first = false;
+    }
 
-	collide(area: { w: number; h: number }) {
-		if (this.pos[0] - this.radius < -10 * tile) {
-			this.pos[0] = this.radius + -10 * tile;
-		}
-		if (this.pos[0] + this.radius > area.w + 10 * tile) {
-			this.pos[0] = area.w - this.radius + 10 * tile;
-		}
-		if (this.pos[1] - this.radius < 0) {
-			this.pos[1] = this.radius;
-		}
-		if (this.pos[1] + this.radius > area.h) {
-			this.pos[1] = area.h - this.radius;
-		}
-	}
+    if (input.second) {
+      this.secondAbility.activate();
+      input.second = false;
+    }
+  }
 
-	abstract noEnergy(): void;
-	abstract useFirstAbility(): void;
-	abstract useSecondAbility(): void;
-	abstract deactivateFirstAbility(): void;
-	abstract deactivateSecondAbility(): void;
+  regenerateEnergy(delta: number) {
+    let addEnergy = this.regeneration * (delta / 1000);
+    if (addEnergy > this.maxEnergy - this.energy)
+      addEnergy = this.maxEnergy - this.energy;
+    this.energy += addEnergy;
+  }
 
-	pack(): PackedPlayer {
-		return {
-			id: this.id,
-			name: this.name,
-			x: this.pos[0],
-			y: this.pos[1],
-			radius: this.radius,
-			speed: this.speed,
-			energy: Math.round(this.energy),
-			downed: this.downed,
-			regeneration: this.regeneration,
-			area: this.area,
-			world: this.world,
-			dTimer: this.dTimer,
-			aura: this.aura,
-			auraColor: this.auraColor,
-		};
-	}
+  knock() {
+    this.downed = true;
+    this.dTimer = gameConfig.spawn.downedTimer;
+    this.firstAbility.deactivate();
+    this.firstAbility.deactivate();
+  }
+
+  res() {
+    this.downed = false;
+    this.dTimer = gameConfig.spawn.downedTimer;
+  }
+
+  collide(area: { w: number; h: number }) {
+    if (this.pos[0] - this.radius < -10 * tile) {
+      this.pos[0] = this.radius + -10 * tile;
+    }
+    if (this.pos[0] + this.radius > area.w + 10 * tile) {
+      this.pos[0] = area.w - this.radius + 10 * tile;
+    }
+    if (this.pos[1] - this.radius < 0) {
+      this.pos[1] = this.radius;
+    }
+    if (this.pos[1] + this.radius > area.h) {
+      this.pos[1] = area.h - this.radius;
+    }
+  }
+
+  consumeEnergy(count: number) {
+    if (this.energy >= count) {
+      this.energy -= count;
+      return true;
+    }
+    return false;
+  }
+
+  pack(): PackedPlayer {
+    const first = this.firstAbility.pack();
+    const second = this.secondAbility.pack();
+    return {
+      id: this.id,
+      name: this.name,
+      x: this.pos[0],
+      y: this.pos[1],
+      radius: this.radius,
+      speed: this.speed,
+      energy: Math.round(this.energy),
+      downed: this.downed,
+      regeneration: this.regeneration,
+      area: this.area,
+      world: this.world,
+      dTimer: Math.round(this.dTimer),
+      aura: this.aura,
+      auraColor: this.auraColor,
+      firstAbilityActive: first.active,
+      firstAbilityLvl: first.level,
+      firstAbilityMaxLvl: first.maxLevel,
+      secondAbilityActive: second.active,
+      secondAbilityLvl: second.level,
+      secondAbilityMaxLvl: second.maxLevel,
+      maxEnergy: this.maxEnergy,
+    };
+  }
 }

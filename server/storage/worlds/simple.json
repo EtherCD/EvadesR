@@ -1,27 +1,82 @@
 {
-	"client": {
-		"fillStyle": "",
-		"strokeStyle": "",
-		"areaFill": ""
-	},
-	"name": "Celestial Canyon",
-	"areas": [
-		{
-			"enemies": [
-				{
-					"types": ["normal"],
-					"radius": 15,
-					"speed": 10,
-					"count": 10
-				}
-			],
-			"w": 60,
-			"h": 15
-		},
-		{
-			"w": 60,
-			"h": 15,
-			"win": true
-		}
-	]
+  "client": {
+    "fillStyle": "",
+    "strokeStyle": "",
+    "areaFill": ""
+  },
+  "name": "Celestial Canyon",
+  "areas": [
+    {
+      "enemies": [
+        {
+          "types": ["normal"],
+          "radius": 15,
+          "speed": 10,
+          "count": 10
+        }
+      ],
+      "w": 60,
+      "h": 15
+    },
+    {
+      "w": 15,
+      "h": 15,
+      "enemies": [
+        {
+          "types": ["normal"],
+          "radius": 15,
+          "speed": 5,
+          "count": 5
+        }
+      ]
+    },
+    {
+      "w": 15,
+      "h": 15,
+      "enemies": [
+        {
+          "types": ["normal"],
+          "radius": 15,
+          "speed": 5,
+          "count": 10
+        }
+      ]
+    },
+    {
+      "w": 15,
+      "h": 15,
+      "enemies": [
+        {
+          "types": ["normal"],
+          "radius": 15,
+          "speed": 5,
+          "count": 15
+        }
+      ]
+    },
+    {
+      "w": 15,
+      "h": 15,
+      "enemies": [
+        {
+          "types": ["normal"],
+          "radius": 15,
+          "speed": 5,
+          "count": 20
+        }
+      ]
+    },
+    {
+      "w": 15,
+      "h": 15,
+      "enemies": [
+        {
+          "types": ["normal"],
+          "radius": 15,
+          "speed": 5,
+          "count": 25
+        }
+      ]
+    }
+  ]
 }

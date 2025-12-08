@@ -7,10 +7,22 @@ services:
       dockerfile: Dockerfile
     container_name: lwf_app
     ports:
-      - "3000:3000"
+      - "8080:3000"
     volumes:
       - ./src:/app/src
       - ./package*.json:/app/package*.json
+      - ./storage:storage
     environment:
       NODE_ENV: development
+      PORT: 8080
+      TICK_RATE: 60
+
+      STORAGE_PATH: storage
+      WORLDS_PATH: worlds 
+      LOG_PATH: logs
+
+      NODE_ENV: dev
+
+      DATABASE_FILE: database.sqlite
+
     command: npm run

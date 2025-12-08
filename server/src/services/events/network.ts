@@ -1,8 +1,8 @@
 import mitt from "mitt";
 
 type NetworkEventsType = {
-	all: unknown;
-	direct: { id: number; value: unknown };
+	all: object;
+	direct: { id: number; value: object };
 };
 
 export const networkEvents = mitt<NetworkEventsType>();

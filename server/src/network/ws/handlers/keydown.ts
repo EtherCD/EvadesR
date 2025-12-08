@@ -6,6 +6,6 @@ export const KeyDown = (ws: WebSocket<Client>, key: string) => {
 	const client = ws.getUserData();
 	if (accessedKeys.includes(key)) {
 		//@ts-ignore
-		client.movement[key] = true;
+		client.input[key] = true;
 	}
 };
