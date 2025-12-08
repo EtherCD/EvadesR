@@ -1,6 +1,6 @@
+import type { PackedEntity } from "shared";
 import { GlobalAssets } from "../assets";
 import Camera from "../storages/camera";
-import type { PackedEntity } from "../types";
 
 export default class Entity {
   harmless: boolean;
@@ -19,7 +19,7 @@ export default class Entity {
     this.harmless = props.harmless ?? false;
   }
 
-  draw(ctx: CanvasRenderingContext2D, delta: number) {
+  draw(ctx: CanvasRenderingContext2D, _: number) {
     ctx.beginPath();
     ctx.lineWidth = 2 * Camera.s;
     ctx.fillStyle = GlobalAssets.entities[this.type][0];

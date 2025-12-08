@@ -1,11 +1,12 @@
-import { Normal } from "../../assets/entity/normal";
+import { PackedEntity } from "@shared/types";
 import { tile } from "../../shared/config";
-import { PackedEntity, Update } from "../../shared/core/types";
+import { Update } from "../../shared/core/types";
 import { diff } from "../../shared/diff";
 import { RawArea, RawEntity } from "../../shared/services/types";
 import { Entity } from "../objects/entity";
 import { Player } from "../objects/player";
 import { sendToNetwork } from "../send";
+import { SpawnFactory } from "./spawn";
 
 export class Area {
   entities: Record<number, Entity> = {};
@@ -15,11 +16,13 @@ export class Area {
   w: number;
   h: number;
   players: number[] = [];
+  id = 0;
 
   constructor(props: RawArea) {
     this.w = props.w * tile;
     this.h = props.h * tile;
     this.rawEntities = props.enemies;
+    this.id = props.id;
   }
 
   join(player: Player) {
@@ -40,11 +43,15 @@ export class Area {
     for (let i = 0; i < this.rawEntities.length; i++) {
       for (let l = 0; l < this.rawEntities[i].count; l++) {
         const val = this.rawEntities[i];
-        this.entities[this.nextId++] = new Normal({
+        const type = val.types[Math.floor(Math.random() * val.types.length)];
+        this.entities[this.nextId++] = SpawnFactory.entity({
           ...val,
           area: this,
-          name: "normal",
-          type: 0,
+          name: "",
+          type: type,
+          num: l,
+          count: this.rawEntities[i].count,
+          inverse: false,
         });
       }
     }
@@ -61,6 +68,10 @@ export class Area {
 
     for (const e in this.entities) {
       this.entities[e].update(update);
+      if (this.entities[e].toRemove) {
+        sendToNetwork.closeEntities(this.players, Number(e));
+        delete this.entities[e];
+      }
     }
 
     const updatedEntities = this.getDiffEnemies();
@@ -68,6 +79,12 @@ export class Area {
       for (const i of this.players)
         sendToNetwork.updateEntities(i, updatedEntities[0]);
   }
+
+  addEntity = (entity: Entity) => {
+    this.nextId++;
+    this.entities[this.nextId] = entity;
+    sendToNetwork.newEntities(this.players, this.nextId, entity.pack());
+  };
 
   getDiffEnemies(): [Record<number, Partial<PackedEntity>>, boolean] {
     let updated: Record<number, Partial<PackedEntity>> = {};

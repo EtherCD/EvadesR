@@ -1,15 +1,11 @@
 import { random } from "../../shared/random";
 import { gameConfig, tile } from "../../shared/config";
-import {
-  PackedPlayer,
-  PlayerProps,
-  Update,
-  UpdatePlayer,
-  UserRole,
-} from "../../shared/core/types";
+import { PlayerProps, UpdatePlayer, UserRole } from "../../shared/core/types";
 import distance from "../../shared/distance";
 import { Input } from "../../shared/ws/types";
 import { Ability } from "./ability";
+import { Area } from "../world/area";
+import { PackedPlayer } from "@shared/types";
 
 export abstract class Player {
   name: string;
@@ -22,7 +18,7 @@ export abstract class Player {
   speed: number;
   energy: number;
   maxEnergy: number;
-  downed: boolean;
+  downed: number = 0;
   regeneration: number;
   area: number;
   world: string;
@@ -34,6 +30,10 @@ export abstract class Player {
   aura: number;
   auraColor: string;
   role: UserRole;
+
+  state = 0;
+  stateMeta = 0;
+  hero = 0;
 
   abstract firstAbility: Ability;
   abstract secondAbility: Ability;
@@ -54,7 +54,6 @@ export abstract class Player {
     this.energy = gameConfig.spawn.energy;
     this.maxEnergy = gameConfig.spawn.energy;
     this.regeneration = gameConfig.spawn.regeneration;
-    this.downed = false;
     this.area = gameConfig.spawn.area;
     this.world = gameConfig.spawn.world;
     this.angle = 0;
@@ -174,14 +173,14 @@ export abstract class Player {
   }
 
   knock() {
-    this.downed = true;
+    this.downed = 1;
     this.dTimer = gameConfig.spawn.downedTimer;
     this.firstAbility.deactivate();
     this.firstAbility.deactivate();
   }
 
   res() {
-    this.downed = false;
+    this.downed = 0;
     this.dTimer = gameConfig.spawn.downedTimer;
   }
 
@@ -219,7 +218,7 @@ export abstract class Player {
       radius: this.radius,
       speed: this.speed,
       energy: Math.round(this.energy),
-      downed: this.downed,
+      died: this.downed,
       regeneration: this.regeneration,
       area: this.area,
       world: this.world,
@@ -233,6 +232,9 @@ export abstract class Player {
       secondAbilityLvl: second.level,
       secondAbilityMaxLvl: second.maxLevel,
       maxEnergy: this.maxEnergy,
+      state: this.state,
+      stateMeta: this.stateMeta,
+      hero: this.hero,
     };
   }
 }

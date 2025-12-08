@@ -1,34 +1,58 @@
-import { networkEvents } from "../services/events/network";
 import {
   ChatMessage,
   PackedPlayer,
   AreaInit,
   PackedEntity,
-} from "../shared/core/types";
+} from "@shared/types";
+import { networkEvents } from "../services/events/network";
 
 export const sendToNetwork = {
-  message: (m: ChatMessage) => {
-    networkEvents.emit("all", { m });
+  message: (message: ChatMessage) => {
+    networkEvents.emit("all", { message });
   },
-  newPlayer: (np: PackedPlayer) => {
-    networkEvents.emit("all", { np });
+  newPlayer: (newPlayer: PackedPlayer) => {
+    networkEvents.emit("all", { newPlayer });
   },
-  closePlayer: (cp: number) => {
-    networkEvents.emit("all", { cp });
+  closePlayer: (closePlayer: number) => {
+    networkEvents.emit("all", { closePlayer });
   },
-  players: (id: number, pls: Record<number, PackedPlayer>) => {
-    networkEvents.emit("direct", { id, value: { pls } });
+  players: (id: number, players: Record<number, PackedPlayer>) => {
+    networkEvents.emit("direct", { id, value: { players } });
   },
-  self: (id: number, s: PackedPlayer) => {
-    networkEvents.emit("direct", { id, value: { s } });
+  self: (id: number, self: PackedPlayer) => {
+    networkEvents.emit("direct", { id, value: { self } });
   },
-  updatePlayers: (p: Record<number, Partial<PackedPlayer>>) => {
-    networkEvents.emit("all", { p });
+  updatePlayers: (updatePlayers: Record<number, Partial<PackedPlayer>>) => {
+    networkEvents.emit("all", { updatePlayers });
   },
-  areaInit: (id: number, ai: AreaInit) => {
-    networkEvents.emit("direct", { id, value: { ai } });
+  areaInit: (id: number, areaInit: AreaInit) => {
+    networkEvents.emit("direct", { id, value: { areaInit } });
   },
-  updateEntities: (id: number, ue: Partial<PackedEntity>) => {
-    networkEvents.emit("direct", { id, value: { ue } });
+  updateEntities: (id: number, updateEntities: Partial<PackedEntity>) => {
+    networkEvents.emit("direct", { id, value: { updateEntities } });
+  },
+  close: (id: number, reason: string) => {
+    networkEvents.emit("close", {
+      id,
+      reason,
+    });
+  },
+  newEntities: (ids: number[], eId: number, entity: PackedEntity) => {
+    for (const id of ids)
+      networkEvents.emit("direct", {
+        id,
+        value: {
+          newEntities: { [eId]: entity },
+        },
+      });
+  },
+  closeEntities: (ids: number[], eId: number) => {
+    for (const id of ids)
+      networkEvents.emit("direct", {
+        id,
+        value: {
+          closeEntities: [eId],
+        },
+      });
   },
 };

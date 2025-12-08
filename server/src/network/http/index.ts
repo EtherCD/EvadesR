@@ -90,6 +90,7 @@ export class HTTPServer {
 
           if (valid) {
             makeResponse(res, true, 200, {
+              // @ts-ignore
               valid: database.checkAuth(json.token),
             });
             return;

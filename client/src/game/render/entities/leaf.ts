@@ -1,6 +1,6 @@
+import type { PackedEntity } from "shared";
 import AssetLoader from "../../storages/assets";
 import Camera from "../../storages/camera";
-import type { PackedEntity } from "../../types";
 import Entity from "../../units/entity";
 
 const arr = [AssetLoader.images.leaf, AssetLoader.images.leaf2];
@@ -17,7 +17,7 @@ export class Leaf extends Entity {
     super.accept(props);
   }
 
-  draw(ctx: CanvasRenderingContext2D, delta: number): void {
+  draw(ctx: CanvasRenderingContext2D): void {
     ctx.beginPath();
     ctx.globalAlpha = this.harmless ? 0.4 : 1;
     const pos = Camera.transform(this);

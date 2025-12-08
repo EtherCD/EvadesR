@@ -1,8 +1,8 @@
+import type { PackedPlayer } from "shared";
 import Camera from "../storages/camera";
-import type { PackedPlayer } from "../types";
 import MaxContainer from "./maxcur";
 
-export class Player {
+export abstract class Player {
   x: number;
   y: number;
   id: number;
@@ -20,6 +20,12 @@ export class Player {
    */
   dt: number;
 
+  state: number;
+  stateMeta: number;
+  hero: number;
+
+  abstract color: string;
+
   constructor(props: PackedPlayer) {
     this.x = props.x ? props.x : 0;
     this.y = props.y ? props.y : 0;
@@ -27,12 +33,15 @@ export class Player {
     this.id = props.id;
     this.name = props.name;
     this.area = props.area;
-    this.died = props.downed ?? false;
+    this.died = props.died ? true : false;
     this.world = props.world;
     this.regen = new MaxContainer(props.regeneration ?? 1, 7);
     this.speed = new MaxContainer(props.speed ?? 5, 17);
     this.energy = new MaxContainer(props.energy ?? 0, props.maxEnergy);
     this.radius = props.radius ?? 15;
+    this.state = props.state;
+    this.stateMeta = props.stateMeta;
+    this.hero = props.hero;
   }
 
   draw(ctx: CanvasRenderingContext2D, sid: number) {
@@ -50,7 +59,7 @@ export class Player {
       };
 
     ctx.beginPath();
-    ctx.fillStyle = "#ff0000";
+    ctx.fillStyle = this.color;
     ctx.globalAlpha = 1;
 
     if (this.died) {
@@ -98,7 +107,14 @@ export class Player {
     ctx.font = 12 * Camera.s + 'px "Open  Sans", Verdana, Segoe, sans-serif';
     ctx.fillText(this.name, pos.x, pos.y - (this.radius + 11) * Camera.s);
     ctx.closePath();
+
+    this.renderMeta(ctx, pos);
   }
+
+  abstract renderMeta(
+    ctx: CanvasRenderingContext2D,
+    renderPos: { x: number; y: number }
+  ): void;
 
   accept(props: Partial<PackedPlayer>) {
     this.x = props.x ? props.x : this.x;
@@ -108,7 +124,10 @@ export class Player {
     this.speed.accept(props.speed);
     this.energy.accept(props.energy, props.maxEnergy);
     this.regen.accept(props.regeneration);
-    this.died = props.downed ?? this.died;
+    this.died =
+      props.died !== undefined ? (props.died ? true : false) : this.died;
     this.dt = props.dTimer ?? this.dt;
+    this.state = props.state ?? this.state;
+    this.stateMeta = props.stateMeta ?? this.stateMeta;
   }
 }

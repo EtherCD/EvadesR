@@ -39,5 +39,5 @@ export const GlobalAssets: Assets = {
       fillColor: "#FFFABA",
     },
   },
-  entities: [["#ccc"]],
+  entities: [["#ccc"], ["#000"], ["#000"], ["#A05353"], ["#A05353"]],
 };

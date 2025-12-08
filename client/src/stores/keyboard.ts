@@ -32,7 +32,7 @@ interface KeyboardState {
   clearMovement: () => void;
 }
 
-export const useKeyboard = create<KeyboardState>((set, get) => ({
+export const useKeyboard = create<KeyboardState>((set, _) => ({
   isChatting: false,
   left: false,
   up: false,
@@ -42,7 +42,15 @@ export const useKeyboard = create<KeyboardState>((set, get) => ({
   setChatting(value) {
     set({ isChatting: value });
   },
-  clearMovement() {},
+  clearMovement() {
+    set({
+      left: false,
+      up: false,
+      right: false,
+      down: false,
+      shift: false,
+    });
+  },
 }));
 
 export const keyboardEvent = (event: KeyboardEvent) => {
@@ -57,8 +65,7 @@ export const keyboardEvent = (event: KeyboardEvent) => {
     });
   }
   if (event.code === "Enter" && event.type === "keydown") {
-    const isChatting = !state.isChatting;
-    useKeyboard.setState({ isChatting });
+    const isChatting = state.isChatting;
     if (isChatting) state.clearMovement();
     keyboardEvents.emit("enter", isChatting);
   }

@@ -8,6 +8,9 @@ import type {
   PackedEntity,
   PackedPlayer,
 } from "../game/types";
+import { Spawn } from "../game/spawner";
+import { useKeyboard } from "./keyboard";
+import { useMouseStore } from "./mouse";
 
 export interface GameState {
   areaBoundary: { w: number; h: number };
@@ -18,7 +21,7 @@ export interface GameState {
   area: number;
 }
 
-export const gameState: GameState = {
+export let gameState: GameState = {
   areaBoundary: { w: 0, h: 0 },
   zones: [],
   entities: {},
@@ -41,6 +44,7 @@ interface State {
   players: Record<string, ShortPlayer>;
   messages: Array<ChatMessage>;
   isGameInit: boolean;
+  reason?: string;
 
   message(data: ChatMessage): void;
   uplayers(data: Record<number, PackedPlayer>): void;
@@ -52,6 +56,8 @@ interface State {
   newEntities(data: Record<number, PackedEntity>): void;
   updateEntities(data: Record<number, Partial<PackedEntity>>): void;
   closeEntities(data: number[]): void;
+  close(reason: string): void;
+  clear(): void;
 }
 
 export const useGameStore = create<State>((set, get) => ({
@@ -68,7 +74,7 @@ export const useGameStore = create<State>((set, get) => ({
   uplayers(data: Record<number, PackedPlayer>) {
     for (const p in data) {
       const player = data[p];
-      gameState.players[p] = new Player(player);
+      gameState.players[p] = Spawn.player(player);
       const players = get().players;
       set({
         players: {
@@ -85,7 +91,7 @@ export const useGameStore = create<State>((set, get) => ({
   },
   self(data) {
     set({ selfId: data.id, isGameInit: true });
-    gameState.players[data.id] = new Player(data);
+    gameState.players[data.id] = Spawn.player(data);
   },
   areaInit(data) {
     gameState.entities = {};
@@ -165,7 +171,7 @@ export const useGameStore = create<State>((set, get) => ({
     };
   },
   newPlayer(data) {
-    gameState.players[data.id] = new Player(data);
+    gameState.players[data.id] = Spawn.player(data);
     const players = get().players;
     set({
       players: {
@@ -177,10 +183,13 @@ export const useGameStore = create<State>((set, get) => ({
   closePlayer(data) {
     if (Object.keys(gameState.players).includes(data + "")) {
       delete gameState.players[data];
-      const players = get().players;
-      delete players[data];
+      let players = get().players;
+      let out: Record<number, ShortPlayer> = {};
+      for (const i in players) {
+        if (Number(i) !== data) out[Number(i)] = players[i];
+      }
       set({
-        players,
+        players: out,
       });
     }
   },
@@ -190,7 +199,8 @@ export const useGameStore = create<State>((set, get) => ({
       const state = get().players;
       if (
         (data[p].dTimer !== undefined && state[p].dt !== data[p].dTimer) ||
-        (data[p].downed !== undefined && state[p].died !== data[p].downed) ||
+        (data[p].died !== undefined &&
+          state[p].died !== Boolean(data[p].died)) ||
         (data[p].world !== undefined && state[p].world !== data[p].world) ||
         (data[p].area !== undefined && state[p].area !== data[p].area)
       ) {
@@ -203,18 +213,48 @@ export const useGameStore = create<State>((set, get) => ({
               world: data[p].world ?? state[p].world,
               area: data[p].area ?? state[p].area,
               dt: data[p].dTimer ?? state[p].dt,
-              died: data[p].downed ?? state[p].died,
+              died: Boolean(data[p].died) ?? state[p].died,
             },
           },
         });
       }
     }
   },
-  newEntities(data) {},
+  newEntities(data) {
+    for (const id in data) {
+      gameState.entities[id] = new Entity(data[id]);
+    }
+  },
   updateEntities(data) {
     for (const e in data) {
       gameState.entities[e].accept(data[e]);
     }
   },
-  closeEntities(data) {},
+  closeEntities(data) {
+    for (const i of data) {
+      delete gameState.entities[i];
+    }
+  },
+  close(reason) {
+    set({ reason });
+  },
+  clear() {
+    set({
+      selfId: -1,
+      players: {},
+      messages: [],
+      isGameInit: false,
+      reason: "",
+    });
+    gameState = {
+      areaBoundary: { w: 0, h: 0 },
+      zones: [],
+      entities: {},
+      players: {},
+      world: "",
+      area: 0,
+    };
+    useKeyboard.getState().clearMovement();
+    useMouseStore.setState({ enable: false });
+  },
 }));

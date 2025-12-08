@@ -1,12 +1,18 @@
-import { useState } from "preact/hooks";
+import { useEffect, useState } from "preact/hooks";
 import { Button } from "../components/basic/button";
 import { useAuthStore } from "../stores/auth";
 import { Game } from "../components/game";
+import { useGameStore } from "../stores/game";
 
 export const Home = () => {
   const auth = useAuthStore();
 
   const [inGame, setInGame] = useState(false);
+  const game = useGameStore();
+
+  useEffect(() => {
+    setInGame(game.isGameInit);
+  }, [game.isGameInit]);
 
   if (inGame) {
     return <Game />;

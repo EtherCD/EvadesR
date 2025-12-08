@@ -9,7 +9,13 @@
     {
       "enemies": [
         {
-          "types": ["normal"],
+          "types": ["normal", "sniper"],
+          "radius": 15,
+          "speed": 10,
+          "count": 10
+        },
+        {
+          "types": ["wall"],
           "radius": 15,
           "speed": 10,
           "count": 10
@@ -39,6 +45,12 @@
           "radius": 15,
           "speed": 5,
           "count": 10
+        },
+        {
+          "types": ["wall"],
+          "radius": 15,
+          "speed": 5,
+          "count": 15
         }
       ]
     },
@@ -48,6 +60,12 @@
       "enemies": [
         {
           "types": ["normal"],
+          "radius": 15,
+          "speed": 5,
+          "count": 15
+        },
+        {
+          "types": ["wall"],
           "radius": 15,
           "speed": 5,
           "count": 15
@@ -63,20 +81,19 @@
           "radius": 15,
           "speed": 5,
           "count": 20
+        },
+        {
+          "types": ["wall"],
+          "radius": 15,
+          "speed": 5,
+          "count": 15
         }
       ]
     },
     {
       "w": 15,
       "h": 15,
-      "enemies": [
-        {
-          "types": ["normal"],
-          "radius": 15,
-          "speed": 5,
-          "count": 25
-        }
-      ]
+      "win": true
     }
   ]
 }

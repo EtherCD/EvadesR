@@ -10,7 +10,7 @@ interface ResizeState {
   resize: (scale: number, canvas: HTMLCanvasElement, rect: DOMRect) => void;
 }
 
-export const useResize = create<ResizeState>((set, get) => ({
+export const useResize = create<ResizeState>((set, _) => ({
   scale: 1,
   canvasLeft: 0,
   canvasTop: 0,

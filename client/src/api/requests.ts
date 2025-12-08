@@ -35,27 +35,27 @@ export class ApiRequests {
       body,
     });
 
-  private static put = <T extends ApiResponse<{}>>(
-    url: string,
-    body: unknown,
-    withCredentials: boolean = false
-  ) =>
-    ApiRequests.fetch<T>({
-      url,
-      method: "PUT",
-      withCredentials,
-      body,
-    });
+  // private static put = <T extends ApiResponse<{}>>(
+  //   url: string,
+  //   body: unknown,
+  //   withCredentials: boolean = false
+  // ) =>
+  //   ApiRequests.fetch<T>({
+  //     url,
+  //     method: "PUT",
+  //     withCredentials,
+  //     body,
+  //   });
 
-  private static get = <T extends ApiResponse<{}>>(
-    url: string,
-    withCredentials: boolean = false
-  ) =>
-    ApiRequests.fetch<T>({
-      url,
-      method: "GET",
-      withCredentials,
-    });
+  // private static get = <T extends ApiResponse<{}>>(
+  //   url: string,
+  //   withCredentials: boolean = false
+  // ) =>
+  //   ApiRequests.fetch<T>({
+  //     url,
+  //     method: "GET",
+  //     withCredentials,
+  //   });
 
   private static fetch<T extends ApiResponse<{}>>(options: {
     url: string;

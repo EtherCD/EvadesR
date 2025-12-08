@@ -1,6 +1,5 @@
 import { Ability } from "../../core/objects/ability";
-import { Player } from "../../core/objects/player";
-import { Update, UpdatePlayer } from "../../shared/core/types";
+import { UpdatePlayer } from "../../shared/core/types";
 import distance from "../../shared/distance";
 
 export class LifebuoyAbility extends Ability {
@@ -30,12 +29,19 @@ export class LifebuoyAbility extends Ability {
   }
 
   activate(): void {
+    this.caster.state = 1;
     this.active = !this.active;
+    if (this.active) {
+    } else {
+      this.deactivate();
+    }
   }
   deactivate(): void {
     this.active = false;
+    this.caster.state = 0;
   }
   noEnergy(): void {
     this.active = false;
+    this.caster.state = 0;
   }
 }

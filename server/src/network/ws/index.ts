@@ -1,4 +1,4 @@
-import { TemplatedApp, WebSocket } from "uWebSockets.js";
+import { SHARED_COMPRESSOR, TemplatedApp, WebSocket } from "uWebSockets.js";
 import { logger } from "../../services/logger";
 import { clientMessageValidate } from "../../shared/ws/schema";
 import { ClientMessage, Input } from "../../shared/ws/types";
@@ -10,6 +10,8 @@ import { mouseEnable } from "./handlers/mouseenable";
 import { mousePos } from "./handlers/mousepos";
 import { ability } from "./handlers/ability";
 import { database } from "../../services/db";
+import { FormatEncoder } from "@shared/schema";
+import { Compress } from "server/src/services/compress";
 
 export interface Client {
   id: number;
@@ -57,11 +59,14 @@ export class WebSocketServer {
               case "init":
                 const init = data.init!;
                 const auth = database.auth(init.session);
-                if (auth === null || auth === undefined) ws.close();
+                if (auth === null || auth === undefined) {
+                  this.close(ws, "Session expired or corrupted");
+                  return;
+                }
                 const username = auth!.username;
                 for (const i of this.clients)
                   if (username === i[1].getUserData().username) {
-                    ws.close();
+                    this.close(ws, "Bad body request");
                     return;
                   }
                 client.username = auth!.username;
@@ -82,12 +87,7 @@ export class WebSocketServer {
             }
           }
         } else {
-          logger.info(
-            `Client ${
-              ws.getUserData().id
-            } was disconnected by reason [ not valid message structure ]`
-          );
-          ws.close();
+          this.close(ws, "not valid message structure");
         }
       },
       close: (ws: WebSocket<Client>) => {
@@ -112,12 +112,26 @@ export class WebSocketServer {
         client.getUserData().packages.push(event);
       }
     });
+    networkEvents.on("close", (event) => {
+      const client = this.clients.get(event.id);
+
+      if (client) {
+        this.close(client, JSON.stringify({ close: event.reason }));
+      }
+    });
+  }
+
+  close(ws: WebSocket<Client>, reason: string) {
+    logger.info(
+      "Client " + ws.getUserData().id + " was disconnected by reason " + reason
+    );
+    ws.end(1000, reason);
   }
 
   tick() {
     for (const [_, client] of this.clients) {
       const data = client.getUserData();
-      client.send(JSON.stringify(data.packages));
+      client.send(Compress.encode(FormatEncoder.encode(data.packages)), true);
       data.packages = [];
     }
   }

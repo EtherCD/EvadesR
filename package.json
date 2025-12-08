@@ -1,0 +1,12 @@
+{
+  "name": "EvadesR",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/EtherCD/EvadesR.git",
+  "author": "EtherCD <ethernetcoder@gmail.com>",
+  "license": "GPLv3",
+  "private": true,
+  "dependencies": {
+    "lwf": "^2.6.0"
+  }
+}

@@ -1,5 +1,6 @@
 import { gameState, useGameStore } from "../../stores/game";
 import { GlobalAssets } from "../assets";
+import { webSocketConnection } from "../connection";
 import AssetLoader from "../storages/assets";
 import Camera from "../storages/camera";
 import { WorldEffect } from "../types";
@@ -21,7 +22,7 @@ export class Render {
   private static effect: Effect;
   private static lastUpdateTime: number = Date.now();
 
-  static render(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
+  static render(_: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
     const currentTime = Date.now();
     const delta = currentTime - Render.lastUpdateTime;
     Render.lastUpdateTime = currentTime;
@@ -71,6 +72,16 @@ export class Render {
     ctx.textAlign = "left";
     ctx.fillStyle = "white";
     ctx.textAlign = "center";
+
+    ctx.textAlign = "left";
+    ctx.font = '500 20px "Open Sans", sans-serif ';
+    ctx.fillText(
+      "pps " + webSocketConnection.packagesPerSecond,
+      0,
+      Camera.h - 40
+    );
+    ctx.textAlign = "left";
+    ctx.fillText("kbps " + webSocketConnection.kBPerSecond, 0, Camera.h - 10);
   }
 
   private static renderBackground(ctx: CanvasRenderingContext2D) {

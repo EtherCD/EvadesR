@@ -3,19 +3,27 @@ import { mouseEvents } from "./events/mouse";
 import { useAuthStore } from "../stores/auth";
 import { useGameStore } from "../stores/game";
 import { config } from "../config";
+import { FormatEncoder } from "shared";
+import { Compress } from "./compress";
 
 export class WebSocketConnection {
   private ws?: WebSocket;
 
-  public open: boolean = false;
+  open: boolean = false;
+  reason: string = "";
 
-  public disconnect() {
+  kBPerPackage = 0;
+  kBPerSecond = 0;
+  rawPPS = 0;
+  packagesPerSecond = 0;
+
+  disconnect() {
     if (this.open) {
       this.ws!.close();
     }
   }
 
-  public sendMessage(msg: string) {
+  sendMessage(msg: string) {
     if (this.open) {
       this.ws!.send(
         JSON.stringify({
@@ -25,8 +33,9 @@ export class WebSocketConnection {
     }
   }
 
-  public connect() {
+  connect() {
     this.ws = new WebSocket(config.api.replace("http", "ws") + "/server");
+    this.ws.binaryType = "arraybuffer";
     this.ws.onopen = () => {
       this.ws!.send(
         JSON.stringify({
@@ -38,16 +47,29 @@ export class WebSocketConnection {
       );
       this.open = true;
     };
-    this.ws.onclose = () => {
+    this.ws.onclose = (event) => {
       this.open = false;
+      if (event.reason.length === 0) {
+        useGameStore.setState({ reason: "Server disconnected you" });
+        return;
+      }
+      let reason = JSON.parse(event.reason);
+      useGameStore.setState({ reason });
     };
     this.ws.onerror = () => {
       this.open = false;
     };
     this.ws.onmessage = this.onMessage;
+
+    setInterval(() => {
+      this.kBPerSecond = Math.round((this.kBPerPackage / 1024) * 10) / 10;
+      this.kBPerPackage = 0;
+      this.packagesPerSecond = this.rawPPS;
+      this.rawPPS = 0;
+    }, 1000);
   }
 
-  public link() {
+  link() {
     mouseEvents.on("move", (event) => {
       if (this.open) {
         this.ws!.send(
@@ -93,45 +115,52 @@ export class WebSocketConnection {
     });
   }
 
-  private onMessage(event: MessageEvent) {
-    const gData: Array<{ [key: string]: any }> = JSON.parse(event.data);
+  private onMessage = (event: MessageEvent) => {
+    const uint8 = new Uint8Array(event.data);
+    this.kBPerPackage += uint8.byteLength;
+    const gData = FormatEncoder.decode(Compress.decode(uint8)) as Array<
+      Record<string, any>
+    >;
     const gameService = useGameStore.getState();
+    this.rawPPS++;
+
     for (const d in gData) {
       const data = gData[d];
       switch (Object.keys(data)[0]) {
-        case "m":
-          gameService.message(data.m);
+        case "message":
+          gameService.message(data.message);
           break;
-        case "pls":
-          gameService.uplayers(data.pls);
+        case "players":
+          gameService.uplayers(data.players);
           break;
-        case "s":
-          gameService.self(data.s);
+        case "self":
+          gameService.self(data.self);
           break;
-        case "ai":
-          gameService.areaInit(data.ai);
+        case "areaInit":
+          gameService.areaInit(data.areaInit);
           break;
-        case "np":
-          gameService.newPlayer(data.np);
+        case "newPlayer":
+          gameService.newPlayer(data.newPlayer);
           break;
-        case "cp":
-          gameService.closePlayer(data.cp);
+        case "closePlayer":
+          gameService.closePlayer(data.closePlayer);
           break;
-        case "p":
-          gameService.updatePlayers(data.p);
+        case "updatePlayers":
+          gameService.updatePlayers(data.updatePlayers);
           break;
-        case "ne":
-          gameService.newEntities(data.ne);
+        case "newEntities":
+          gameService.newEntities(data.newEntities);
           break;
-        case "ue":
-          gameService.updateEntities(data.ue);
+        case "updateEntities":
+          console.log(data.updateEntities);
+          gameService.updateEntities(data.updateEntities);
           break;
-        case "ce":
-          gameService.closeEntities(data.ce);
+        case "closeEntities":
+          gameService.closeEntities(data.closeEntities);
           break;
       }
     }
-  }
+  };
 }
 
 export const webSocketConnection = new WebSocketConnection();

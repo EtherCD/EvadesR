@@ -7,8 +7,8 @@ import { Player } from "./objects/player";
 import { sendToNetwork } from "./send";
 import { World } from "./world";
 import { Client } from "../network/ws";
-import { ChatMessage, PackedPlayer } from "../shared/core/types";
 import { WorldsWarp } from "./world/warp";
+import { ChatMessage, PackedPlayer } from "@shared/types";
 
 export class Game {
   worlds: Record<string, World> = Loader.loadWorlds();
@@ -80,6 +80,7 @@ export class Game {
         players: area.getPlayers(this.players),
       };
 
+      if (this.isPlayerClose(player)) continue;
       player.update(updatePlayer);
       player.input(map.get(Number(p))!.getUserData().input);
       this.worldsWarp.process(player);
@@ -101,6 +102,18 @@ export class Game {
     }
   }
 
+  isPlayerClose(player: Player) {
+    if (player === undefined) return true;
+    if (player.dTimer <= 0) {
+      sendToNetwork.close(player.id, "You died");
+      sendToNetwork.closePlayer(player.id);
+      this.worlds[player.world].leave(player);
+      delete this.players[player.id];
+      return true;
+    }
+    return false;
+  }
+
   getDiff() {
     let updatedPlayers: Record<number, Partial<PackedPlayer>> | null = null;
     const keys = Object.keys(this.players);
@@ -108,6 +121,7 @@ export class Game {
       const i = v as any as number;
       const dif = diff(this.oldPlayersPack[i], this.players[i].pack());
       if (dif[1]) {
+        console.log(dif);
         if (updatedPlayers === null) updatedPlayers = {};
         updatedPlayers[i] = dif[0];
       }

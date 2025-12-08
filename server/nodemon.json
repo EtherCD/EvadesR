@@ -1,1 +1,6 @@
-{ "watch": ["src"], "ext": "ts,json,yaml,yml", "ignore": ["src/**/*.spec.ts"], "exec": "tsx ./src | pino-pretty" }
+{
+  "watch": ["src", "storage/worlds"],
+  "ext": "ts,json,yaml,yml",
+  "ignore": ["src/**/*.spec.ts"],
+  "exec": "tsx ./src | pino-pretty"
+}

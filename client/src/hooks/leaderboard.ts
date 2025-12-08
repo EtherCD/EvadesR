@@ -54,7 +54,7 @@ export function useLeaderBoard() {
         timer: element.dt ?? -1,
         self: element === players[selfId],
       };
-      let tryFind = outObject.find((v, i, o) => v.name === element.world);
+      let tryFind = outObject.find((v) => v.name === element.world);
       if (tryFind) {
         tryFind.players.push(playersTo);
       } else {

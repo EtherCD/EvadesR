@@ -1,14 +1,18 @@
-import { useEffect, useRef, useState } from "preact/hooks";
+import { useEffect, useRef, type MutableRef } from "preact/hooks";
 import { useResize } from "../stores/resize";
-import { keyboardEvent, useKeyboard } from "../stores/keyboard";
-import { mouseEvent, useMouseStore } from "../stores/mouse";
+import { keyboardEvent } from "../stores/keyboard";
+import { mouseEvent } from "../stores/mouse";
 import { Render } from "../game/render";
 import { useGameStore } from "../stores/game";
 import { webSocketConnection } from "../game/connection";
 
-export function useGame() {
+export function useGame(): [
+  MutableRef<HTMLCanvasElement | null>,
+  string | undefined
+] {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const contextRef = useRef<CanvasRenderingContext2D>();
+  const { reason } = useGameStore();
 
   useEffect(() => {
     if (canvasRef.current) {
@@ -63,5 +67,5 @@ export function useGame() {
     };
   }, []);
 
-  return canvasRef;
+  return [canvasRef, reason];
 }

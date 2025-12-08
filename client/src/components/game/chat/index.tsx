@@ -8,7 +8,7 @@ export function Chat() {
     inputRef,
     onBlur,
     onFocus,
-    onScroll,
+    // onScroll,
     style,
   } = useChat();
 
@@ -17,7 +17,7 @@ export function Chat() {
       <div style={style} class={styles.chat}>
         <div
           class={styles.chatMessages}
-          onScroll={onScroll}
+          // onScroll={onScroll}
           ref={chatMessagesRef}
         >
           {messages.map((value, index) => (

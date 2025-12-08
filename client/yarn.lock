@@ -650,6 +650,11 @@
   resolved "https://registry.yarnpkg.com/@types/estree/-/estree-1.0.8.tgz#958b91c991b1867ced318bedea0e215ee050726e"
   integrity sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w==
 
+"@types/lz4js@^0.2.2":
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/@types/lz4js/-/lz4js-0.2.2.tgz#a4267ec03ea7297994278f27af1d09fe7f369876"
+  integrity sha512-pqXfoJ2AwllcLTf1Nia0+HT1KHj8z4wWo3bBP6vn7Aen5ySywBqrh/u1TyBwWxuKDS+mPzVHkPbHivqZEfk6pA==
+
 "@types/node@^24.10.1":
   version "24.10.1"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-24.10.1.tgz#91e92182c93db8bd6224fca031e2370cef9a8f01"
@@ -947,6 +952,16 @@ lwf@^2.6.0:
   resolved "https://registry.yarnpkg.com/lwf/-/lwf-2.6.0.tgz#ca13fe3a3d5d5120f2b2dd8ccf04e51110c255f5"
   integrity sha512-4xhauzqpPpjCz27d2tciPIahRAmxqLq4vpyKy+Kn3qLHTpyr3i4lOSO234R72E3UFyobkOg0++Q61jDXyyXcEQ==
 
+lz4-wasm@0.7.5:
+  version "0.7.5"
+  resolved "https://registry.yarnpkg.com/lz4-wasm/-/lz4-wasm-0.7.5.tgz#1f852bb82d193eb25428048077a5b68173f97018"
+  integrity sha512-OoZg/zRi5D/ccDAVrsvSmRrbRQeaDJLXJSAIGS90iCEFQJJpeQjXRj39pNDQHIxgqwT3StkthDdqlOKJxXGZZg==
+
+lz4js@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/lz4js/-/lz4js-0.2.0.tgz#09f1a397cb2158f675146c3351dde85058cb322f"
+  integrity sha512-gY2Ia9Lm7Ep8qMiuGRhvUq0Q7qUereeldZPP1PMEJxPtEWHJLqw9pgX68oHajBH0nzJK4MaZEA/YNV3jT8u8Bg==
+
 "magic-string@0.x >= 0.26.0", magic-string@^0.30.21:
   version "0.30.21"
   resolved "https://registry.yarnpkg.com/magic-string/-/magic-string-0.30.21.tgz#56763ec09a0fa8091df27879fd94d19078c00d91"
@@ -1126,6 +1141,11 @@ use-sync-external-store@^1.0.0:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/use-sync-external-store/-/use-sync-external-store-1.6.0.tgz#b174bfa65cb2b526732d9f2ac0a408027876f32d"
   integrity sha512-Pp6GSwGP/NrPIrxVFAIkOQeyw8lFenOHijQWkUTrDvrF4ALqylP2C/KCkeS9dpUM3KvYRQhna5vt7IL95+ZQ9w==
+
+vite-plugin-wasm@^3.5.0:
+  version "3.5.0"
+  resolved "https://registry.yarnpkg.com/vite-plugin-wasm/-/vite-plugin-wasm-3.5.0.tgz#c72af91b1e3687e12f1c339a12e25937b5813ae5"
+  integrity sha512-X5VWgCnqiQEGb+omhlBVsvTfxikKtoOgAzQ95+BZ8gQ+VfMHIjSHr0wyvXFQCa0eKQ0fKyaL0kWcEnYqBac4lQ==
 
 vite-prerender-plugin@^0.5.3:
   version "0.5.12"

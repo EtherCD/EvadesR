@@ -59,7 +59,7 @@ export default class AssetLoader {
     return outMassive;
   }
 
-  static updateTiles(delta: number, tiles: boolean) {
+  static updateTiles(_: number, tiles: boolean) {
     if (tiles) {
       const t = this.tiles;
       switch (Camera.s) {

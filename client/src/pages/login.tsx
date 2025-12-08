@@ -3,7 +3,6 @@ import { TextField } from "../components/basic/text";
 import { Button } from "../components/basic/button";
 import { useAuthStore } from "../stores/auth";
 import { Link, useLocation } from "wouter";
-import { Game } from "../components/game";
 
 export const Login = () => {
   const [username, setUsername] = useState("");
