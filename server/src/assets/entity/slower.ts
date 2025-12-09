@@ -41,7 +41,6 @@ export class SlowEffect extends PlayerEffect {
     this.aura = props.aura;
     this.originalSpeed = props.target.speed + 0;
     props.target.speed = this.originalSpeed * 0.7;
-    console.log("genrate");
   }
 
   update(update: Update): void {
@@ -58,7 +57,6 @@ export class SlowEffect extends PlayerEffect {
   }
 
   clear(): void {
-    console.log("Clear");
     this.target.speed = this.originalSpeed;
     this.target.removeEffect(1);
   }

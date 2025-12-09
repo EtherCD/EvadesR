@@ -2,16 +2,12 @@ import { EncodeIntoResult } from "util";
 import { Player } from "../../core/objects/player";
 import { Area } from "../../core/world/area";
 import { Entity } from "server/src/core/objects/entity";
-
-export enum UserRole {
-  Admin = 0,
-  Dev,
-  None,
-}
+import { AccountRole } from "shared/types";
 
 export interface PlayerProps {
   id: number;
   name: string;
+  role: AccountRole;
 }
 
 export interface EntityProps {

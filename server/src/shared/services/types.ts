@@ -1,4 +1,4 @@
-import { RawClient } from "@shared/types";
+import { RawClient } from "shared/types";
 
 export interface RawWorld {
   name: string;

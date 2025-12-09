@@ -13,12 +13,14 @@ export function useChat() {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [isScrolledToBottom, setScrolled] = useState<boolean>();
 
-  const onScroll = (event: Event) => {
-    const element = event.target as HTMLDivElement;
-    setScrolled(
-      element.scrollHeight - element.clientHeight <= element.scrollTop + 1
-    );
-    if (isScrolledToBottom) scrolledToBottom();
+  const onScroll = () => {
+    const element = chatMessagesRef.current!;
+    const atBottom =
+      element.scrollHeight - element.clientHeight <= element.scrollTop + 1;
+
+    setScrolled(atBottom);
+
+    if (atBottom) scrolledToBottom();
   };
 
   const onFocus = () => {
@@ -31,7 +33,8 @@ export function useChat() {
 
   const scrolledToBottom = () => {
     const chatMessages = chatMessagesRef.current;
-    if (chatMessages) chatMessages.scrollTop = chatMessages.scrollHeight;
+    if (chatMessages && isScrolledToBottom)
+      chatMessages.scrollTop = chatMessages.scrollHeight;
   };
 
   const onEnter = (isChatting: boolean) => {
@@ -52,6 +55,10 @@ export function useChat() {
       keyboardEvents.off("enter", onEnter);
     };
   }, []);
+
+  useEffect(() => {
+    scrolledToBottom();
+  }, [messages]);
 
   const style = {
     transform: `scale(${resize.scale})`,

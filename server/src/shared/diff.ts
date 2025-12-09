@@ -10,7 +10,6 @@ export function diff<T extends object>(a: T, b: T): [Partial<T>, boolean] {
       if (valA !== valB) {
         changes[k] = valB;
         containChanges = true;
-        console.log(valA, valB, k);
       }
       continue;
     }

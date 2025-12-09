@@ -1,4 +1,4 @@
-import { PackedAbility } from "@shared/types";
+import { PackedAbility } from "shared/types";
 import { Update, UpdatePlayer } from "../../shared/core/types";
 import { Player } from "./player";
 

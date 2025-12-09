@@ -22,8 +22,4 @@ export const gameConfig = {
   },
 
   worlds: ["Celestial Canyon", "Tempest Tumult"],
-
-  heroes: {
-    nomal: {},
-  },
 };

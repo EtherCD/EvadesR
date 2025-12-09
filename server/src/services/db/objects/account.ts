@@ -2,6 +2,7 @@ import knex from "knex";
 import { Account } from "server/src/shared/http/types";
 import { hashPassword, verifyPassword } from "../hash";
 import { DBProfile } from "./profile";
+import { AccountRole } from "shared/types";
 
 export class DBAccount extends DBProfile {
   id: number;
@@ -22,8 +23,9 @@ export class DBAccount extends DBProfile {
         username: this.username,
         password: await hashPassword(this.password),
         vp: this.vp,
-        highest: this.highest,
-        accessories: this.accessories,
+        highest: JSON.stringify(this.highest),
+        accessories: JSON.stringify(this.accessories),
+        role: this.role,
       })
       .returning("id");
     this.id = id.id;

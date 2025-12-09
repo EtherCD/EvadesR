@@ -1,6 +1,6 @@
-import { PackedEntity } from "@shared/types";
+import { PackedEntity } from "shared/types";
 import { tile } from "../../shared/config";
-import { PartialUpdate, Update } from "../../shared/core/types";
+import { EntityProps, PartialUpdate, Update } from "../../shared/core/types";
 import { diff } from "../../shared/diff";
 import { RawArea, RawEntity } from "../../shared/services/types";
 import { Entity } from "../objects/entity";
@@ -17,7 +17,7 @@ export class Area {
   w: number;
   h: number;
   players: number[] = [];
-  awardId: string;
+  awardId: string = "";
 
   id = 0;
   props: RawArea;
@@ -27,7 +27,7 @@ export class Area {
     this.h = props.h * tile;
     this.props = props;
     this.id = props.id;
-    this.awardId = randomBytes(10).join("");
+    if (this.props.vp) this.awardId = randomBytes(10).join("");
   }
 
   join(player: Player) {
@@ -49,6 +49,16 @@ export class Area {
     if (this.players.length === 0) {
       this.deInit();
     }
+  }
+
+  spawnEntity(val: EntityProps, additional: unknown) {
+    this.entities[this.nextId++] = SpawnFactory.entity({
+      ...val,
+      area: this,
+      typeId: 0,
+      name: "",
+      inverse: false,
+    });
   }
 
   init() {

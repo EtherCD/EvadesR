@@ -1,3 +1,5 @@
+import type { AccountRole } from "shared";
+
 export interface ApiResponse<T extends object> {
   successful: boolean;
   data: T;
@@ -30,6 +32,7 @@ export interface Profile {
   vp: number;
   username: string;
   highest: string;
+  role: AccountRole;
 }
 
 export type CheckResponse = ApiResponse<{

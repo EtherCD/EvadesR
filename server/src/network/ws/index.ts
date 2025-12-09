@@ -10,7 +10,7 @@ import { mouseEnable } from "./handlers/mouseenable";
 import { mousePos } from "./handlers/mousepos";
 import { ability } from "./handlers/ability";
 import { database } from "../../services/db";
-import { FormatEncoder } from "@shared/schema";
+import { FormatEncoder } from "shared/schema";
 import { Compress } from "server/src/services/compress";
 
 export interface Client {
@@ -73,6 +73,7 @@ export class WebSocketServer {
                 sendToCore.join({
                   name: auth!.username,
                   id: client.id,
+                  role: auth.role,
                 });
                 break;
               case "mousePos":

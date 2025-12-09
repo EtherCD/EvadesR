@@ -1,7 +1,7 @@
 {
   "name": "evades-reload-server",
   "version": "1.0.0",
-  "main": "dist/server/src/index.js",
+  "main": "dist/index.js",
   "author": "EtherCD",
   "license": "MIT",
   "dependencies": {
@@ -15,11 +15,12 @@
     "mitt": "^3.0.1",
     "pino": "^10.1.0",
     "sqlite3": "^5.1.7",
+    "tsup": "^8.5.1",
     "uWebSockets.js": "uNetworking/uWebSockets.js#v20.56.0"
   },
   "scripts": {
     "dev": "nodemon --inspect",
-    "build": "tsc",
+    "build": "tsup",
     "start": "node -r tsconfig-paths/register . | pino-pretty"
   },
   "devDependencies": {

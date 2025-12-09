@@ -4,7 +4,7 @@ import { Env } from "../env";
 import { DatabaseSync } from "node:sqlite";
 import { World } from "../../core/world";
 import { RawWorld } from "server/src/shared/services/types";
-import { ClientArea, ClientWorld } from "@shared/types";
+import { ClientArea, ClientWorld } from "shared/types";
 
 const pathToWorlds = path.join("./", Env.storagePath, Env.worldsPath);
 

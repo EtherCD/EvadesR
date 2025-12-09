@@ -5,7 +5,6 @@ import { mouseEvent } from "../stores/mouse";
 import { Render } from "../game/render";
 import { useGameStore } from "../stores/game";
 import { webSocketConnection } from "../game/connection";
-import { useAssetsStore } from "../stores/assets";
 
 export function useGame(): [
   MutableRef<HTMLCanvasElement | null>,

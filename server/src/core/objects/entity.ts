@@ -3,7 +3,7 @@ import { EntityProps, Update } from "../../shared/core/types";
 import { random } from "../../shared/random";
 import { Player } from "./player";
 import { Area } from "../world/area";
-import { PackedEntity } from "@shared/types";
+import { PackedEntity } from "shared/types";
 
 export abstract class Entity {
   type: number;

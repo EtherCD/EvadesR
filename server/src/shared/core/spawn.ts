@@ -13,6 +13,7 @@ import { Vortex } from "server/src/assets/entity/vortex";
 import { Slower } from "server/src/assets/entity/slower";
 import { Draining } from "server/src/assets/entity/draining";
 import { Disable } from "server/src/assets/entity/disable";
+import { Soul } from "server/src/assets/ability/magneticsoul";
 
 type EntityConstructor = new (props: EntityProps) => Entity;
 
@@ -33,13 +34,13 @@ const types: Record<string, EntityConstructor> = {
   disable: Disable,
 };
 
-const indexes = Object.keys(types);
+export const entityNames = Object.keys(types);
 
 export class SpawnFactory {
   static entity(props: EntityProps) {
     return new types[props.type ?? ""]({
       ...props,
-      typeId: indexes.indexOf(props.type ?? ""),
+      typeId: entityNames.indexOf(props.type ?? ""),
     });
   }
 }

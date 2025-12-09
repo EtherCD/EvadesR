@@ -11,6 +11,7 @@ import { DBAccount } from "./objects/account";
 import { DBSession } from "./objects/session";
 import { DBProfile } from "./objects/profile";
 import { databaseEvents } from "../events/db";
+import { AccountRole } from "shared/types";
 
 const pathToDB = path.join("./", Env.storagePath, Env.databaseFile);
 
@@ -30,8 +31,8 @@ export class SQLDatabase {
     databaseEvents.on("award", async ({ username, vp, accessory }) => {
       const account = await DBAccount.getByUsername(db, username);
       if (account) {
-        account.addVp(vp);
-        if (accessory) account.addAccessory(accessory);
+        await account.addVp(vp);
+        if (accessory) await account.addAccessory(accessory);
       }
     });
   }
@@ -45,6 +46,7 @@ export class SQLDatabase {
         table.integer("vp").defaultTo(0);
         table.json("accessories").defaultTo("[]");
         table.json("highest").defaultTo("{}");
+        table.integer("role").defaultTo(AccountRole.None);
       });
 
     if (!(await db.schema.hasTable("sessions")))
@@ -76,6 +78,7 @@ export class SQLDatabase {
       {
         username,
         password,
+        role: AccountRole.None,
       },
       db
     );

@@ -1,3 +1,5 @@
+import { AccountRole } from "shared/types";
+
 export interface AccountProps {
   username: string;
   password: string;
@@ -16,6 +18,7 @@ export interface Account {
   vp?: number;
   highest?: Record<string, number> | null;
   accessories?: string[];
+  role: AccountRole;
 }
 
 export interface Session {

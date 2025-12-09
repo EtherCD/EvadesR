@@ -35,6 +35,7 @@ export interface PackedPlayer {
   state: number;
   stateMeta: number;
   hero: number;
+  role: AccountRole;
 }
 
 export interface PackedAbility {
@@ -52,6 +53,12 @@ export interface ChatMessage {
   id?: number;
 }
 
+export enum AccountRole {
+  None = 0,
+  MapMaker,
+  Dev,
+}
+
 export interface AreaInit {
   world: string;
   area: number;
@@ -66,6 +73,15 @@ export interface RawClient {
   areaFill: string;
   areaAlpha?: number;
   backgrounds?: Array<[string, number]>;
+  effect: WorldEffect;
+}
+
+export enum WorldEffect {
+  Rain = 0,
+  RainStorm,
+  Snow,
+  SnowStorm,
+  Autumn,
 }
 
 export interface ClientWorld {

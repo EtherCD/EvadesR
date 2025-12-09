@@ -16,6 +16,19 @@ export class WorldsWarp {
   process(player: Player) {
     const area = this.worlds[player.world].areas[player.area];
 
+    if (player.pos[0] + player.radius > area.w + 8 * tile) {
+      const nextArea = this.nextArea(player.world, player.area);
+      if (nextArea !== undefined) {
+        player.pos[0] = -8 * tile + player.radius + 1;
+        this.warp(player, player.world, player.area + 1);
+      } else if (area.props.win) {
+        sendToNetwork.close(
+          player.id,
+          "You win! VP reached: " + (area.props.vp ?? 0)
+        );
+      }
+    }
+
     if (player.area === 0) {
       if (player.pos[0] - player.radius < 0) {
         if (player.pos[1] - player.radius < 2 * tile) {
@@ -33,20 +46,8 @@ export class WorldsWarp {
     } else if (player.pos[0] - player.radius < -8 * tile) {
       const prevArea = this.prevArea(player.world, player.area);
       if (prevArea === undefined) return;
+      player.pos[0] = prevArea.w + 8 * tile - player.radius;
       this.warp(player, player.world, player.area - 1);
-      player.pos[0] = prevArea.w;
-    }
-    if (player.pos[0] + player.radius > area.w + 8 * tile) {
-      const nextArea = this.nextArea(player.world, player.area);
-      if (nextArea !== undefined) {
-        player.pos[0] = -8 * tile + player.radius + 1;
-        this.warp(player, player.world, player.area + 1);
-      } else if (area.props.win) {
-        sendToNetwork.close(
-          player.id,
-          "You win! VP reached: " + (area.props.vp ?? 0)
-        );
-      }
     }
   }
 

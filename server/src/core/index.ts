@@ -8,7 +8,7 @@ import { sendToNetwork } from "./send";
 import { World } from "./world";
 import { Client } from "../network/ws";
 import { WorldsWarp } from "./world/warp";
-import { ChatMessage, PackedPlayer } from "@shared/types";
+import { ChatMessage, PackedPlayer } from "shared/types";
 
 export class Game {
   worlds: Record<string, World> = Loader.loadWorlds();
@@ -75,11 +75,6 @@ export class Game {
 
     this.createDiff();
 
-    for (const w in this.worlds) {
-      this.worlds[w].update(obj);
-      this.worlds[w].interact(this.players);
-    }
-
     for (const p in this.players) {
       const player = this.players[p];
 
@@ -91,13 +86,21 @@ export class Game {
       };
 
       if (this.isPlayerClose(player)) continue;
-      player.input(map.get(Number(p))!.getUserData().input);
       player.update(updatePlayer);
-      player.collide(this.worlds[player.world].areas[player.area]);
+      player.input(map.get(Number(p))!.getUserData().input);
       this.worldsWarp.process(player);
+
+      player.collide(this.worlds[player.world].areas[player.area]);
     }
     const dif = this.getDiff();
-    if (dif !== null) sendToNetwork.updatePlayers(dif);
+    if (dif !== null) {
+      sendToNetwork.updatePlayers(dif);
+    }
+
+    for (const w in this.worlds) {
+      this.worlds[w].update(obj);
+      this.worlds[w].interact(this.players);
+    }
   }
 
   createDiff() {

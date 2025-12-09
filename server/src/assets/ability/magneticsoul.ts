@@ -4,6 +4,7 @@ import { EntityProps, Update, UpdatePlayer } from "../../shared/core/types";
 import distance from "../../shared/distance";
 import { Entity } from "server/src/core/objects/entity";
 import { Player } from "server/src/core/objects/player";
+import { entityNames } from "server/src/shared/core/spawn";
 
 export class MagneticSoulAbility extends Ability {
   consumeEnergy: number = 30;
@@ -17,11 +18,13 @@ export class MagneticSoulAbility extends Ability {
           type: "",
           name: "",
           num: 1,
+          typeId: entityNames.indexOf("soul"),
           x: this.caster.pos[0],
           y: this.caster.pos[1],
           radius: this.caster.radius,
           area: update.area,
           speed: 0,
+          caster: this.caster,
         }),
         this.caster.world,
         this.caster.area
@@ -31,8 +34,8 @@ export class MagneticSoulAbility extends Ability {
   }
 
   activate(): void {
-    this.caster.state = 1;
-    if (this.caster.downed) this.active = true;
+    this.caster.state = 2;
+    if (this.caster.downed && !this.activate) this.active = true;
   }
   deactivate(): void {
     this.active = false;
@@ -43,61 +46,110 @@ export class MagneticSoulAbility extends Ability {
 }
 
 export class Soul extends Entity {
-  type = 5;
-
   casterPos: number[];
+  caster: Player;
+  maxDistance = 120;
 
+  speed = 5;
   timeout = 6000;
 
-  constructor(props: EntityProps) {
+  constructor(props: EntityProps & { caster: Player }) {
     super(props);
-    this.casterPos = [this.pos[0] + 0, this.pos[1] + 0];
+    this.caster = props.caster;
+
+    this.casterPos = [this.pos[0], this.pos[1]];
+
     this.harmless = true;
   }
 
   behavior(props: Update): void {
     this.timeout -= props.delta;
+    if (this.timeout <= 0) {
+      this.toRemove = true;
+      return;
+    }
+
+    let target: Player | null = null;
+    let bestDist = this.maxDistance;
 
     for (const i in props.players) {
-      const player = props.players[i];
+      const p = props.players[i];
 
-      if (
-        distance(
-          this.casterPos[0],
-          this.casterPos[1],
-          player.pos[0],
-          player.pos[1]
-        ) <= 120
-      ) {
-        const dist = distance(
-          this.casterPos[0],
-          this.casterPos[1],
-          player.pos[0],
-          player.pos[1]
-        );
-        let angl = Math.atan2(
-          player.pos[1] - this.casterPos[1],
-          player.pos[0] - this.casterPos[0]
-        );
+      const d = distance(this.pos[0], this.pos[1], p.pos[0], p.pos[1]);
 
-        this.vel[0] = Math.cos(angl) * (dist / 120);
-        this.vel[1] = Math.sin(angl) * (dist / 120);
-
-        break;
+      if (d < bestDist && p.id !== this.caster.id) {
+        bestDist = d;
+        target = p;
       }
     }
 
-    if (this.timeout < 0) this.toRemove = true;
+    if (!target) {
+      this.moveBackToOrigin();
+      return;
+    }
+
+    const ang = Math.atan2(
+      target.pos[1] - this.pos[1],
+      target.pos[0] - this.pos[0]
+    );
+
+    let vx = Math.cos(ang) * this.speed;
+    let vy = Math.sin(ang) * this.speed;
+
+    const nextX = this.pos[0] + vx;
+    const nextY = this.pos[1] + vy;
+
+    const distFromOrigin = distance(
+      this.casterPos[0],
+      this.casterPos[1],
+      nextX,
+      nextY
+    );
+
+    if (distFromOrigin > this.maxDistance) {
+      this.moveBackToOrigin();
+      return;
+    }
+
+    this.vel[0] = vx;
+    this.vel[1] = vy;
   }
+
+  moveBackToOrigin() {
+    const dist = distance(
+      this.pos[0],
+      this.pos[1],
+      this.casterPos[0],
+      this.casterPos[1]
+    );
+
+    if (dist < 1) {
+      this.vel[0] = 0;
+      this.vel[1] = 0;
+      return;
+    }
+
+    const ang = Math.atan2(
+      this.casterPos[1] - this.pos[1],
+      this.casterPos[0] - this.pos[0]
+    );
+
+    this.vel[0] = Math.cos(ang) * this.speed;
+    this.vel[1] = Math.sin(ang) * this.speed;
+  }
+
   auraEffect(player: Player): void {}
 
   interact(player: Player): void {
     if (!player.downed) {
-      if (
-        distance(player.pos[0], player.pos[1], this.pos[0], this.pos[1]) <=
-        this.radius + player.radius
-      ) {
-        player.knock();
+      const d = distance(
+        player.pos[0],
+        player.pos[1],
+        this.pos[0],
+        this.pos[1]
+      );
+      if (d <= this.radius + player.radius) {
+        this.caster.res();
         this.toRemove = true;
       }
     }

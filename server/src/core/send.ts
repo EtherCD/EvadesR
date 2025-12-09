@@ -3,7 +3,7 @@ import {
   PackedPlayer,
   AreaInit,
   PackedEntity,
-} from "@shared/types";
+} from "shared/types";
 import { networkEvents } from "../services/events/network";
 import { Entity } from "./objects/entity";
 import { coreEvents } from "../services/events/core";

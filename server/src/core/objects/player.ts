@@ -1,11 +1,10 @@
 import { random } from "../../shared/random";
 import { gameConfig, tile } from "../../shared/config";
-import { PlayerProps, UpdatePlayer, UserRole } from "../../shared/core/types";
+import { PlayerProps, UpdatePlayer } from "../../shared/core/types";
 import distance from "../../shared/distance";
 import { Input } from "../../shared/ws/types";
 import { Ability } from "./ability";
-import { Area } from "../world/area";
-import { PackedPlayer } from "@shared/types";
+import { AccountRole, PackedPlayer } from "shared/types";
 import { PlayerEffect } from "./effect";
 
 export abstract class Player {
@@ -30,7 +29,7 @@ export abstract class Player {
   immortal: boolean;
   aura: number;
   auraColor: string;
-  role: UserRole;
+  role: AccountRole;
 
   state = 0;
   stateMeta = 0;
@@ -68,7 +67,7 @@ export abstract class Player {
     this.immortal = false;
     this.aura = 0;
     this.auraColor = "";
-    this.role = UserRole.None;
+    this.role = props.role;
     this.downed = false;
   }
 
@@ -215,7 +214,10 @@ export abstract class Player {
   }
 
   addAward(awardId: string) {
-    if (!this.awards.includes(awardId)) this.awards.push(awardId);
+    if (!this.awards.includes(awardId)) {
+      this.awards.push(awardId);
+      return false;
+    }
     return true;
   }
 
@@ -259,6 +261,7 @@ export abstract class Player {
       state: this.state,
       stateMeta: this.stateMeta,
       hero: this.hero,
+      role: this.role,
     };
   }
 }
