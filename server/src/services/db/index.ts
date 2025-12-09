@@ -1,93 +1,95 @@
-import Database from "better-sqlite3";
 import path from "path";
 import { Env } from "../env";
 import {
-  Account,
   AccountProps,
   DatabaseResponse,
   ResponseMessage,
   Profile,
-  Session,
 } from "../../shared/http/types";
-import { hashPassword, verifyPassword } from "./hash";
-import { randomBytes } from "crypto";
+import knex from "knex";
+import { DBAccount } from "./objects/account";
+import { DBSession } from "./objects/session";
+import { DBProfile } from "./objects/profile";
+import { databaseEvents } from "../events/db";
 
 const pathToDB = path.join("./", Env.storagePath, Env.databaseFile);
 
-const db = new Database(pathToDB);
-
-db.exec(`
-    CREATE TABLE IF NOT EXISTS accounts (
-				id INTEGER PRIMARY KEY AUTOINCREMENT,
-				username TEXT UNIQUE NOT NULL,
-				password TEXT NOT NULL,
-				vp INTEGER DEFAULT 0,
-				highest TEXT
-		);
-
-		CREATE TABLE IF NOT EXISTS sessions (
-				id INTEGER PRIMARY KEY AUTOINCREMENT,
-				account_id INTEGER NOT NULL,
-				session_token TEXT UNIQUE NOT NULL,
-				expires_at INTEGER NOT NULL,
-				FOREIGN KEY(account_id) REFERENCES accounts(id)
-		);
-		`);
+const db = knex({
+  client: "sqlite3",
+  connection: {
+    filename: pathToDB,
+  },
+  useNullAsDefault: true,
+});
 
 export class SQLDatabase {
-  createAccountStmt = db.prepare<[string, string], unknown>(`
-		INSERT INTO accounts (username, password)
-    VALUES (?, ?)
-		`);
-  createSessionStmt = db.prepare<[number, string, number], unknown>(`
-			INSERT INTO sessions (account_id, session_token, expires_at)
-      VALUES (?, ?, ?)
-			`);
-  getAccountStmt = db.prepare<[string], Account>(`
-			SELECT * FROM accounts WHERE username = ?
-			`);
-  getAccountByIdStmt = db.prepare<[number], Account>(`
-			SELECT * FROM accounts WHERE id = ?
-			`);
-  getSessionStmt = db.prepare<[string, number], Session>(`
-		SELECT accounts.* 
-		FROM sessions 
-		JOIN accounts ON sessions.account_id = accounts.id
-		WHERE sessions.session_token = ? 
-    AND sessions.expires_at > ?`);
-  deleteSessionStmt = db.prepare<[string], unknown>(`
-    DELETE FROM sessions WHERE session_token = ?
-    `);
+  wasInit = false;
 
-  async register(
-    account: AccountProps
-  ): Promise<DatabaseResponse & { token?: string; profile?: Profile }> {
-    const exists = this.getAccountStmt.get(account.username);
+  constructor() {
+    this.init();
+    databaseEvents.on("award", async ({ username, vp, accessory }) => {
+      const account = await DBAccount.getByUsername(db, username);
+      if (account) {
+        account.addVp(vp);
+        if (accessory) account.addAccessory(accessory);
+      }
+    });
+  }
 
-    if (exists) return { message: ResponseMessage.AccountExists };
+  init = async () => {
+    if (!(await db.schema.hasTable("accounts")))
+      await db.schema.createTable("accounts", (table) => {
+        table.increments("id").primary();
+        table.string("username").unique().notNullable();
+        table.string("password").notNullable();
+        table.integer("vp").defaultTo(0);
+        table.json("accessories").defaultTo("[]");
+        table.json("highest").defaultTo("{}");
+      });
 
-    const hashedPassword = await hashPassword(account.password);
+    if (!(await db.schema.hasTable("sessions")))
+      await db.schema.createTable("sessions", (table) => {
+        table.increments("id").primary();
+        table
+          .integer("account_id")
+          .notNullable()
+          .references("id")
+          .inTable("accounts");
+        table.string("token").unique().notNullable();
+        table.integer("expires_at").notNullable();
+      });
 
-    this.createAccountStmt.run(account.username, hashedPassword);
+    this.wasInit = true;
+  };
 
-    const token = randomBytes(32).toString("hex");
+  async register({
+    username,
+    password,
+  }: AccountProps): Promise<
+    DatabaseResponse & { token?: string; profile?: DBProfile }
+  > {
+    const exists = await DBAccount.getByUsername(db, username);
 
-    const user = this.getAccountStmt.get(account.username)!;
+    if (exists !== null) return { message: ResponseMessage.AccountExists };
 
-    this.createSessionStmt.run(
-      user.id,
-      token,
-      Date.now() + 7 * 24 * 60 * 60 * 1000
+    const account = new DBAccount(
+      {
+        username,
+        password,
+      },
+      db
     );
+
+    await account.write();
+
+    const session = new DBSession({ account_id: account.id, id: 0 }, db);
+
+    await session.write();
 
     return {
       message: ResponseMessage.Ok,
-      token,
-      profile: {
-        username: user.username,
-        vp: user.vp,
-        highest: user.highest,
-      },
+      token: session.token,
+      profile: new DBProfile(account),
     };
   }
 
@@ -97,79 +99,43 @@ export class SQLDatabase {
   }: AccountProps): Promise<
     DatabaseResponse & { token?: string; profile?: Profile }
   > {
-    const account = this.getAccountStmt.get(username);
+    const account = await DBAccount.getByUsername(db, username);
 
     if (!account) return { message: ResponseMessage.AccountNotExists };
 
-    if (!(await verifyPassword(account.password, password)))
+    if (!account.verify(password))
       return { message: ResponseMessage.AccountNotExists };
 
-    const token = randomBytes(32).toString("hex");
+    const session = new DBSession({ account_id: account.id, id: 0 }, db);
 
-    this.createSessionStmt.run(
-      account.id,
-      token,
-      Date.now() + 7 * 24 * 60 * 60 * 1000
-    );
+    session.write();
 
     return {
       message: ResponseMessage.Ok,
-      token,
-      profile: {
-        username: account.username,
-        highest: account.highest,
-        vp: account.vp,
-      },
+      token: session.token,
+      profile: new DBProfile(account),
     };
   }
 
-  checkAuth(token: string): boolean {
-    const session = this.getSession(token);
+  async auth(token: string) {
+    const session = await DBSession.getSession(db, token);
 
-    return session !== null;
+    if (session === null) return null;
+
+    const account = await DBAccount.getById(db, session.account_id);
+
+    if (account) return new DBProfile(account);
+    return null;
   }
 
-  auth(token: string): Profile | undefined {
-    const account = this.getSession(token);
-
-    if (account === null) return undefined;
-
-    if (account)
-      return {
-        vp: account.vp,
-        highest: account.highest,
-        username: account.username,
-      };
-    return undefined;
+  async checkAuth(token: string) {
+    return (await DBSession.getSession(db, token)) !== null;
   }
 
-  logout(token: string) {
-    if (!this.checkAuth(token)) return;
+  async logout(token: string) {
+    if (!(await this.checkAuth(token))) return;
 
-    this.deleteSessionStmt.run(token);
-  }
-
-  getSession(token: string): Account | null {
-    const now = Date.now();
-
-    const session = db.transaction(() => {
-      db.prepare(
-        `DELETE FROM sessions WHERE session_token = ? AND expires_at <= ?`
-      ).run(token, now);
-
-      return db
-        .prepare<[string, number], Account>(
-          `
-            SELECT accounts.* 
-            FROM sessions 
-            JOIN accounts ON sessions.account_id = accounts.id
-            WHERE sessions.session_token = ? AND sessions.expires_at > ?
-        `
-        )
-        .get(token, now);
-    })();
-
-    return session || null;
+    DBSession.remove(db, token);
   }
 }
 

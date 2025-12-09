@@ -1,3 +1,4 @@
+import type { ClientWorld } from "shared";
 import { config } from "../config";
 import type {
   RegisterProps,
@@ -21,6 +22,10 @@ export class ApiRequests {
     return ApiRequests.post<CheckResponse>("/check", {
       token,
     });
+  }
+
+  public static worlds(): Promise<Record<string, ClientWorld>> {
+    return ApiRequests.get<Record<string, ClientWorld>>("/worlds");
   }
 
   private static post = <T extends ApiResponse<{}>>(
@@ -47,17 +52,17 @@ export class ApiRequests {
   //     body,
   //   });
 
-  // private static get = <T extends ApiResponse<{}>>(
-  //   url: string,
-  //   withCredentials: boolean = false
-  // ) =>
-  //   ApiRequests.fetch<T>({
-  //     url,
-  //     method: "GET",
-  //     withCredentials,
-  //   });
+  private static get = <T extends object>(
+    url: string,
+    withCredentials: boolean = false
+  ) =>
+    ApiRequests.fetch<T>({
+      url,
+      method: "GET",
+      withCredentials,
+    });
 
-  private static fetch<T extends ApiResponse<{}>>(options: {
+  private static fetch<T extends object>(options: {
     url: string;
     method: "POST" | "PUT" | "GET";
     withCredentials: boolean;
@@ -72,6 +77,8 @@ export class ApiRequests {
       headers: options.method === "GET" ? undefined : headers,
       body: options.body ? JSON.stringify(options.body) : undefined,
       credentials: options.withCredentials ? "include" : "omit",
-    }).then((res) => res.json() as Promise<T>);
+    }).then((res) => {
+      return res.json() as Promise<T>;
+    });
   }
 }

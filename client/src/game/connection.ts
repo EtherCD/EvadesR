@@ -53,8 +53,7 @@ export class WebSocketConnection {
         useGameStore.setState({ reason: "Server disconnected you" });
         return;
       }
-      let reason = JSON.parse(event.reason);
-      useGameStore.setState({ reason });
+      useGameStore.setState({ reason: event.reason });
     };
     this.ws.onerror = () => {
       this.open = false;
@@ -115,10 +114,10 @@ export class WebSocketConnection {
     });
   }
 
-  private onMessage = (event: MessageEvent) => {
+  private onMessage = async (event: MessageEvent) => {
     const uint8 = new Uint8Array(event.data);
     this.kBPerPackage += uint8.byteLength;
-    const gData = FormatEncoder.decode(Compress.decode(uint8)) as Array<
+    const gData = FormatEncoder.decode(await Compress.decode(uint8)) as Array<
       Record<string, any>
     >;
     const gameService = useGameStore.getState();
@@ -152,7 +151,6 @@ export class WebSocketConnection {
           gameService.newEntities(data.newEntities);
           break;
         case "updateEntities":
-          console.log(data.updateEntities);
           gameService.updateEntities(data.updateEntities);
           break;
         case "closeEntities":

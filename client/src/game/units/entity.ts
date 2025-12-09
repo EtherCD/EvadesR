@@ -9,6 +9,9 @@ export default class Entity {
   type: number;
   x: number;
   y: number;
+  alpha: number;
+  state: number;
+  stateMetadata: number;
 
   constructor(props: PackedEntity) {
     this.x = props.x;
@@ -17,30 +20,36 @@ export default class Entity {
     this.type = props.type;
     this.radius = props.radius;
     this.harmless = props.harmless ?? false;
+    this.alpha = props.alpha;
+    this.state = props.state;
+    this.stateMetadata = props.stateMetadata;
   }
 
   draw(ctx: CanvasRenderingContext2D, _: number) {
     ctx.beginPath();
     ctx.lineWidth = 2 * Camera.s;
-    ctx.fillStyle = GlobalAssets.entities[this.type][0];
+    const ent = GlobalAssets.entities[this.type];
+    ctx.fillStyle = (ent ?? ["#fff"])[0];
     ctx.strokeStyle = "#000000";
-    ctx.globalAlpha = this.harmless ? 0.4 : 1;
+    ctx.globalAlpha = this.alpha !== 1 ? this.alpha : this.harmless ? 0.4 : 1;
     const pos = Camera.transform(this);
     ctx.arc(pos.x, pos.y, this.radius * Camera.s, 0, Math.PI * 2);
     ctx.fill();
     ctx.stroke();
     ctx.closePath();
+    ctx.globalAlpha = 1;
   }
 
   drawaura(ctx: CanvasRenderingContext2D) {
     ctx.beginPath();
-    ctx.fillStyle = GlobalAssets.entities[this.type][0];
+    const ent = GlobalAssets.entities[this.type];
+    ctx.fillStyle = (ent ?? ["#fff"])[0];
     ctx.globalAlpha = 0.15;
-    if (this.aura > 0)
+    if (this.state === 1)
       ctx.arc(
         Camera.w / 2 + (this.x - Camera.x) * Camera.s,
         Camera.h / 2 + (this.y - Camera.y) * Camera.s,
-        this.aura * Camera.s,
+        this.stateMetadata * Camera.s,
         0,
         Math.PI * 2
       );
@@ -55,5 +64,6 @@ export default class Entity {
     this.type = props.type ?? this.type;
     this.radius = props.radius ?? this.radius;
     this.harmless = props.harmless ?? this.harmless;
+    this.alpha = props.alpha ?? this.alpha;
   }
 }

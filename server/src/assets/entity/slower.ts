@@ -1,14 +1,65 @@
+import { PlayerEffect } from "server/src/core/objects/effect";
 import { Entity } from "../../core/objects/entity";
 import { Player } from "../../core/objects/player";
-import { EntityProps, Update } from "../../shared/core/types";
+import {
+  EntityProps,
+  PlayerEffectProps,
+  Update,
+} from "../../shared/core/types";
+import distance from "server/src/shared/distance";
 
-export class Pull extends Entity {
-  type = 4;
+export class Slower extends Entity {
+  aura = 0;
 
   constructor(props: EntityProps) {
     super(props);
+    this.aura = props.aura ?? 150;
+    this.state = 1;
+    this.stateMetadata = this.aura;
   }
 
   behavior(props: Update): void {}
-  auraEffect(player: Player): void {}
+  auraEffect(player: Player): void {
+    if (!player.hasEffect(1))
+      player.addEffect(
+        1,
+        new SlowEffect({
+          target: player,
+          caster: this,
+          aura: this.aura!,
+        })
+      );
+  }
+}
+
+export class SlowEffect extends PlayerEffect {
+  aura: number;
+  originalSpeed: number;
+
+  constructor(props: PlayerEffectProps & { aura: number }) {
+    super(props);
+    this.aura = props.aura;
+    this.originalSpeed = props.target.speed + 0;
+    props.target.speed = this.originalSpeed * 0.7;
+    console.log("genrate");
+  }
+
+  update(update: Update): void {
+    if (
+      distance(
+        this.caster.pos[0],
+        this.caster.pos[1],
+        this.target.pos[0],
+        this.target.pos[1]
+      ) > this.aura
+    ) {
+      this.clear();
+    }
+  }
+
+  clear(): void {
+    console.log("Clear");
+    this.target.speed = this.originalSpeed;
+    this.target.removeEffect(1);
+  }
 }

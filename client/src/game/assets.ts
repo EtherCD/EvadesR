@@ -1,4 +1,4 @@
-import { WorldEffect, type Assets } from "./types";
+import { type Assets } from "./types";
 
 export const GlobalAssets: Assets = {
   textures: {
@@ -7,14 +7,6 @@ export const GlobalAssets: Assets = {
     road: "worlds/road.png",
     leaf: "entity/leaf.png",
     leaf2: "entity/leaf2.png",
-  },
-  worlds: {
-    /* world name - properties */
-    "Celestial Canyon": {
-      fillColor: "#49a8d7ff",
-      fillAlpha: 0.2,
-      effect: WorldEffect.Rain,
-    },
   },
   zones: {
     teleport_world: {
@@ -39,5 +31,20 @@ export const GlobalAssets: Assets = {
       fillColor: "#FFFABA",
     },
   },
-  entities: [["#ccc"], ["#000"], ["#000"], ["#A05353"], ["#A05353"]],
+  entities: [
+    ["#787878"],
+    ["#000"],
+    ["#000"],
+    ["#A05353"],
+    ["#A05353"],
+    ["#565656"],
+    ["#00EB00"],
+    ["#679fff"], // drop
+    ["#fff"],
+    ["#A0780A"],
+    ["#aaa"],
+    ["#f00"],
+    ["#00f"],
+    ["#ffbfce"],
+  ],
 };

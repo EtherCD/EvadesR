@@ -6,6 +6,7 @@ import { Input } from "../../shared/ws/types";
 import { Ability } from "./ability";
 import { Area } from "../world/area";
 import { PackedPlayer } from "@shared/types";
+import { PlayerEffect } from "./effect";
 
 export abstract class Player {
   name: string;
@@ -18,7 +19,7 @@ export abstract class Player {
   speed: number;
   energy: number;
   maxEnergy: number;
-  downed: number = 0;
+  downed: boolean;
   regeneration: number;
   area: number;
   world: string;
@@ -35,8 +36,12 @@ export abstract class Player {
   stateMeta = 0;
   hero = 0;
 
+  awards: string[] = [];
+
   abstract firstAbility: Ability;
   abstract secondAbility: Ability;
+
+  effects: Record<string, PlayerEffect> = {};
 
   constructor(props: PlayerProps) {
     this.name = props.name;
@@ -64,11 +69,13 @@ export abstract class Player {
     this.aura = 0;
     this.auraColor = "";
     this.role = UserRole.None;
+    this.downed = false;
   }
 
   update(update: UpdatePlayer) {
     const { delta, timeFix } = update;
     this.regenerateEnergy(delta);
+    for (const i in this.effects) this.effects[i].update(update);
 
     let slide = [this.slide[0], this.slide[1]];
 
@@ -155,7 +162,7 @@ export abstract class Player {
     }
 
     if (input.first) {
-      this.secondAbility.activate();
+      this.firstAbility.activate();
       input.first = false;
     }
 
@@ -173,15 +180,15 @@ export abstract class Player {
   }
 
   knock() {
-    this.downed = 1;
+    this.downed = true;
     this.dTimer = gameConfig.spawn.downedTimer;
     this.firstAbility.deactivate();
-    this.firstAbility.deactivate();
+    this.secondAbility.deactivate();
   }
 
   res() {
-    this.downed = 0;
-    this.dTimer = gameConfig.spawn.downedTimer;
+    this.downed = false;
+    this.dTimer = gameConfig.spawn.downedTimer + 1;
   }
 
   collide(area: { w: number; h: number }) {
@@ -199,12 +206,29 @@ export abstract class Player {
     }
   }
 
-  consumeEnergy(count: number) {
+  consumeEnergy(count: number, delta: number) {
     if (this.energy >= count) {
-      this.energy -= count;
+      this.energy -= count * (delta / 1000);
       return true;
     }
     return false;
+  }
+
+  addAward(awardId: string) {
+    if (!this.awards.includes(awardId)) this.awards.push(awardId);
+    return true;
+  }
+
+  addEffect(id: number, effect: PlayerEffect) {
+    if (!Object.keys(this.effects).includes(id + "")) this.effects[id] = effect;
+  }
+
+  hasEffect(id: number) {
+    return this.effects[id] !== undefined;
+  }
+
+  removeEffect(id: number) {
+    delete this.effects[id];
   }
 
   pack(): PackedPlayer {
@@ -218,11 +242,11 @@ export abstract class Player {
       radius: this.radius,
       speed: this.speed,
       energy: Math.round(this.energy),
-      died: this.downed,
+      died: this.downed ?? true,
       regeneration: this.regeneration,
       area: this.area,
       world: this.world,
-      dTimer: Math.round(this.dTimer),
+      dTimer: Math.floor(this.dTimer),
       aura: this.aura,
       auraColor: this.auraColor,
       firstAbilityActive: first.active,

@@ -1,13 +1,9 @@
+import { RawClient } from "@shared/types";
+
 export interface RawWorld {
-  client: RawWorldClient;
   name: string;
   areas: RawArea[];
-}
-
-export interface RawWorldClient {
-  fill: string;
-  stroke: string;
-  areaFill: string;
+  client: RawClient;
 }
 
 export interface RawArea {
@@ -16,6 +12,9 @@ export interface RawArea {
   h: number;
   id: number;
   world: string;
+  win?: boolean;
+  vp?: number;
+  text?: string;
 }
 
 export interface RawEntity {

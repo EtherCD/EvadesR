@@ -952,10 +952,10 @@ lwf@^2.6.0:
   resolved "https://registry.yarnpkg.com/lwf/-/lwf-2.6.0.tgz#ca13fe3a3d5d5120f2b2dd8ccf04e51110c255f5"
   integrity sha512-4xhauzqpPpjCz27d2tciPIahRAmxqLq4vpyKy+Kn3qLHTpyr3i4lOSO234R72E3UFyobkOg0++Q61jDXyyXcEQ==
 
-lz4-wasm@0.7.5:
-  version "0.7.5"
-  resolved "https://registry.yarnpkg.com/lz4-wasm/-/lz4-wasm-0.7.5.tgz#1f852bb82d193eb25428048077a5b68173f97018"
-  integrity sha512-OoZg/zRi5D/ccDAVrsvSmRrbRQeaDJLXJSAIGS90iCEFQJJpeQjXRj39pNDQHIxgqwT3StkthDdqlOKJxXGZZg==
+lz4-wasm@^0.9.2:
+  version "0.9.2"
+  resolved "https://registry.yarnpkg.com/lz4-wasm/-/lz4-wasm-0.9.2.tgz#2047b8a9771ad33b1699c350cda3e86249fbbb46"
+  integrity sha512-8Y/OvG/nTQNWR242NhLmjI7VzLMRKFaxg/+Pxi/vkczgFdrS4qiJ8l6n30XyNJyc0TB5C66Ncdjq345Kx5XsvQ==
 
 lz4js@^0.2.0:
   version "0.2.0"

@@ -5,7 +5,7 @@ export const makeResponse = (
   res: HttpResponse,
   successful: boolean,
   status: number,
-  data: DatabaseResponse & object
+  data?: DatabaseResponse & object
 ) => {
   res.writeHeader("Content-Type", "application/json");
   res.writeStatus(status + "");

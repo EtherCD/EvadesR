@@ -13,7 +13,7 @@ export function useChat() {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [isScrolledToBottom, setScrolled] = useState<boolean>();
 
-  const onScroll = (event: UIEvent) => {
+  const onScroll = (event: Event) => {
     const element = event.target as HTMLDivElement;
     setScrolled(
       element.scrollHeight - element.clientHeight <= element.scrollTop + 1

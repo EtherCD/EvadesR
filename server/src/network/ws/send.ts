@@ -5,8 +5,8 @@ export const sendToCore = {
   join(props: PlayerProps) {
     coreEvents.emit("join", props);
   },
-  leave(id: number) {
-    coreEvents.emit("leave", id);
+  leave(id: number, reason?: string) {
+    coreEvents.emit("leave", { id, reason });
   },
   message(id: number, msg: string) {
     coreEvents.emit("message", { id, msg });

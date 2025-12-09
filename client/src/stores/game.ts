@@ -2,15 +2,17 @@ import { create } from "zustand";
 import Entity from "../game/units/entity";
 import { Player } from "../game/units/player";
 import Zone from "../game/units/zone";
-import type {
-  AreaInit,
-  ChatMessage,
-  PackedEntity,
-  PackedPlayer,
-} from "../game/types";
 import { Spawn } from "../game/spawner";
 import { useKeyboard } from "./keyboard";
 import { useMouseStore } from "./mouse";
+import type {
+  ChatMessage,
+  PackedPlayer,
+  AreaInit,
+  PackedEntity,
+  ClientArea,
+} from "shared";
+import { useAssetsStore } from "./assets";
 
 export interface GameState {
   areaBoundary: { w: number; h: number };
@@ -96,72 +98,101 @@ export const useGameStore = create<State>((set, get) => ({
   areaInit(data) {
     gameState.entities = {};
     for (const e in data.entities) {
-      gameState.entities[e] = new Entity(data.entities[e]);
+      gameState.entities[e] = Spawn.entity(data.entities[e]);
     }
+    let clientData: ClientArea | undefined;
+    const areas = useAssetsStore.getState().worlds[data.world].areas;
+    if (Object.keys(areas).includes(data.area + ""))
+      clientData = areas[data.area];
 
-    gameState.zones = [
-      ...(data.area === 0
-        ? [
-            new Zone({
-              x: -10 * 32,
-              y: 0,
-              w: 10 * 32,
-              h: 2 * 32,
-              type: "teleport_world",
-            }),
-            new Zone({
-              x: -10 * 32,
-              y: 2 * 32,
-              w: 10 * 32,
-              h: data.h - 2 * 32,
-              type: "safe",
-            }),
-            new Zone({
-              x: -10 * 32,
-              y: data.h - 2 * 32,
-              w: 10 * 32,
-              h: 2 * 32,
-              type: "teleport_world",
-            }),
-          ]
-        : [
-            new Zone({
-              x: -10 * 32,
-              y: 0,
-              w: 2 * 32,
-              h: data.h,
-              type: "teleport",
-            }),
-            new Zone({
-              x: -8 * 32,
-              y: 0,
-              w: 8 * 32,
-              h: data.h,
-              type: "safe",
-            }),
-          ]),
-      new Zone({
-        x: 0,
-        y: 0,
-        w: data.w,
-        h: data.h,
-        type: "active",
-      }),
-      new Zone({
-        x: data.w,
-        y: 0,
-        w: 8 * 32,
-        h: data.h,
-        type: "safe",
-      }),
-      new Zone({
-        x: data.w + 8 * 32,
-        y: 0,
-        w: 2 * 32,
-        h: data.h,
-        type: "teleport",
-      }),
-    ];
+    if (clientData && clientData.win)
+      gameState.zones = [
+        new Zone({
+          x: -10 * 32,
+          y: 0,
+          w: 2 * 32,
+          h: data.h,
+          type: "teleport",
+        }),
+        new Zone({
+          x: -8 * 32,
+          y: 0,
+          w: data.w + 16 * 32,
+          h: data.h,
+          type: "victory",
+        }),
+        new Zone({
+          x: data.w + 8 * 32,
+          y: 0,
+          w: 2 * 32,
+          h: data.h,
+          type: "exit",
+        }),
+      ];
+    else
+      gameState.zones = [
+        ...(data.area === 0
+          ? [
+              new Zone({
+                x: -10 * 32,
+                y: 0,
+                w: 10 * 32,
+                h: 2 * 32,
+                type: "teleport_world",
+              }),
+              new Zone({
+                x: -10 * 32,
+                y: 2 * 32,
+                w: 10 * 32,
+                h: data.h - 2 * 32,
+                type: "safe",
+              }),
+              new Zone({
+                x: -10 * 32,
+                y: data.h - 2 * 32,
+                w: 10 * 32,
+                h: 2 * 32,
+                type: "teleport_world",
+              }),
+            ]
+          : [
+              new Zone({
+                x: -10 * 32,
+                y: 0,
+                w: 2 * 32,
+                h: data.h,
+                type: "teleport",
+              }),
+              new Zone({
+                x: -8 * 32,
+                y: 0,
+                w: 8 * 32,
+                h: data.h,
+                type: "safe",
+              }),
+            ]),
+        new Zone({
+          x: 0,
+          y: 0,
+          w: data.w,
+          h: data.h,
+          type: "active",
+        }),
+        new Zone({
+          x: data.w,
+          y: 0,
+          w: 8 * 32,
+          h: data.h,
+          type: "safe",
+        }),
+        new Zone({
+          x: data.w + 8 * 32,
+          y: 0,
+          w: 2 * 32,
+          h: data.h,
+          type: "teleport",
+        }),
+      ];
 
     gameState.world = data.world;
     gameState.area = data.area;

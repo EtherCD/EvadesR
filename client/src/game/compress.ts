@@ -1,7 +1,7 @@
-import lz4 from "lz4js";
+import { decompress } from "lz4-wasm";
 
 export class Compress {
-  static decode(uint8: Uint8Array) {
-    return lz4.decompress(uint8);
+  static async decode(uint8: Uint8Array) {
+    return decompress(uint8);
   }
 }

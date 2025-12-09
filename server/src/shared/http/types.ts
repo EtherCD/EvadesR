@@ -10,18 +10,19 @@ export interface RegisterProps {
 }
 
 export interface Account {
-  id: number;
+  id?: number;
   username: string;
   password: string;
-  vp: number;
-  highest: Record<string, number> | null;
+  vp?: number;
+  highest?: Record<string, number> | null;
+  accessories?: string[];
 }
 
 export interface Session {
   id: number;
   account_id: number;
-  session_token: string;
-  expires_at: number;
+  token?: string;
+  expires_at?: number;
 }
 
 export interface Profile {

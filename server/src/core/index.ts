@@ -35,12 +35,13 @@ export class Game {
         this.worlds[player.world].packArea(player.area)
       );
     });
-    coreEvents.on("leave", (id) => {
+    coreEvents.on("leave", ({ id, reason }) => {
       try {
         const player = this.players[id];
         sendToNetwork.closePlayer(id);
         this.worlds[player.world].leave(player);
         delete this.players[id];
+        sendToNetwork.close(id, reason ?? "");
       } catch {}
     });
     coreEvents.on("message", ({ msg, id }) => {
@@ -52,6 +53,9 @@ export class Game {
         world: player.world,
       };
       sendToNetwork.message(out);
+    });
+    coreEvents.on("newEntity", ({ world, area, ent }) => {
+      this.worlds[world].areas[area].addEntity(ent);
     });
   }
 
@@ -66,9 +70,15 @@ export class Game {
     const obj = {
       delta,
       timeFix,
+      players: this.players,
     };
 
     this.createDiff();
+
+    for (const w in this.worlds) {
+      this.worlds[w].update(obj);
+      this.worlds[w].interact(this.players);
+    }
 
     for (const p in this.players) {
       const player = this.players[p];
@@ -81,24 +91,19 @@ export class Game {
       };
 
       if (this.isPlayerClose(player)) continue;
-      player.update(updatePlayer);
       player.input(map.get(Number(p))!.getUserData().input);
-      this.worldsWarp.process(player);
+      player.update(updatePlayer);
       player.collide(this.worlds[player.world].areas[player.area]);
+      this.worldsWarp.process(player);
     }
     const dif = this.getDiff();
     if (dif !== null) sendToNetwork.updatePlayers(dif);
-
-    for (const w in this.worlds) {
-      this.worlds[w].update(obj);
-      this.worlds[w].interact(this.players);
-    }
   }
 
   createDiff() {
     this.oldPlayersPack = {};
     for (const i in this.players) {
-      this.oldPlayersPack[i] = this.players[i].pack();
+      this.oldPlayersPack[i] = Object.assign({}, this.players[i].pack());
     }
   }
 
@@ -121,7 +126,6 @@ export class Game {
       const i = v as any as number;
       const dif = diff(this.oldPlayersPack[i], this.players[i].pack());
       if (dif[1]) {
-        console.log(dif);
         if (updatedPlayers === null) updatedPlayers = {};
         updatedPlayers[i] = dif[0];
       }

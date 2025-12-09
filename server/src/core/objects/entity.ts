@@ -22,9 +22,10 @@ export abstract class Entity {
 
   state = 0;
   stateMetadata = 0;
+  alpha = 1;
 
   constructor(data: EntityProps) {
-    this.type = 0;
+    this.type = data.typeId;
     this.name = "normal";
     this.radius = data.radius;
     this.speed = data.speed;
@@ -35,6 +36,11 @@ export abstract class Entity {
       random(this.radius, this.area.w - this.radius),
       random(this.radius, this.area.h - this.radius),
     ];
+    this.aura = data.aura;
+    if (this.aura) {
+      this.state = 1;
+      this.stateMetadata = this.aura;
+    }
     this.angle = Math.random();
     this.vel = [
       Math.cos(this.angle * Math.PI * 2) * data.speed,
@@ -81,7 +87,6 @@ export abstract class Entity {
 
   update(props: Update) {
     const { timeFix, delta } = props;
-    this.harmless = false;
     this.behavior(props);
     this.move(timeFix);
     this.collide(this.area);
@@ -161,6 +166,7 @@ export abstract class Entity {
       harmless: this.harmless,
       state: this.state,
       stateMetadata: this.stateMetadata,
+      alpha: Math.round(this.alpha * 10) / 10,
     };
   }
 }

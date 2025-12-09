@@ -1,9 +1,8 @@
-import lz4 from "lz4";
+import lz4 from "lz4-napi";
 
 export class Compress {
-  static encode(buffer: Uint8Array) {
-    let input = Buffer.from(buffer);
-    return lz4.encode(input);
+  static async encode(buffer: Uint8Array) {
+    return await lz4.compress(Buffer.from(buffer));
   }
 
   // static decode(buffer: Uint8Array): Buffer {

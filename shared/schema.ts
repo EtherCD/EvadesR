@@ -19,7 +19,16 @@ const packedPlayer = [
   "hero",
 ];
 
-const packedEntity = ["type", "x", "y", "radius", "harmless"];
+const packedEntity = [
+  "type",
+  "x",
+  "y",
+  "radius",
+  "harmless",
+  "state",
+  "stateMetadata",
+  "alpha",
+];
 
 export const sendSchema = new lwf.Schema({
   root: {

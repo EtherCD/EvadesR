@@ -5,6 +5,10 @@ import {
   PackedEntity,
 } from "@shared/types";
 import { networkEvents } from "../services/events/network";
+import { Entity } from "./objects/entity";
+import { coreEvents } from "../services/events/core";
+import { databaseEvents } from "../services/events/db";
+import { DBAccount } from "../services/db/objects/account";
 
 export const sendToNetwork = {
   message: (message: ChatMessage) => {
@@ -37,6 +41,12 @@ export const sendToNetwork = {
       reason,
     });
   },
+  win: async (id: number, vp: number) => {
+    networkEvents.emit("win", {
+      id,
+      vp,
+    });
+  },
   newEntities: (ids: number[], eId: number, entity: PackedEntity) => {
     for (const id of ids)
       networkEvents.emit("direct", {
@@ -54,5 +64,21 @@ export const sendToNetwork = {
           closeEntities: [eId],
         },
       });
+  },
+};
+
+export const sendToCore = {
+  addEntity(ent: Entity, world: string, area: number) {
+    coreEvents.emit("newEntity", {
+      ent,
+      world,
+      area,
+    });
+  },
+};
+
+export const sendToDB = {
+  award(props: { username: string; vp: number; accessory?: string }) {
+    databaseEvents.emit("award", props);
   },
 };

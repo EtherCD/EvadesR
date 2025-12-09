@@ -3,16 +3,20 @@ import { Button } from "../components/basic/button";
 import { useAuthStore } from "../stores/auth";
 import { Game } from "../components/game";
 import { useGameStore } from "../stores/game";
+import { navigate } from "wouter/use-hash-location";
+import { useAssetsStore } from "../stores/assets";
 
 export const Home = () => {
   const auth = useAuthStore();
 
   const [inGame, setInGame] = useState(false);
   const game = useGameStore();
+  const assets = useAssetsStore();
 
   useEffect(() => {
-    setInGame(game.isGameInit);
-  }, [game.isGameInit]);
+    useAssetsStore.getState().fetch();
+    if (inGame == false) setInGame(game.isGameInit && assets.loaded);
+  }, [game.isGameInit, assets.loaded]);
 
   if (inGame) {
     return <Game />;
@@ -35,7 +39,9 @@ export const Home = () => {
           >
             Play
           </Button>
-          <Button onClick={auth.logout}>Profile</Button>
+          <Button onClick={() => navigate("profile", { replace: true })}>
+            Profile
+          </Button>
         </div>
         <div className={"flex gap-0.5"}>
           <Button onClick={() => {}}>Accessories</Button>

@@ -124,9 +124,9 @@ export abstract class Player {
     this.speed.accept(props.speed);
     this.energy.accept(props.energy, props.maxEnergy);
     this.regen.accept(props.regeneration);
+    this.dt = props.dTimer ?? this.dt;
     this.died =
       props.died !== undefined ? (props.died ? true : false) : this.died;
-    this.dt = props.dTimer ?? this.dt;
     this.state = props.state ?? this.state;
     this.stateMeta = props.stateMeta ?? this.stateMeta;
   }

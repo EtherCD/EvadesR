@@ -7,6 +7,7 @@ export interface PackedEntity {
   harmless: boolean;
   state: number;
   stateMetadata: number;
+  alpha: number;
 }
 
 export interface PackedPlayer {
@@ -18,7 +19,7 @@ export interface PackedPlayer {
   speed: number;
   energy: number;
   maxEnergy: number;
-  died: number;
+  died: boolean;
   regeneration: number;
   area: number;
   world: string;
@@ -57,4 +58,23 @@ export interface AreaInit {
   w: number;
   h: number;
   entities: Record<number, PackedEntity>;
+}
+
+export interface RawClient {
+  fillStyle: string;
+  strokeStyle: string;
+  areaFill: string;
+  areaAlpha?: number;
+  backgrounds?: Array<[string, number]>;
+}
+
+export interface ClientWorld {
+  client: RawClient;
+  areas: Record<number, ClientArea>;
+}
+
+export interface ClientArea {
+  win?: boolean;
+  vp?: number;
+  text?: string;
 }

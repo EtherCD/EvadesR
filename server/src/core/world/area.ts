@@ -1,56 +1,71 @@
 import { PackedEntity } from "@shared/types";
 import { tile } from "../../shared/config";
-import { Update } from "../../shared/core/types";
+import { PartialUpdate, Update } from "../../shared/core/types";
 import { diff } from "../../shared/diff";
 import { RawArea, RawEntity } from "../../shared/services/types";
 import { Entity } from "../objects/entity";
 import { Player } from "../objects/player";
-import { sendToNetwork } from "../send";
-import { SpawnFactory } from "./spawn";
+import { sendToDB, sendToNetwork } from "../send";
+import { SpawnFactory } from "../../shared/core/spawn";
+import { randomBytes } from "crypto";
+import { DBAccount } from "server/src/services/db/objects/account";
 
 export class Area {
   entities: Record<number, Entity> = {};
   oldEntitiesPacks: Record<number, PackedEntity> = {};
-  rawEntities: RawEntity[] = [];
   nextId = 0;
   w: number;
   h: number;
   players: number[] = [];
+  awardId: string;
+
   id = 0;
+  props: RawArea;
 
   constructor(props: RawArea) {
     this.w = props.w * tile;
     this.h = props.h * tile;
-    this.rawEntities = props.enemies;
+    this.props = props;
     this.id = props.id;
+    this.awardId = randomBytes(10).join("");
   }
 
   join(player: Player) {
     if (this.players.length === 0) {
       this.init();
     }
+    if (this.props.win)
+      if (!player.addAward(this.awardId)) {
+        sendToDB.award({
+          username: player.name,
+          vp: this.props.vp ?? 0,
+        });
+      }
     this.players.push(player.id);
   }
 
   leave(player: Player) {
     this.players = this.players.filter((v) => v !== player.id);
-    if (this.players.length === 0) this.deInit();
+    if (this.players.length === 0) {
+      this.deInit();
+    }
   }
 
   init() {
-    if (!this.rawEntities) return;
+    if (!this.props.enemies) return;
     this.nextId = 0;
-    for (let i = 0; i < this.rawEntities.length; i++) {
-      for (let l = 0; l < this.rawEntities[i].count; l++) {
-        const val = this.rawEntities[i];
+    for (let i = 0; i < this.props.enemies.length; i++) {
+      for (let l = 0; l < this.props.enemies[i].count; l++) {
+        const val = this.props.enemies[i];
         const type = val.types[Math.floor(Math.random() * val.types.length)];
         this.entities[this.nextId++] = SpawnFactory.entity({
           ...val,
           area: this,
+          typeId: 0,
           name: "",
           type: type,
           num: l,
-          count: this.rawEntities[i].count,
+          count: this.props.enemies[i].count,
           inverse: false,
         });
       }
@@ -63,11 +78,17 @@ export class Area {
     this.entities = [];
   }
 
-  update(update: Update) {
+  update(update: PartialUpdate) {
     this.oldEntitiesPacks = Object.assign({}, this.getEnemies());
 
+    const upd = {
+      ...update,
+      area: this,
+      players: this.getPlayers(update.players),
+    };
+
     for (const e in this.entities) {
-      this.entities[e].update(update);
+      this.entities[e].update(upd);
       if (this.entities[e].toRemove) {
         sendToNetwork.closeEntities(this.players, Number(e));
         delete this.entities[e];
@@ -86,15 +107,18 @@ export class Area {
     sendToNetwork.newEntities(this.players, this.nextId, entity.pack());
   };
 
-  getDiffEnemies(): [Record<number, Partial<PackedEntity>>, boolean] {
-    let updated: Record<number, Partial<PackedEntity>> = {};
+  getDiffEnemies(): [
+    Record<number, Partial<PackedEntity>> | undefined,
+    boolean
+  ] {
+    let updated: Record<number, Partial<PackedEntity>> | undefined;
     const keys = Object.keys(this.entities);
     let isUpdated = false;
     for (const v of keys) {
       const i = v as any as number;
       const dif = diff(this.oldEntitiesPacks[i], this.entities[i].pack());
       if (dif[1]) {
-        if (updated === null) updated = {};
+        if (updated === undefined) updated = {};
         updated[i] = dif[0];
         isUpdated = true;
       }

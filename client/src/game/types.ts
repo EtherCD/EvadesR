@@ -25,13 +25,12 @@ export interface AssetsZone {
 export type AssetsEntity = [
   string,
   {
-    instance?: Entity;
+    instance?: typeof Entity;
   }?
 ];
 
 export interface Assets {
   textures: Record<string, string>;
-  worlds: Record<string, AssetsWorld>;
   zones: Record<string, AssetsZone>;
   entities: Array<AssetsEntity>;
 }

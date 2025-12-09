@@ -21,7 +21,7 @@ export const gameConfig = {
     downedTimer: 60,
   },
 
-  worlds: ["Celestial Canyon", "Acuity Abyss"],
+  worlds: ["Celestial Canyon", "Tempest Tumult"],
 
   heroes: {
     nomal: {},

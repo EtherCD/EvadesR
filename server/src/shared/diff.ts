@@ -6,17 +6,25 @@ export function diff<T extends object>(a: T, b: T): [Partial<T>, boolean] {
     const valA = a[k];
     const valB = b[k];
 
-    if (typeof valA === "boolean" || typeof valB === "boolean") {
-      if (Boolean(valA) !== Boolean(valB)) {
+    if (typeof valA === "boolean" && typeof valB === "boolean") {
+      if (valA !== valB) {
+        changes[k] = valB;
+        containChanges = true;
+        console.log(valA, valB, k);
+      }
+      continue;
+    }
+
+    if (typeof valA === "number" && typeof valB === "number") {
+      if (valA !== valB) {
         changes[k] = valB;
         containChanges = true;
       }
-    } else if (typeof valA === "number" || typeof valB === "number") {
-      if (Number(valA) !== Number(valB)) {
-        changes[k] = valB;
-        containChanges = true;
-      }
-    } else if (valA !== valB) {
+
+      continue;
+    }
+
+    if (valA !== valB) {
       changes[k] = valB;
       containChanges = true;
     }

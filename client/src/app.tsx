@@ -6,12 +6,12 @@ import { navigate } from "wouter/use-browser-location";
 import { useAuthStore } from "./stores/auth";
 import { Register } from "./pages/register";
 import { Suspense } from "preact/compat";
+import { Profile } from "./pages/profile";
 
 export const App = () => {
   const auth = useAuthStore();
   useEffect(() => {
     if (!auth.valid) navigate("/login");
-    else navigate("/");
   }, [auth.valid]);
   return (
     <Suspense fallback={"Haha"}>
@@ -19,6 +19,7 @@ export const App = () => {
         <Route path={"/"} component={Home} />
         <Route path={"/login"} component={Login} />
         <Route path={"/register"} component={Register} />
+        <Route path={"/profile"} component={Profile} />
       </Router>
     </Suspense>
   );

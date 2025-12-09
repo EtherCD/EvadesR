@@ -34,7 +34,7 @@ export class WebSocketServer {
         logger.info(`User connected ${data.id}`);
         this.clients.set(data.id, ws);
       },
-      message: (ws, msg, isBinary) => {
+      message: async (ws, msg, isBinary) => {
         const rawData = JSON.parse(Buffer.from(msg).toString());
         const validate = clientMessageValidate(rawData);
 
@@ -58,7 +58,7 @@ export class WebSocketServer {
                 break;
               case "init":
                 const init = data.init!;
-                const auth = database.auth(init.session);
+                const auth = await database.auth(init.session);
                 if (auth === null || auth === undefined) {
                   this.close(ws, "Session expired or corrupted");
                   return;
@@ -66,7 +66,7 @@ export class WebSocketServer {
                 const username = auth!.username;
                 for (const i of this.clients)
                   if (username === i[1].getUserData().username) {
-                    this.close(ws, "Bad body request");
+                    this.close(ws, "You already in game");
                     return;
                   }
                 client.username = auth!.username;
@@ -128,10 +128,14 @@ export class WebSocketServer {
     ws.end(1000, reason);
   }
 
-  tick() {
+  async tick() {
     for (const [_, client] of this.clients) {
       const data = client.getUserData();
-      client.send(Compress.encode(FormatEncoder.encode(data.packages)), true);
+      if (data.packages.length != 0)
+        client.send(
+          await Compress.encode(FormatEncoder.encode(data.packages)),
+          true
+        );
       data.packages = [];
     }
   }

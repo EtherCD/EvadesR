@@ -5,7 +5,6 @@ import { EntityProps, PlayerProps, Update } from "../../shared/core/types";
 
 export class Wall extends Entity {
   name = "immune";
-  type = 2;
   immune = true;
   dirAct = 1;
 

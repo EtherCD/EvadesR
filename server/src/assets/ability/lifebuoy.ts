@@ -30,7 +30,7 @@ export class LifebuoyAbility extends Ability {
 
   activate(): void {
     this.caster.state = 1;
-    this.active = !this.active;
+    this.active = this.caster.downed ? false : !this.active;
     if (this.active) {
     } else {
       this.deactivate();

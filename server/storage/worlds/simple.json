@@ -1,24 +1,37 @@
 {
   "client": {
-    "fillStyle": "",
-    "strokeStyle": "",
-    "areaFill": ""
+    "fillStyle": "#b3cde0",
+    "strokeStyle": "#011f4b",
+    "areaFill": "#011f4b"
   },
   "name": "Celestial Canyon",
   "areas": [
     {
       "enemies": [
         {
-          "types": ["normal", "sniper"],
+          "types": [
+            "changer",
+            "corrosive",
+            "disable",
+            "draining",
+            "drop",
+            "homing",
+            "immune",
+            "leaf",
+            "normal",
+            "slower",
+            "sniper",
+            "vortex"
+          ],
           "radius": 15,
-          "speed": 10,
-          "count": 10
+          "speed": 5,
+          "count": 20
         },
         {
           "types": ["wall"],
-          "radius": 15,
-          "speed": 10,
-          "count": 10
+          "radius": 30,
+          "speed": 5,
+          "count": 5
         }
       ],
       "w": 60,
@@ -27,73 +40,9 @@
     {
       "w": 15,
       "h": 15,
-      "enemies": [
-        {
-          "types": ["normal"],
-          "radius": 15,
-          "speed": 5,
-          "count": 5
-        }
-      ]
-    },
-    {
-      "w": 15,
-      "h": 15,
-      "enemies": [
-        {
-          "types": ["normal"],
-          "radius": 15,
-          "speed": 5,
-          "count": 10
-        },
-        {
-          "types": ["wall"],
-          "radius": 15,
-          "speed": 5,
-          "count": 15
-        }
-      ]
-    },
-    {
-      "w": 15,
-      "h": 15,
-      "enemies": [
-        {
-          "types": ["normal"],
-          "radius": 15,
-          "speed": 5,
-          "count": 15
-        },
-        {
-          "types": ["wall"],
-          "radius": 15,
-          "speed": 5,
-          "count": 15
-        }
-      ]
-    },
-    {
-      "w": 15,
-      "h": 15,
-      "enemies": [
-        {
-          "types": ["normal"],
-          "radius": 15,
-          "speed": 5,
-          "count": 20
-        },
-        {
-          "types": ["wall"],
-          "radius": 15,
-          "speed": 5,
-          "count": 15
-        }
-      ]
-    },
-    {
-      "w": 15,
-      "h": 15,
-      "win": true
+      "win": true,
+      "vp": 1,
+      "text": "You have passed this canyon!"
     }
   ]
 }

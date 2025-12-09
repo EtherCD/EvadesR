@@ -1,5 +1,4 @@
-import { logger } from "../../services/logger";
-import { Update } from "../../shared/core/types";
+import { PartialUpdate, Update } from "../../shared/core/types";
 import distance from "../../shared/distance";
 import { RawWorld } from "../../shared/services/types";
 import { Player } from "../objects/player";
@@ -20,7 +19,7 @@ export class World {
     );
   }
 
-  update(props: Update) {
+  update(props: PartialUpdate) {
     for (const area in this.areas) this.areas[area].update(props);
   }
 
@@ -35,7 +34,7 @@ export class World {
   interact(players: Record<number, Player>) {
     for (const area of this.areas) {
       Object.values(area.entities).forEach((v) => {
-        Object.keys(players).forEach((o) => {
+        Object.keys(area.getPlayers(players)).forEach((o) => {
           const player = players[Number(o)];
           if (
             player.pos[0] + player.radius > 9 &&

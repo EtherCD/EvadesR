@@ -19,7 +19,7 @@ export class Leaf extends Entity {
 
   draw(ctx: CanvasRenderingContext2D): void {
     ctx.beginPath();
-    ctx.globalAlpha = this.harmless ? 0.4 : 1;
+    ctx.globalAlpha = this.alpha;
     const pos = Camera.transform(this);
     const size = this.radius * 2 * Camera.s;
 
@@ -30,6 +30,7 @@ export class Leaf extends Entity {
       size,
       size
     );
+    ctx.globalAlpha = 1;
     ctx.closePath();
   }
 }
