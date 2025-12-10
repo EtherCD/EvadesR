@@ -27,17 +27,23 @@ export class Vortex extends Entity {
       this.pos[1]
     );
 
-    if (dist <= this.aura!) {
-      const mult = 1.5 * (1 - dist / this.aura!) + 0.3;
-
+    if (dist <= this.aura! && !player.downed) {
       const dx = player.pos[0] - this.pos[0];
       const dy = player.pos[1] - this.pos[1];
 
       let angle = Math.atan2(dy, dx);
-      angle += this.rotationSpeed * mult;
 
-      player.pos[0] = this.pos[0] + dist * Math.cos(angle);
-      player.pos[1] = this.pos[1] + dist * Math.sin(angle);
+      const rotMult = 1 - dist / this.aura!;
+      angle += this.rotationSpeed * (1 + rotMult * 2);
+
+      const suckStrength = 0.6;
+      const newDist = Math.max(
+        5,
+        dist - suckStrength * (1 - dist / this.aura!)
+      );
+
+      player.pos[0] = this.pos[0] + newDist * Math.cos(angle);
+      player.pos[1] = this.pos[1] + newDist * Math.sin(angle);
     }
   }
 

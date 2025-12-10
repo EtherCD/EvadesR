@@ -8,6 +8,7 @@ export abstract class Ability {
   consumeEnergy = 0;
   active = false;
   caster: Player;
+  rollback: number = 0;
 
   constructor(caster: Player) {
     this.caster = caster;

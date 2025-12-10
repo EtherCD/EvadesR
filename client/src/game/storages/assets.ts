@@ -1,4 +1,4 @@
-import { GlobalAssets } from "../assets";
+import { GlobalAssets } from "shared/assets";
 import Camera from "./camera";
 
 export default class AssetLoader {

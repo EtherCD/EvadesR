@@ -36,11 +36,8 @@ export class World {
       Object.values(area.entities).forEach((v) => {
         Object.keys(area.getPlayers(players)).forEach((o) => {
           const player = players[Number(o)];
-          if (
-            player.pos[0] + player.radius > 9 &&
-            player.pos[0] - player.radius < area.w
-          )
-            v.interact(players[Number(o)]);
+
+          v.interact(players[Number(o)]);
         });
       });
 

@@ -1,14 +1,17 @@
-import { Entity } from "../../core/objects/entity";
-import { Player } from "../../core/objects/player";
-import { tile } from "../../shared/config";
-import { EntityProps, Update } from "../../shared/core/types";
-import distance from "../../shared/distance";
+import { Entity } from "server/src/core/objects/entity";
+import { Player } from "server/src/core/objects/player";
+import { tile } from "server/src/shared/config";
+import { Update } from "server/src/shared/core/types";
+import distance from "server/src/shared/distance";
+import { Trail } from "./flame";
+import { entityNames } from "server/src/shared/core/spawn";
 
-export class Sniper extends Entity {
-  name = "sniper";
+export class FlameSniper extends Entity {
   delay = 3000;
   timer = Math.random() * this.delay;
   bulletSize = this.radius / 2;
+
+  light = true;
 
   interact(player: Player) {
     super.interact(player);
@@ -32,10 +35,10 @@ export class Sniper extends Entity {
             target.pos[0] - this.pos[0]
           );
 
-          let bullet = new Bullet({
+          let bullet = new Flame({
             count: 1,
             type: "",
-            typeId: 4,
+            typeId: entityNames.indexOf("trail"),
             num: 1,
             x: this.pos[0],
             y: this.pos[1],
@@ -43,6 +46,7 @@ export class Sniper extends Entity {
             speed: 10,
             area: this.area,
           });
+          console.log(bullet);
           bullet.vel[0] = Math.cos(angl) * bullet.speed;
           bullet.vel[1] = Math.sin(angl) * bullet.speed;
 
@@ -60,21 +64,33 @@ export class Sniper extends Entity {
   auraEffect(player: Player): void {}
 }
 
-export class Bullet extends Entity {
-  behavior(props: Update): void {}
-  auraEffect(player: Player): void {}
+class Flame extends Entity {
+  timer = 0;
 
-  interact(player: Player): void {
-    if (!player.downed) {
-      if (
-        distance(player.pos[0], player.pos[1], this.pos[0], this.pos[1]) <=
-        this.radius + player.radius
-      ) {
-        player.knock();
-        this.toRemove = true;
-      }
+  light = true;
+
+  behavior({ delta }: Update): void {
+    this.timer += delta;
+    if (this.timer >= 32.5 * ((this.radius * 2) / this.speed)) {
+      const trail = new Trail({
+        x: this.pos[0],
+        y: this.pos[1],
+        radius: this.radius,
+        speed: 0,
+        area: this.area,
+        ownerSpeed: this.speed,
+        type: "",
+        typeId: entityNames.indexOf("trail"),
+        count: 0,
+        num: 0,
+      });
+
+      this.area.addEntity(trail);
+
+      this.timer = 0;
     }
   }
+  auraEffect(player: Player): void {}
 
   collide(boundary: { w: number; h: number }): void {
     if (this.pos[0] - this.radius < 0) {

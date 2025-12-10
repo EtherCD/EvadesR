@@ -12,4 +12,10 @@ export class Maven extends Player {
     this.firstAbility = new LifebuoyAbility(this);
     this.secondAbility = new MagneticSoulAbility(this);
   }
+
+  res(): void {
+    super.res();
+
+    this.secondAbility.deactivate();
+  }
 }

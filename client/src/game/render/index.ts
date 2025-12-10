@@ -125,7 +125,7 @@ export class Render {
       x: -10 * 32,
       y: 0,
     });
-    ctx.globalAlpha = 0.25;
+    ctx.globalAlpha = world.areaAlpha ?? 0.3;
     ctx.fillStyle = world.areaFill;
     ctx.fillRect(
       pos.x,

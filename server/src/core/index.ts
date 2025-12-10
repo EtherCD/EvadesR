@@ -92,14 +92,16 @@ export class Game {
 
       player.collide(this.worlds[player.world].areas[player.area]);
     }
-    const dif = this.getDiff();
-    if (dif !== null) {
-      sendToNetwork.updatePlayers(dif);
-    }
 
     for (const w in this.worlds) {
       this.worlds[w].update(obj);
       this.worlds[w].interact(this.players);
+    }
+
+    const dif = this.getDiff();
+
+    if (dif !== null) {
+      sendToNetwork.updatePlayers(dif);
     }
   }
 

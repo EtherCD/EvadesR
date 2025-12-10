@@ -5,13 +5,17 @@ import distance from "../../shared/distance";
 import { Entity } from "server/src/core/objects/entity";
 import { Player } from "server/src/core/objects/player";
 import { entityNames } from "server/src/shared/core/spawn";
+import { logger } from "server/src/services/logger";
 
 export class MagneticSoulAbility extends Ability {
   consumeEnergy: number = 30;
-  aura: number = 180;
+  rollback: number = 0;
 
   update(update: UpdatePlayer): void {
-    if (this.caster.downed && this.active) {
+    this.rollback -= update.delta;
+    if (this.rollback < 0) this.rollback = 0;
+    if (this.caster.downed && this.active && this.rollback === 0) {
+      this.rollback = 5000;
       sendToCore.addEntity(
         new Soul({
           count: 1,
@@ -29,13 +33,15 @@ export class MagneticSoulAbility extends Ability {
         this.caster.world,
         this.caster.area
       );
-      this.active = false;
+      this.deactivate();
     }
   }
 
   activate(): void {
-    this.caster.state = 2;
-    if (this.caster.downed && !this.activate) this.active = true;
+    if (this.caster.downed && !this.active) {
+      this.active = true;
+      this.caster.state = 2;
+    }
   }
   deactivate(): void {
     this.active = false;
@@ -48,6 +54,7 @@ export class MagneticSoulAbility extends Ability {
 export class Soul extends Entity {
   casterPos: number[];
   caster: Player;
+  casterId: number;
   maxDistance = 120;
 
   speed = 5;
@@ -58,6 +65,7 @@ export class Soul extends Entity {
     this.caster = props.caster;
 
     this.casterPos = [this.pos[0], this.pos[1]];
+    this.casterId = props.caster.id;
 
     this.harmless = true;
   }
@@ -141,7 +149,8 @@ export class Soul extends Entity {
   auraEffect(player: Player): void {}
 
   interact(player: Player): void {
-    if (!player.downed) {
+    super.interact(player);
+    if (!player.downed && player.id !== this.casterId) {
       const d = distance(
         player.pos[0],
         player.pos[1],
@@ -151,6 +160,7 @@ export class Soul extends Entity {
       if (d <= this.radius + player.radius) {
         this.caster.res();
         this.toRemove = true;
+        console.log("collide");
       }
     }
   }

@@ -7,7 +7,6 @@ import { PackedEntity } from "shared/types";
 
 export abstract class Entity {
   type: number;
-  name: string;
   radius: number;
   aura?: number;
   speed: number;
@@ -26,7 +25,6 @@ export abstract class Entity {
 
   constructor(data: EntityProps) {
     this.type = data.typeId;
-    this.name = "normal";
     this.radius = data.radius;
     this.speed = data.speed;
     this.harmless = false;
@@ -137,23 +135,27 @@ export abstract class Entity {
   }
 
   interact(player: Player) {
-    if (!player.immortal && !player.downed) {
-      if (
-        distance(player.pos[0], player.pos[1], this.pos[0], this.pos[1]) <=
-          this.radius + player.radius &&
-        !this.harmless
-      ) {
-        player.knock();
-      }
-      if (this.aura != undefined && this.aura > 0) {
+    if (
+      player.pos[0] > -player.radius &&
+      player.pos[0] - player.radius < this.area.w
+    )
+      if (!player.immortal && !player.downed) {
         if (
           distance(player.pos[0], player.pos[1], this.pos[0], this.pos[1]) <=
-          this.aura + player.radius
+            this.radius + player.radius &&
+          !this.harmless
         ) {
-          this.auraEffect(player);
+          player.knock();
+        }
+        if (this.aura != undefined && this.aura > 0) {
+          if (
+            distance(player.pos[0], player.pos[1], this.pos[0], this.pos[1]) <=
+            this.aura + player.radius
+          ) {
+            this.auraEffect(player);
+          }
         }
       }
-    }
   }
 
   pack(): PackedEntity {

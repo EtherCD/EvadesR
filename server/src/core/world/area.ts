@@ -56,7 +56,6 @@ export class Area {
       ...val,
       area: this,
       typeId: 0,
-      name: "",
       inverse: false,
     });
   }
@@ -72,7 +71,6 @@ export class Area {
           ...val,
           area: this,
           typeId: 0,
-          name: "",
           type: type,
           num: l,
           count: this.props.enemies[i].count,

@@ -13,7 +13,15 @@ import { Vortex } from "server/src/assets/entity/vortex";
 import { Slower } from "server/src/assets/entity/slower";
 import { Draining } from "server/src/assets/entity/draining";
 import { Disable } from "server/src/assets/entity/disable";
-import { Soul } from "server/src/assets/ability/magneticsoul";
+import { Tree } from "server/src/assets/entity/tree";
+import { Bee } from "server/src/assets/entity/bee";
+import {
+  HomingBullet,
+  HomingSniper,
+} from "server/src/assets/entity/homingsniper";
+import { Flame, Trail } from "server/src/assets/entity/flame";
+import { FlameSniper } from "server/src/assets/entity/flamesniper";
+import { Cloud } from "server/src/assets/entity/cloud";
 
 type EntityConstructor = new (props: EntityProps) => Entity;
 
@@ -32,6 +40,15 @@ const types: Record<string, EntityConstructor> = {
   slower: Slower,
   draining: Draining,
   disable: Disable,
+  tree: Tree,
+  bee: Bee,
+  homing_sniper: HomingSniper,
+  homing_bullet: HomingBullet,
+  flame: Flame,
+  // @ts-ignore
+  trail: Trail,
+  flame_sniper: FlameSniper,
+  cloud: Cloud,
 };
 
 export const entityNames = Object.keys(types);

@@ -1,4 +1,4 @@
-import { GlobalAssets } from "../assets";
+import { GlobalAssets } from "shared/assets";
 import AssetLoader from "../storages/assets";
 import Camera from "../storages/camera";
 

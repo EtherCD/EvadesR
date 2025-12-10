@@ -11,7 +11,6 @@ export interface PlayerProps {
 }
 
 export interface EntityProps {
-  name: string;
   type: string;
   typeId: number;
   radius: number;

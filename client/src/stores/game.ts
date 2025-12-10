@@ -253,7 +253,7 @@ export const useGameStore = create<State>((set, get) => ({
   },
   newEntities(data) {
     for (const id in data) {
-      gameState.entities[id] = new Entity(data[id]);
+      gameState.entities[id] = Spawn.entity(data[id]);
     }
   },
   updateEntities(data) {

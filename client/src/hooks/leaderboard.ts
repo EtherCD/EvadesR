@@ -1,6 +1,7 @@
 import { useState, useEffect } from "preact/hooks";
 import { useGameStore } from "../stores/game";
 import { useResize } from "../stores/resize";
+import { useAssetsStore } from "../stores/assets";
 
 interface PlayerInLeaderBoard {
   area: number;
@@ -45,7 +46,7 @@ export function useLeaderBoard() {
     let outObject: Array<OutObject> = [];
     sortPlayers().forEach((element) => {
       let color;
-      color = "white";
+      color = useAssetsStore.getState().worlds[element.world].client.fillStyle;
 
       let playersTo: PlayerInLeaderBoard = {
         area: element.area,

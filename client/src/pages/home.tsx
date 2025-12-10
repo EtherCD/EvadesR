@@ -31,7 +31,8 @@ export const Home = () => {
         "min-h-screen w-full flex flex-col gap-1 justify-center items-center text-center text-2xl"
       }
     >
-      <h1 class={"text-5xl border-b-2"}>Evades.R</h1>
+      <img src="/favicon.svg" alt="" width={100} />
+      <h1 class={"text-5xl border-b-2"}>Altverse</h1>
       <p class={"text-2xl"}>Welcome {auth.profile?.username}</p>
       <div className={"flex w-20 flex-col gap-0.5"}>
         <div className={"flex gap-0.5"}>

@@ -2,6 +2,8 @@ export function diff<T extends object>(a: T, b: T): [Partial<T>, boolean] {
   const changes: Partial<T> = {};
   let containChanges = false;
 
+  if (!a) return [{}, false];
+
   for (const k in b) {
     const valA = a[k];
     const valB = b[k];

@@ -9,23 +9,17 @@
     {
       "enemies": [
         {
-          "types": [
-            "changer",
-            "corrosive",
-            "disable",
-            "draining",
-            "drop",
-            "homing",
-            "immune",
-            "leaf",
-            "normal",
-            "slower",
-            "sniper",
-            "vortex"
-          ],
+          "types": ["flame", "homing_sniper", "sniper"],
           "radius": 15,
           "speed": 5,
-          "count": 20
+          "count": 10
+        },
+        {
+          "types": ["tree"],
+          "radius": 30,
+          "speed": 0,
+          "count": 2,
+          "aura": 400
         },
         {
           "types": ["wall"],

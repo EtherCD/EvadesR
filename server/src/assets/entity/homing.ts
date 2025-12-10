@@ -14,16 +14,23 @@ export class Homing extends Entity {
 
     for (const i in data.players) {
       const player = data.players[i];
-      const dist = distance(
-        this.pos[0],
-        this.pos[1],
-        player.pos[0],
-        player.pos[1]
-      );
-      if (dist <= this.maxDistance && dist < lastDistance) {
-        target = player;
-        lastDistance = dist;
-      }
+
+      if (
+        player.pos[0] > -player.radius &&
+        player.pos[0] - player.radius < this.area.w
+      )
+        if (!player.downed) {
+          const dist = distance(
+            this.pos[0],
+            this.pos[1],
+            player.pos[0],
+            player.pos[1]
+          );
+          if (dist <= this.maxDistance && dist < lastDistance) {
+            target = player;
+            lastDistance = dist;
+          }
+        }
     }
     if (target !== null) {
       const dX = target.pos[0] - this.pos[0];
@@ -34,6 +41,7 @@ export class Homing extends Entity {
       const angleDif = Math.atan2(Math.sin(dif), Math.cos(dif));
       const angleIncrement = 0.04;
 
+      this.velToAngle();
       if (Math.abs(angleDif) >= angleIncrement) {
         if (angleDif < 0) {
           this.angle -= angleIncrement * (data.delta / 30);

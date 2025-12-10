@@ -1,11 +1,12 @@
+import { entityNames } from "server/src/shared/core/spawn";
 import { Entity } from "../../core/objects/entity";
 import { Player } from "../../core/objects/player";
 import { tile } from "../../shared/config";
 import { EntityProps, Update } from "../../shared/core/types";
 import distance from "../../shared/distance";
 
-export class Sniper extends Entity {
-  name = "sniper";
+export class HomingSniper extends Entity {
+  name = "homingsniper";
   delay = 3000;
   timer = Math.random() * this.delay;
   bulletSize = this.radius / 2;
@@ -32,10 +33,10 @@ export class Sniper extends Entity {
             target.pos[0] - this.pos[0]
           );
 
-          let bullet = new Bullet({
+          let bullet = new HomingBullet({
             count: 1,
             type: "",
-            typeId: 4,
+            typeId: entityNames.indexOf("homing_bullet"),
             num: 1,
             x: this.pos[0],
             y: this.pos[1],
@@ -60,9 +61,11 @@ export class Sniper extends Entity {
   auraEffect(player: Player): void {}
 }
 
-export class Bullet extends Entity {
-  behavior(props: Update): void {}
+export class HomingBullet extends Entity {
   auraEffect(player: Player): void {}
+
+  targetAngle: number = this.angle;
+  maxDistance = 5.625 * 32;
 
   interact(player: Player): void {
     if (!player.downed) {
@@ -72,6 +75,47 @@ export class Bullet extends Entity {
       ) {
         player.knock();
         this.toRemove = true;
+      }
+    }
+  }
+
+  behavior(data: Update) {
+    let lastDistance = this.maxDistance;
+    let target: Player | null = null;
+    this.targetAngle = this.angle;
+
+    for (const i in data.players) {
+      const player = data.players[i];
+      if (player.pos[0] > 0 && player.pos[0] < this.area.w && !player.downed) {
+        const dist = distance(
+          this.pos[0],
+          this.pos[1],
+          player.pos[0],
+          player.pos[1]
+        );
+        if (dist <= this.maxDistance && dist < lastDistance) {
+          target = player;
+          lastDistance = dist;
+        }
+      }
+    }
+    if (target !== null) {
+      const dX = target.pos[0] - this.pos[0];
+      const dY = target.pos[1] - this.pos[1];
+      this.targetAngle = Math.atan2(dY, dX);
+
+      const dif = this.targetAngle - this.angle;
+      const angleDif = Math.atan2(Math.sin(dif), Math.cos(dif));
+      const angleIncrement = 0.04;
+
+      this.velToAngle();
+      if (Math.abs(angleDif) >= angleIncrement) {
+        if (angleDif < 0) {
+          this.angle -= angleIncrement * (data.delta / 30);
+        } else {
+          this.angle += angleIncrement * (data.delta / 30);
+        }
+        this.angleToVel();
       }
     }
   }

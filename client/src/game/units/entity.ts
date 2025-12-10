@@ -1,5 +1,5 @@
 import type { PackedEntity } from "shared";
-import { GlobalAssets } from "../assets";
+import { GlobalAssets } from "shared/assets";
 import Camera from "../storages/camera";
 
 export default class Entity {
