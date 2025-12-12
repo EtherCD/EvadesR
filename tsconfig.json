@@ -2,7 +2,8 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "shared/*": ["shared/*"]
+      "shared/*": ["shared/*"],
+      "napi/*": ["napi/*"]
     }
   }
 }

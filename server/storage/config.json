@@ -1,0 +1,19 @@
+{
+  "spawn": {
+    "radius": 15,
+    "speed": 17,
+    "max_speed": 17,
+    "regeneration": 1,
+    "energy": 20,
+    "max_energy": 20,
+    "world": "Celestial Canyon",
+    "area": 0,
+
+    "sx": -165,
+    "sy": 815,
+    "ex": -15,
+    "ey": 401,
+
+    "died_timer": 2
+  }
+}

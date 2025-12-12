@@ -12,10 +12,11 @@ import { ability } from "./handlers/ability";
 import { database } from "../../services/db";
 import { FormatEncoder } from "shared/schema";
 import { Compress } from "server/src/services/compress";
+import { InputProps } from "napi/index";
 
 export interface Client {
   id: number;
-  input: Input;
+  input: InputProps;
   packages: object[];
   username: string;
 }
@@ -30,7 +31,7 @@ export class WebSocketServer {
       open: (ws) => {
         const data = ws.getUserData();
         data.id = this.nextId++;
-        data.input = {};
+        data.input = new InputProps();
         data.packages = [];
         data.username = "";
         logger.info(`User connected ${data.id}`);
@@ -103,23 +104,12 @@ export class WebSocketServer {
       },
     });
 
-    networkEvents.on("direct", (event) => {
-      const client = this.clients.get(event.id);
-
-      if (client) {
-        client.getUserData().packages.push(event.value);
-      }
-    });
-    networkEvents.on("all", (event) => {
-      for (const [_, client] of this.clients) {
-        client.getUserData().packages.push(event);
-      }
-    });
-    networkEvents.on("close", (event) => {
-      const client = this.clients.get(event.id);
-
-      if (client) {
-        this.close(client, JSON.stringify({ close: event.reason }));
+    networkEvents.on("send", (packages) => {
+      for (const [id, client] of this.clients) {
+        let pkg = packages[id];
+        if (pkg != undefined) {
+          if (pkg.length != 0) client.send(pkg, true);
+        }
       }
     });
   }

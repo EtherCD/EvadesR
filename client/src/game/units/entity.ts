@@ -17,7 +17,7 @@ export default class Entity {
     this.x = props.x;
     this.y = props.y;
     this.aura = props.aura ?? 0;
-    this.type = props.type;
+    this.type = props.type_id;
     this.radius = props.radius;
     this.harmless = props.harmless ?? false;
     this.alpha = props.alpha;
@@ -29,7 +29,7 @@ export default class Entity {
     ctx.beginPath();
     ctx.lineWidth = 2 * Camera.s;
     const ent = GlobalAssets.entities[this.type];
-    ctx.fillStyle = (ent ?? ["#fff"])[0];
+    ctx.fillStyle = "#fff";
     ctx.strokeStyle = "#000000";
     ctx.globalAlpha = this.alpha !== 1 ? this.alpha : this.harmless ? 0.4 : 1;
     const pos = Camera.transform(this);
@@ -61,7 +61,7 @@ export default class Entity {
   accept(props: Partial<PackedEntity>) {
     this.x = props.x ? props.x : this.x;
     this.y = props.y ? props.y : this.y;
-    this.type = props.type ?? this.type;
+    this.type = props.type_id ?? this.type;
     this.radius = props.radius ?? this.radius;
     this.harmless = props.harmless ?? this.harmless;
     this.alpha = props.alpha ?? this.alpha;

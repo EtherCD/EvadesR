@@ -1,10 +1,7 @@
 import mitt from "mitt";
 
 type NetworkEventsType = {
-  all: object;
-  direct: { id: number; value: object };
-  close: { id: number; reason: string };
-  win: { id: number; vp: number };
+  send: Record<number, Buffer>;
 };
 
 export const networkEvents = mitt<NetworkEventsType>();

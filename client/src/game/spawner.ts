@@ -16,12 +16,12 @@ const entities: Record<number, typeof Entity> = {
 
 export class Spawn {
   static player(pkg: PackedPlayer) {
-    const hero = heroes[pkg.hero];
-    const player = new hero(pkg);
-    return player;
+    // const hero = heroes[pkg.hero];
+    // const player = new hero(pkg);
+    return new Maven(pkg);
   }
   static entity(pkg: PackedEntity) {
-    const ent = entities[pkg.type];
+    const ent = entities[pkg.type_id];
     if (ent) return new ent(pkg);
     return new Entity(pkg);
   }

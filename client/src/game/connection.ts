@@ -3,8 +3,9 @@ import { mouseEvents } from "./events/mouse";
 import { useAuthStore } from "../stores/auth";
 import { useGameStore } from "../stores/game";
 import { config } from "../config";
-import { FormatEncoder } from "shared";
-import { Compress } from "./compress";
+import { compress, decompress } from "lz4js";
+
+const decoder = new TextDecoder();
 
 export class WebSocketConnection {
   private ws?: WebSocket;
@@ -119,41 +120,42 @@ export class WebSocketConnection {
   private onMessage = async (event: MessageEvent) => {
     const uint8 = new Uint8Array(event.data);
     this.kBPerPackage += uint8.byteLength;
-    const gData = FormatEncoder.decode(await Compress.decode(uint8)) as Array<
+    const gData = JSON.parse(decoder.decode(decompress(uint8))) as Array<
       Record<string, any>
     >;
     const gameService = useGameStore.getState();
     this.rawPPS++;
 
-    for (const d in gData) {
-      const data = gData[d];
+    for (let index = 0; index < gData.length; index++) {
+      const data = gData[index];
       switch (Object.keys(data)[0]) {
         case "message":
           gameService.message(data.message);
           break;
-        case "players":
-          gameService.uplayers(data.players);
+        // case "UpdatePlayers":
+        // gameService.uplayers(data.UpdatePlayers);
+        // break;
+        case "MySelf":
+          gameService.self(data.MySelf);
           break;
-        case "self":
-          gameService.self(data.self);
+        case "AreaInit":
+          gameService.areaInit(data.AreaInit);
           break;
-        case "areaInit":
-          gameService.areaInit(data.areaInit);
+        case "NewPlayer":
+          gameService.newPlayer(data.NewPlayer);
           break;
-        case "newPlayer":
-          gameService.newPlayer(data.newPlayer);
+        case "ClosePlayer":
+          gameService.closePlayer(data.ClosePlayer);
           break;
-        case "closePlayer":
-          gameService.closePlayer(data.closePlayer);
-          break;
-        case "updatePlayers":
-          gameService.updatePlayers(data.updatePlayers);
+        case "UpdatePlayers":
+          console.log(data.UpdatePlayers);
+          gameService.updatePlayers(data.UpdatePlayers);
           break;
         case "newEntities":
-          gameService.newEntities(data.newEntities);
+          // gameService.newEntities(data.newEntities);
           break;
-        case "updateEntities":
-          gameService.updateEntities(data.updateEntities);
+        case "UpdateEntities":
+          gameService.updateEntities(data.UpdateEntities);
           break;
         case "closeEntities":
           gameService.closeEntities(data.closeEntities);

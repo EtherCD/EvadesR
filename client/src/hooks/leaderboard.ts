@@ -46,7 +46,10 @@ export function useLeaderBoard() {
     let outObject: Array<OutObject> = [];
     sortPlayers().forEach((element) => {
       let color;
-      color = useAssetsStore.getState().worlds[element.world].client.fillStyle;
+      if (useAssetsStore.getState().worlds[element.world])
+        color =
+          useAssetsStore.getState().worlds[element.world].client.fillStyle;
+      else color = "#336655";
 
       let playersTo: PlayerInLeaderBoard = {
         area: element.area,

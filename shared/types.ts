@@ -1,5 +1,5 @@
 export interface PackedEntity {
-  type: number;
+  type_id: number;
   x: number;
   y: number;
   aura?: number;
