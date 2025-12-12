@@ -13,8 +13,7 @@ export const useAssetsStore = create<State>((set) => ({
   loaded: false,
   fetch() {
     ApiRequests.worlds().then((worlds) => {
-      // @ts-ignore
-      set({ worlds: JSON.parse(worlds), loaded: true });
+      set({ worlds, loaded: true });
     });
   },
 }));

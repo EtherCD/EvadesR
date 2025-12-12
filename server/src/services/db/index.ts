@@ -140,6 +140,13 @@ export class SQLDatabase {
 
     DBSession.remove(db, token);
   }
+
+  async getProfile(username: string) {
+    const account = await DBAccount.getByUsername(db, username);
+
+    if (account !== null) return new DBProfile(account);
+    return null;
+  }
 }
 
 export const database = new SQLDatabase();

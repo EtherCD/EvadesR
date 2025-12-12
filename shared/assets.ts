@@ -1,4 +1,4 @@
-import { Assets } from "./types";
+import type { Assets } from "./types";
 
 export const GlobalAssets: Assets = {
   textures: {

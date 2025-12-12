@@ -25,6 +25,8 @@ export class WebSocketServer {
   clients = new Map<number, WebSocket<Client>>();
   constructor(app: TemplatedApp) {
     app.ws<Client>("/server", {
+      compression: SHARED_COMPRESSOR,
+      idleTimeout: 10,
       open: (ws) => {
         const data = ws.getUserData();
         data.id = this.nextId++;

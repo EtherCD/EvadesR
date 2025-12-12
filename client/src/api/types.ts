@@ -28,6 +28,11 @@ export type RegisterResponse = ApiResponse<{
   profile?: Profile;
 }>;
 
+export type ProfileResponse = ApiResponse<{
+  message: ResponseMessage;
+  profile?: Profile;
+}>;
+
 export interface Profile {
   vp: number;
   username: string;

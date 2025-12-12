@@ -1,10 +1,12 @@
 import { Link, useParams } from "wouter";
-import { useAuthStore } from "../stores/auth";
 import { AccountRole } from "shared";
+import { useEffect, useState } from "preact/hooks";
+import { ApiRequests } from "../api/requests";
+import type { Profile } from "../api/types";
 
-export const Profile = () => {
-  const { profile } = useAuthStore();
-  const location = useParams();
+export const ProfilePage = () => {
+  const params = useParams();
+  const [profile, setProfile] = useState<Profile>();
 
   const styleForBg = () => {
     if (profile) {
@@ -14,6 +16,13 @@ export const Profile = () => {
         return "text-[#fff] bg-linear-to-br from-[#005B96] via-[#6497b1] to-[#011f4b]";
     }
   };
+
+  useEffect(() => {
+    const fetch = async () => {
+      setProfile((await ApiRequests.profile(params[0] + "")).data.profile);
+    };
+    fetch();
+  }, []);
 
   const role = () => {
     if (profile) {

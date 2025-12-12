@@ -5,7 +5,7 @@ import Camera from "../storages/camera";
 import Entity from "../units/entity";
 import { Leaf } from "./entities/leaf";
 import { useAssetsStore } from "../../stores/assets";
-import type { RawClient } from "shared";
+import { WorldEffect, type RawClient } from "shared";
 
 export const customEntities: Record<string, typeof Entity> = {
   leaf: Leaf,
@@ -100,7 +100,12 @@ export class Render {
     );
     let world: RawClient;
     if (!isContain)
-      world = { fillStyle: "#fff", strokeStyle: "#ccc", areaFill: "#ccc" };
+      world = {
+        fillStyle: "#fff",
+        strokeStyle: "#ccc",
+        areaFill: "#ccc",
+        effect: WorldEffect.Autumn,
+      };
     else world = useAssetsStore.getState().worlds[gameState.world].client;
     return world;
   }

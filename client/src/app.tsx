@@ -6,7 +6,7 @@ import { navigate } from "wouter/use-browser-location";
 import { useAuthStore } from "./stores/auth";
 import { Register } from "./pages/register";
 import { Suspense } from "preact/compat";
-import { Profile } from "./pages/profile";
+import { ProfilePage } from "./pages/profile";
 
 export const App = () => {
   const auth = useAuthStore();
@@ -19,7 +19,7 @@ export const App = () => {
         <Route path={"/"} component={Home} />
         <Route path={"/login"} component={Login} />
         <Route path={"/register"} component={Register} />
-        <Route path={"/profile/:username"} component={Profile} />
+        <Route path={"/profile/:username"} component={ProfilePage} />
       </Router>
     </Suspense>
   );

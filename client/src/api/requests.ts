@@ -7,6 +7,8 @@ import type {
   LoginResponse,
   CheckResponse,
   RegisterResponse,
+  Profile,
+  ProfileResponse,
 } from "./types";
 
 export class ApiRequests {
@@ -26,6 +28,10 @@ export class ApiRequests {
 
   public static worlds(): Promise<Record<string, ClientWorld>> {
     return ApiRequests.get<Record<string, ClientWorld>>("/worlds");
+  }
+
+  public static profile(username: string): Promise<ProfileResponse> {
+    return ApiRequests.get<ProfileResponse>("/profile/" + username);
   }
 
   private static post = <T extends ApiResponse<{}>>(

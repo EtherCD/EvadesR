@@ -34,7 +34,9 @@ export class WebSocketConnection {
   }
 
   connect() {
-    this.ws = new WebSocket(config.api.replace("http", "ws") + "/server");
+    this.ws = new WebSocket(config.api.replace("http", "ws") + "/server", [
+      "permessage-deflate",
+    ]);
     this.ws.binaryType = "arraybuffer";
     this.ws.onopen = () => {
       this.ws!.send(
