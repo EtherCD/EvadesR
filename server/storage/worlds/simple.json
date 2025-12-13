@@ -9,7 +9,7 @@
     {
       "enemies": [
         {
-          "types": ["flame", "homing_sniper", "sniper"],
+          "types": ["homing", "sniper", "immune"],
           "radius": 15,
           "speed": 5,
           "count": 10

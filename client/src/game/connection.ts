@@ -4,6 +4,7 @@ import { useAuthStore } from "../stores/auth";
 import { useGameStore } from "../stores/game";
 import { config } from "../config";
 import { decompress } from "lz4js";
+import { decode } from "msgpack-lite";
 
 const decoder = new TextDecoder();
 
@@ -120,9 +121,8 @@ export class WebSocketConnection {
   private onMessage = async (event: MessageEvent) => {
     const uint8 = new Uint8Array(event.data);
     this.kBPerPackage += uint8.byteLength;
-    const gData = JSON.parse(decoder.decode(decompress(uint8))) as Array<
-      Record<string, any>
-    >;
+    const gData = decode(decompress(uint8)) as Array<Record<string, any>>;
+    console.log(gData);
     const gameService = useGameStore.getState();
     this.rawPPS++;
 
@@ -132,9 +132,9 @@ export class WebSocketConnection {
         case "message":
           gameService.message(data.message);
           break;
-        // case "UpdatePlayers":
-        // gameService.uplayers(data.UpdatePlayers);
-        // break;
+        case "Players":
+          gameService.uplayers(data.Players);
+          break;
         case "MySelf":
           gameService.self(data.MySelf);
           break;
@@ -151,14 +151,15 @@ export class WebSocketConnection {
           console.log(data.UpdatePlayers);
           gameService.updatePlayers(data.UpdatePlayers);
           break;
-        case "newEntities":
-          // gameService.newEntities(data.newEntities);
+        case "NewEntities":
+          console.log(data.NewEntities);
+          gameService.newEntities(data.NewEntities);
           break;
         case "UpdateEntities":
           gameService.updateEntities(data.UpdateEntities);
           break;
-        case "closeEntities":
-          gameService.closeEntities(data.closeEntities);
+        case "CloseEntities":
+          gameService.closeEntities(data.CloseEntities);
           break;
       }
     }

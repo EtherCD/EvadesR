@@ -29,7 +29,7 @@ export abstract class Player {
   constructor(props: PackedPlayer) {
     this.x = props.x ? props.x : 0;
     this.y = props.y ? props.y : 0;
-    this.dt = props.dTimer ?? 60;
+    this.dt = props.deathTimer ?? 60;
     this.id = props.id;
     this.name = props.name;
     this.area = props.area;
@@ -124,7 +124,7 @@ export abstract class Player {
     this.speed.accept(props.speed);
     this.energy.accept(props.energy, props.max_energy);
     this.regen.accept(props.regeneration);
-    this.dt = props.dTimer ?? this.dt;
+    this.dt = props.deathTimer ?? this.dt;
     this.died =
       props.died !== undefined ? (props.died ? true : false) : this.died;
     this.state = props.state ?? this.state;

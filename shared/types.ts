@@ -23,7 +23,7 @@ export interface PackedPlayer {
   regeneration: number;
   area: number;
   world: string;
-  dTimer: number;
+  deathTimer: number;
   aura: number;
   auraColor: string;
   firstAbilityLvl: number;

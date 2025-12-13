@@ -9,10 +9,10 @@ import { Suspense } from "preact/compat";
 import { ProfilePage } from "./pages/profile";
 
 export const App = () => {
-  const auth = useAuthStore();
-  useEffect(() => {
-    if (!auth.valid) navigate("/login");
-  }, [auth.valid]);
+  // const auth = useAuthStore();
+  // useEffect(() => {
+  //   if (!auth.valid) navigate("/login");
+  // }, [auth.valid]);
   return (
     <Suspense fallback={"Haha"}>
       <Router>

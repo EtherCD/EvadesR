@@ -222,7 +222,8 @@ export const useGameStore = create<State>((set, get) => ({
       gameState.players[p].accept(data[p]);
       const state = get().players;
       if (
-        (data[p].dTimer !== undefined && state[p].dt !== data[p].dTimer) ||
+        (data[p].deathTimer !== undefined &&
+          state[p].dt !== data[p].deathTimer) ||
         (data[p].died !== undefined &&
           state[p].died !== Boolean(data[p].died)) ||
         (data[p].world !== undefined && state[p].world !== data[p].world) ||
@@ -236,7 +237,7 @@ export const useGameStore = create<State>((set, get) => ({
               name: data[p].name ?? state[p].name,
               world: data[p].world ?? state[p].world,
               area: data[p].area ?? state[p].area,
-              dt: data[p].dTimer ?? state[p].dt,
+              dt: data[p].deathTimer ?? state[p].dt,
               died: Boolean(data[p].died) ?? state[p].died,
             },
           },
