@@ -8,7 +8,6 @@ import { Player } from "../objects/player";
 import { sendToDB, sendToNetwork } from "../send";
 import { SpawnFactory } from "../../shared/core/spawn";
 import { randomBytes } from "crypto";
-import { DBAccount } from "server/src/services/db/objects/account";
 
 export class Area {
   entities: Record<number, Entity> = {};

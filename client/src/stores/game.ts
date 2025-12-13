@@ -264,6 +264,7 @@ export const useGameStore = create<State>((set, get) => ({
   closeEntities(data) {
     for (const i of data) {
       delete gameState.entities[i];
+      console.log(i)
     }
   },
   close(reason) {

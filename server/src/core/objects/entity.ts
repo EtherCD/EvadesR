@@ -57,7 +57,7 @@ export abstract class Entity {
           mx = Number(data.x.slice(0, -1)) * 32 - 15;
         } else if (data.x.endsWith("tn")) {
           mx = w - Number(data.x.slice(0, -2)) * 32 + 15;
-        } else mx = eval(data.x);
+        }
       } else {
         mx = data.x;
       }
@@ -68,8 +68,6 @@ export abstract class Entity {
           my = Number(data.y.slice(0, -1)) * 32 - 15;
         } else if (data.y.endsWith("tn")) {
           my = h - Number(data.y.slice(0, -2)) * 32 + 15;
-        } else {
-          my = eval(data.y);
         }
       } else {
         my = data.y;
