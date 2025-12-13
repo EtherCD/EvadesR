@@ -37,10 +37,10 @@ export abstract class Player {
     this.world = props.world;
     this.regen = new MaxContainer(props.regeneration ?? 1, 7);
     this.speed = new MaxContainer(props.speed ?? 5, 17);
-    this.energy = new MaxContainer(props.energy ?? 0, props.maxEnergy);
+    this.energy = new MaxContainer(props.energy ?? 0, props.max_energy);
     this.radius = props.radius ?? 15;
     this.state = props.state;
-    this.stateMeta = props.stateMeta;
+    this.stateMeta = props.state_meta;
     this.hero = props.hero;
   }
 
@@ -122,12 +122,12 @@ export abstract class Player {
     this.world = props.world ?? this.world;
     this.area = props.area ?? this.area;
     this.speed.accept(props.speed);
-    this.energy.accept(props.energy, props.maxEnergy);
+    this.energy.accept(props.energy, props.max_energy);
     this.regen.accept(props.regeneration);
     this.dt = props.dTimer ?? this.dt;
     this.died =
       props.died !== undefined ? (props.died ? true : false) : this.died;
     this.state = props.state ?? this.state;
-    this.stateMeta = props.stateMeta ?? this.stateMeta;
+    this.stateMeta = props.state_meta ?? this.stateMeta;
   }
 }

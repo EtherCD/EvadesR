@@ -5,14 +5,7 @@ import Zone from "../game/units/zone";
 import { Spawn } from "../game/spawner";
 import { useKeyboard } from "./keyboard";
 import { useMouseStore } from "./mouse";
-import type {
-  ChatMessage,
-  PackedPlayer,
-  AreaInit,
-  PackedEntity,
-  ClientArea,
-} from "shared";
-import { useAssetsStore } from "./assets";
+import type { ChatMessage, PackedPlayer, AreaInit, PackedEntity } from "shared";
 
 export interface GameState {
   areaBoundary: { w: number; h: number };

@@ -22,14 +22,14 @@ export default class Entity {
     this.harmless = props.harmless ?? false;
     this.alpha = props.alpha;
     this.state = props.state;
-    this.stateMetadata = props.stateMetadata;
+    this.stateMetadata = props.state_metadata;
   }
 
   draw(ctx: CanvasRenderingContext2D, _: number) {
     ctx.beginPath();
     ctx.lineWidth = 2 * Camera.s;
     const ent = GlobalAssets.entities[this.type];
-    ctx.fillStyle = "#fff";
+    ctx.fillStyle = (ent ?? ["#fff"])[0];
     ctx.strokeStyle = "#000000";
     ctx.globalAlpha = this.alpha !== 1 ? this.alpha : this.harmless ? 0.4 : 1;
     const pos = Camera.transform(this);

@@ -15,3 +15,7 @@ This version is an implementation of rust-napi for performance.
 # Used
 
 **napi-rs, ajv, uwebsocket.js**
+
+```
+At the moment, the development has been stopped due to its inexpediency.
+```

@@ -1,14 +1,13 @@
 import type { PackedEntity, PackedPlayer } from "shared";
 import { Maven } from "./render/hero/maven";
-import type { Player } from "./units/player";
 import Entity from "./units/entity";
 import { Leaf } from "./render/entities/leaf";
 
-type PlayerConstructor = new (props: PackedPlayer) => Player;
-
-const heroes: Record<number, PlayerConstructor> = {
-  0: Maven,
-};
+// type PlayerConstructor = new (props: PackedPlayer) => Player;
+//
+// const heroes: Record<number, PlayerConstructor> = {
+//   0: Maven,
+// };
 
 const entities: Record<number, typeof Entity> = {
   8: Leaf,

@@ -3,7 +3,7 @@ import { mouseEvents } from "./events/mouse";
 import { useAuthStore } from "../stores/auth";
 import { useGameStore } from "../stores/game";
 import { config } from "../config";
-import { compress, decompress } from "lz4js";
+import { decompress } from "lz4js";
 
 const decoder = new TextDecoder();
 

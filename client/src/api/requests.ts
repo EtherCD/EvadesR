@@ -7,7 +7,6 @@ import type {
   LoginResponse,
   CheckResponse,
   RegisterResponse,
-  Profile,
   ProfileResponse,
 } from "./types";
 
