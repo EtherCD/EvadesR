@@ -54,7 +54,7 @@ export const Register = () => {
       }
     >
       <form class={"flex flex-col gap-1 items-center"}>
-        <h1 class={"text-5xl "}>Evades.R</h1>
+        <h1 class={"text-5xl "}>Altverse</h1>
         <TextField
           placeholder={"Username"}
           onInput={(value) => {

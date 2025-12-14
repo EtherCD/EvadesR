@@ -3,7 +3,7 @@
     "baseUrl": ".",
     "paths": {
       "shared/*": ["shared/*"],
-      "napi/*": ["napi/*"]
+      "native/*": ["server/native/*"]
     }
   }
 }

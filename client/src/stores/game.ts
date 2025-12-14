@@ -237,7 +237,10 @@ export const useGameStore = create<State>((set, get) => ({
               name: data[p].name ?? state[p].name,
               world: data[p].world ?? state[p].world,
               area: data[p].area ?? state[p].area,
-              dt: data[p].deathTimer ?? state[p].dt,
+              dt:
+                data[p].deathTimer !== undefined
+                  ? data[p].deathTimer
+                  : state[p].dt,
               died: Boolean(data[p].died) ?? state[p].died,
             },
           },

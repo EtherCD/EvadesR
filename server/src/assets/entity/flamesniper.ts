@@ -46,7 +46,6 @@ export class FlameSniper extends Entity {
             speed: 10,
             area: this.area,
           });
-          console.log(bullet);
           bullet.vel[0] = Math.cos(angl) * bullet.speed;
           bullet.vel[1] = Math.sin(angl) * bullet.speed;
 

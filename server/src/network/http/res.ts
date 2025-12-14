@@ -7,8 +7,10 @@ export const makeResponse = (
   status: number,
   data?: DatabaseResponse & object
 ) => {
-  res.writeHeader("Content-Type", "application/json");
-  res.writeStatus(status + "");
-  res.write(JSON.stringify({ successful, data }));
+  res.cork(() => {
+    res.writeHeader("Content-Type", "application/json");
+    res.writeStatus(status + "");
+    res.write(JSON.stringify({ successful, data }));
+  });
   res.end();
 };

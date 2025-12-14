@@ -12,7 +12,7 @@ import { ability } from "./handlers/ability";
 import { database } from "../../services/db";
 import { FormatEncoder } from "shared/schema";
 import { Compress } from "server/src/services/compress";
-import { InputProps } from "napi/index";
+import { InputProps } from "native/index";
 
 export interface Client {
   id: number;

@@ -160,7 +160,6 @@ export class Soul extends Entity {
       if (d <= this.radius + player.radius) {
         this.caster.res();
         this.toRemove = true;
-        console.log("collide");
       }
     }
   }

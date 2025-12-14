@@ -113,34 +113,32 @@ export class HTTPServer {
         res.write(JSON.stringify(Loader.worldsProps));
         res.end();
       })
-      .get("/profile/:username", async (res, req) => {
-        try {
-          this.setCorsHeaders(res);
-          const username = req.getParameter(0);
-          if (!username || username.trim() === "") {
-            makeResponse(res, false, 400, {
-              message: ResponseMessage.InvalidBody,
+      .get("/profile", (res, req) => {
+        this.setCorsHeaders(res);
+        const username = "Enay";
+
+        console.log(username);
+
+        database
+          .getProfile(username)
+          .then((profile) => {
+            if (!profile) {
+              makeResponse(res, false, 404, {
+                message: ResponseMessage.InvalidBody,
+              });
+              return;
+            } else {
+              makeResponse(res, true, 200, {
+                // @ts-ignore
+                profile,
+              });
+            }
+          })
+          .catch(() => {
+            makeResponse(res, false, 500, {
+              message: ResponseMessage.InternalError,
             });
-            return;
-          }
-          const profile = await database.getProfile(username);
-          console.log(profile);
-          if (!profile) {
-            makeResponse(res, false, 404, {
-              message: ResponseMessage.InvalidBody,
-            });
-            return;
-          }
-          makeResponse(res, true, 200, {
-            // @ts-ignore
-            profile,
           });
-        } catch {
-          makeResponse(res, false, 500, {
-            message: ResponseMessage.InternalError,
-          });
-        }
-        res.end();
       });
 
     // .post("/logout", (res, req) => {

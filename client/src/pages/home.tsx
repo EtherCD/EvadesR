@@ -30,8 +30,7 @@ export const Home = () => {
         "min-h-screen w-full flex flex-col gap-1 justify-center items-center text-center text-2xl"
       }
     >
-      <img src="/favicon.svg" alt="" width={100} />
-      <h1 class={"text-5xl border-b-2"}>Altverse</h1>
+      <img src="/logotype.svg" alt="" />
       <p class={"text-2xl"}>Welcome {auth.profile?.username}</p>
       <div className={"flex w-20 flex-col gap-0.5"}>
         <div className={"flex gap-0.5"}>
@@ -55,9 +54,7 @@ export const Home = () => {
       </div>
       <div class={"p-1 block w-15 font-bold border-2 rounded-xl "}>
         <h1>Warning!</h1>
-        <p className={"text-yellow-300"}>
-          This project written 4 days. May contain bugs.
-        </p>
+        <p className={"text-yellow-300"}>Game still in developing.</p>
       </div>
     </main>
   );

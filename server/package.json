@@ -20,7 +20,8 @@
   },
   "scripts": {
     "dev": "nodemon --inspect",
-    "build": "tsup",
+    "build": "cd native && npm run build && cd .. && tsup",
+    "build:node": "tsup",
     "start": "node -r tsconfig-paths/register . | pino-pretty"
   },
   "devDependencies": {

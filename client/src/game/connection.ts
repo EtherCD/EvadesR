@@ -6,8 +6,6 @@ import { config } from "../config";
 import { decompress } from "lz4js";
 import { decode } from "msgpack-lite";
 
-const decoder = new TextDecoder();
-
 export class WebSocketConnection {
   private ws?: WebSocket;
 
@@ -122,7 +120,6 @@ export class WebSocketConnection {
     const uint8 = new Uint8Array(event.data);
     this.kBPerPackage += uint8.byteLength;
     const gData = decode(decompress(uint8)) as Array<Record<string, any>>;
-    console.log(gData);
     const gameService = useGameStore.getState();
     this.rawPPS++;
 
@@ -148,11 +145,9 @@ export class WebSocketConnection {
           gameService.closePlayer(data.ClosePlayer);
           break;
         case "UpdatePlayers":
-          console.log(data.UpdatePlayers);
           gameService.updatePlayers(data.UpdatePlayers);
           break;
         case "NewEntities":
-          console.log(data.NewEntities);
           gameService.newEntities(data.NewEntities);
           break;
         case "UpdateEntities":

@@ -1,6 +1,5 @@
 <div align="center">
-  <img src="./client/public/favicon.svg" width=100/>
-  <h1>Altverse</h1>
+  <img src="./misc/logotype.svg" />
   <p>A simple game/engine, a parody of evades.io</p>
 </div>
 
@@ -15,7 +14,3 @@ This version is an implementation of rust-napi for performance.
 # Used
 
 **napi-rs, ajv, uwebsocket.js**
-
-```
-At the moment, the development has been stopped due to its inexpediency.
-```

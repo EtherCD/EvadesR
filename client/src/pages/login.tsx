@@ -45,7 +45,7 @@ export const Login = () => {
       }
     >
       <form class={"flex flex-col gap-1 items-center"}>
-        <h1 class={"text-5xl "}>Evades.R</h1>
+        <img src="/logotype.svg" alt="" />
         <TextField
           placeholder={"Username"}
           onInput={(value) => {

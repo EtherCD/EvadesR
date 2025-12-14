@@ -11,6 +11,10 @@ export default defineConfig({
   clean: true,
   alias: {
     "@shared": "./src/shared",
+    native: "./native",
   },
-  external: [],
+  loader: {
+    ".node": "copy",
+  },
+  external: ["*.node"],
 });

@@ -1,4 +1,4 @@
-import napi from "napi";
+import napi from "native/index";
 import { Loader } from "../services/loader";
 import { coreEvents } from "../services/events/core";
 import { networkEvents } from "../services/events/network";
