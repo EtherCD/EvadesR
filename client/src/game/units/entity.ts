@@ -14,15 +14,15 @@ export default class Entity {
   stateMetadata: number;
 
   constructor(props: PackedEntity) {
-    this.x = props.x;
-    this.y = props.y;
-    this.aura = props.aura ?? 0;
-    this.type = props.type_id;
-    this.radius = props.radius;
+    this.x = props.x / 10;
+    this.y = props.y / 10;
+    this.aura = props.aura ? props.aura/10 : 0;
+    this.type = props.typeId;
+    this.radius = props.radius / 10;
     this.harmless = props.harmless ?? false;
-    this.alpha = props.alpha;
+    this.alpha = props.alpha / 10;
     this.state = props.state;
-    this.stateMetadata = props.state_metadata;
+    this.stateMetadata = props.stateMetadata / 10;
   }
 
   draw(ctx: CanvasRenderingContext2D, _: number) {
@@ -59,11 +59,11 @@ export default class Entity {
   }
 
   accept(props: Partial<PackedEntity>) {
-    this.x = props.x ? props.x : this.x;
-    this.y = props.y ? props.y : this.y;
-    this.type = props.type_id ?? this.type;
-    this.radius = props.radius ?? this.radius;
+    this.x = props.x ? props.x / 10: this.x;
+    this.y = props.y ? props.y /10: this.y;
+    this.type = props.typeId ?? this.type;
+    this.radius = props.radius ? props.radius / 10 : this.radius;
     this.harmless = props.harmless ?? this.harmless;
-    this.alpha = props.alpha ?? this.alpha;
+    this.alpha = props.alpha != undefined ? props.alpha / 100: this.alpha;
   }
 }

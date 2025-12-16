@@ -12,7 +12,7 @@
     "skipLibCheck": true,
     "paths": {
       "shared/*": ["shared/*"],
-      "native/*": ["server/native/*"]
+      "compute/*": ["server/compute/*"]
     }
   },
   "include": ["./**/*.ts", "../shared/**/*.ts"]

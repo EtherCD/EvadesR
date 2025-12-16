@@ -3,7 +3,8 @@
     "baseUrl": ".",
     "paths": {
       "shared/*": ["shared/*"],
-      "native/*": ["server/native/*"]
+      "compute/*": ["server/compute/*"],
+      "proto/*": ["server/compute/protos/*"]
     }
   }
 }

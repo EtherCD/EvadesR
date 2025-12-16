@@ -2,16 +2,14 @@ import { Route, Router } from "wouter";
 import { Login } from "./pages/login";
 import { Home } from "./pages/home";
 import { Register } from "./pages/register";
-import { Suspense, useEffect } from "preact/compat";
+import { Suspense } from "preact/compat";
 import { ProfilePage } from "./pages/profile";
-import { navigate } from "wouter/use-browser-location";
-import { useAuthStore } from "./stores/auth";
 
 export const App = () => {
-  const auth = useAuthStore();
-  useEffect(() => {
-    if (!auth.valid) navigate("/login");
-  }, [auth.valid]);
+  // const auth = useAuthStore();
+  // useEffect(() => {
+  //   if (!auth.valid) navigate("/login");
+  // }, [auth.valid]);
   return (
     <Suspense fallback={"Haha"}>
       <Router>

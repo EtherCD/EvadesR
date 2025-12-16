@@ -109,13 +109,14 @@ export class HTTPServer {
       .get("/worlds", (res) => {
         this.setCorsHeaders(res);
         res.writeHeader("Content-Type", "application/json");
-        res.writeStatus("200");
+        res.writeStatus("200")
+        console.log(Loader.worldsProps)
         res.write(JSON.stringify(Loader.worldsProps));
         res.end();
       })
       .get("/profile", (res, req) => {
         this.setCorsHeaders(res);
-        const username = "Enay";
+        const username = req.getParameter("username") + "";
 
         console.log(username);
 

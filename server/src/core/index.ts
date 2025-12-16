@@ -1,18 +1,23 @@
-import napi from "native/index";
 import { Loader } from "../services/loader";
 import { coreEvents } from "../services/events/core";
 import { networkEvents } from "../services/events/network";
+import { ComputeEngine, EngineProps, Input, JoinProps } from "compute/index";
 
 export class Core {
-  game: napi.Game;
+  game: ComputeEngine;
 
   constructor() {
-    this.game = new napi.Game(
-      new napi.GameProps(Loader.loadConfig(), Loader.loadWorlds())
+    this.game = new ComputeEngine(
+      new EngineProps(Loader.loadConfig(), Loader.loadWorlds())
     );
 
+    // this.game.onPlayerDeath((id) => {
+    //   networkEvents.emit("leave", id);
+    //   return null;
+    // })
+
     coreEvents.on("join", ({ name, id }) => {
-      this.game.join(new napi.JoinProps(name, id));
+      this.game.join(new JoinProps(name, id));
     });
 
     coreEvents.on("leave", ({ id }) => {
@@ -24,7 +29,7 @@ export class Core {
     networkEvents.emit("send", this.game.update() as Record<number, Buffer>);
   }
 
-  input(id: number, input: napi.InputProps) {
+  input(id: number, input: Input) {
     this.game.input(id, input);
   }
 }

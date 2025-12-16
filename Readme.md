@@ -7,10 +7,28 @@
 
 This version is an implementation of rust-napi for performance.
 
-`A game similar to the popular evades.io.`
 
-**Currently in deep development and finalization**
+Status: **Currently in deep development and finalization**
 
-# Used
+| Parameter | Status |
+|-----|--------|
+| Performance | 🟢     |
+| Playable | 🔴       |
 
-**napi-rs, ajv, uwebsocket.js**
+# Usage
+
+To run the server, you first need to compile the compute module
+
+## Build the compute module
+
+To build you will need cargo/rust
+
+```bash
+npm run build:compute
+```
+
+## Build proto files
+
+```bash
+npm run build:proto
+```

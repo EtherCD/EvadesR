@@ -3,19 +3,17 @@ import { mouseEvents } from "./events/mouse";
 import { useAuthStore } from "../stores/auth";
 import { useGameStore } from "../stores/game";
 import { config } from "../config";
-import { decompress } from "lz4js";
-import { decode } from "msgpack-lite";
+// @ts-ignore
+import { game } from "proto";
 
 export class WebSocketConnection {
-  private ws?: WebSocket;
-
   open: boolean = false;
   reason: string = "";
-
   kBPerPackage = 0;
   kBPerSecond = 0;
   rawPPS = 0;
   packagesPerSecond = 0;
+  private ws?: WebSocket;
 
   disconnect() {
     if (this.open) {
@@ -119,43 +117,47 @@ export class WebSocketConnection {
   private onMessage = async (event: MessageEvent) => {
     const uint8 = new Uint8Array(event.data);
     this.kBPerPackage += uint8.byteLength;
-    const gData = decode(decompress(uint8)) as Array<Record<string, any>>;
+    const packages = game.Packages.decode(uint8)
     const gameService = useGameStore.getState();
     this.rawPPS++;
 
-    for (let index = 0; index < gData.length; index++) {
-      const data = gData[index];
-      switch (Object.keys(data)[0]) {
-        case "message":
-          gameService.message(data.message);
-          break;
-        case "Players":
-          gameService.uplayers(data.Players);
-          break;
-        case "MySelf":
-          gameService.self(data.MySelf);
-          break;
-        case "AreaInit":
-          gameService.areaInit(data.AreaInit);
-          break;
-        case "NewPlayer":
-          gameService.newPlayer(data.NewPlayer);
-          break;
-        case "ClosePlayer":
-          gameService.closePlayer(data.ClosePlayer);
-          break;
-        case "UpdatePlayers":
-          gameService.updatePlayers(data.UpdatePlayers);
-          break;
-        case "NewEntities":
-          gameService.newEntities(data.NewEntities);
-          break;
-        case "UpdateEntities":
-          gameService.updateEntities(data.UpdateEntities);
-          break;
-        case "CloseEntities":
-          gameService.closeEntities(data.CloseEntities);
-          break;
+    for (let index = 0; index < packages.items.length; index++) {
+      const data = packages.items[index];
+      try {
+        switch (Object.keys(data)[0]) {
+          case "message":
+            gameService.message(data.message);
+            break;
+          case "players":
+            gameService.uplayers(data.players.players);
+            break;
+          case "myself":
+            gameService.self(data.myself);
+            break;
+          case "areaInit":
+            gameService.areaInit(data.areaInit);
+            break;
+          case "newPlayer":
+            gameService.newPlayer(data.newPlayer);
+            break;
+          case "closePlayer":
+            gameService.closePlayer(data.closePlayer);
+            break;
+          case "updatePlayers":
+            gameService.updatePlayers(data.updatePlayers.items);
+            break;
+          case "newEntities":
+            gameService.newEntities(data.newEntities.entities);
+            break;
+          case "updateEntities":
+            gameService.updateEntities(data.updateEntities.items);
+            break;
+          case "closeEntities":
+            gameService.closeEntities(data.closeEntities.ids);
+            break;
+        }
+      } catch {
+
       }
     }
   };

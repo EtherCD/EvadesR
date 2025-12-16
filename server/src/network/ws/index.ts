@@ -1,7 +1,7 @@
 import { SHARED_COMPRESSOR, TemplatedApp, WebSocket } from "uWebSockets.js";
 import { logger } from "../../services/logger";
 import { clientMessageValidate } from "../../shared/ws/schema";
-import { ClientMessage, Input } from "../../shared/ws/types";
+import { ClientMessage } from "../../shared/ws/types";
 import { networkEvents } from "../../services/events/network";
 import { sendToCore } from "./send";
 import { KeyUp } from "./handlers/keyup";
@@ -10,9 +10,7 @@ import { mouseEnable } from "./handlers/mouseenable";
 import { mousePos } from "./handlers/mousepos";
 import { ability } from "./handlers/ability";
 import { database } from "../../services/db";
-import { FormatEncoder } from "shared/schema";
-import { Compress } from "server/src/services/compress";
-import { InputProps } from "native/index";
+import { InputProps } from "compute/index";
 
 export interface Client {
   id: number;
@@ -112,6 +110,13 @@ export class WebSocketServer {
         }
       }
     });
+
+    networkEvents.on("leave", (id) => {
+      let client = this.clients.get(id);
+      if (client) {
+        client.close()
+      }
+    });
   }
 
   close(ws: WebSocket<Client>, reason: string) {
@@ -126,7 +131,7 @@ export class WebSocketServer {
       const data = client.getUserData();
       if (data.packages.length != 0)
         client.send(
-          await Compress.encode(FormatEncoder.encode(data.packages)),
+          data.packages,
           true
         );
       data.packages = [];

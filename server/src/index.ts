@@ -19,6 +19,5 @@ setInterval(() => {
     core.input(index, client.getUserData().input);
   }
   core.tick();
-
   network.wss.tick();
 }, 1000 / Env.tickRate);

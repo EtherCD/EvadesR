@@ -1,12 +1,13 @@
 export interface PackedEntity {
-  type_id: number;
+  id: number;
+  typeId: number;
   x: number;
   y: number;
   aura?: number;
   radius: number;
   harmless: boolean;
   state: number;
-  state_metadata: number;
+  stateMetadata: number;
   alpha: number;
 }
 
@@ -18,7 +19,7 @@ export interface PackedPlayer {
   radius: number;
   speed: number;
   energy: number;
-  max_energy: number;
+  maxEnergy: number;
   died: boolean;
   regeneration: number;
   area: number;
@@ -33,7 +34,7 @@ export interface PackedPlayer {
   secondAbilityMaxLvl: number;
   secondAbilityActive: boolean;
   state: number;
-  state_meta: number;
+  stateMeta: number;
   hero: number;
   role: AccountRole;
 }

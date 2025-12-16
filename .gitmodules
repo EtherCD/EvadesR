@@ -1,3 +1,6 @@
 [submodule "server/native"]
 	path = server/native
 	url = https://github.com/EtherCD/Altverse-Native.git
+[submodule "server/compute"]
+	path = server/compute
+	url = https://github.com/EtherCD/Altverse-Compute.git

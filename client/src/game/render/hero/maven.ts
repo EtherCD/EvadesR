@@ -13,6 +13,7 @@ export class Maven extends Player {
       ctx.arc(renderPos.x, renderPos.y, 180, 0, Math.PI * 2);
       ctx.fillStyle = this.color;
       ctx.fill();
+      ctx.globalAlpha = 1;
       ctx.closePath();
     }
     if (this.state === 2) {

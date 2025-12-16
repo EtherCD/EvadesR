@@ -5,97 +5,6 @@ __metadata:
   version: 8
   cacheKey: 10c0
 
-"@antoniomuso/lz4-napi-android-arm-eabi@npm:2.9.0":
-  version: 2.9.0
-  resolution: "@antoniomuso/lz4-napi-android-arm-eabi@npm:2.9.0"
-  conditions: os=android & cpu=arm
-  languageName: node
-  linkType: hard
-
-"@antoniomuso/lz4-napi-android-arm64@npm:2.9.0":
-  version: 2.9.0
-  resolution: "@antoniomuso/lz4-napi-android-arm64@npm:2.9.0"
-  conditions: os=android & cpu=arm64
-  languageName: node
-  linkType: hard
-
-"@antoniomuso/lz4-napi-darwin-arm64@npm:2.9.0":
-  version: 2.9.0
-  resolution: "@antoniomuso/lz4-napi-darwin-arm64@npm:2.9.0"
-  conditions: os=darwin & cpu=arm64
-  languageName: node
-  linkType: hard
-
-"@antoniomuso/lz4-napi-darwin-x64@npm:2.9.0":
-  version: 2.9.0
-  resolution: "@antoniomuso/lz4-napi-darwin-x64@npm:2.9.0"
-  conditions: os=darwin & cpu=x64
-  languageName: node
-  linkType: hard
-
-"@antoniomuso/lz4-napi-freebsd-x64@npm:2.9.0":
-  version: 2.9.0
-  resolution: "@antoniomuso/lz4-napi-freebsd-x64@npm:2.9.0"
-  conditions: os=freebsd & cpu=x64
-  languageName: node
-  linkType: hard
-
-"@antoniomuso/lz4-napi-linux-arm-gnueabihf@npm:2.9.0":
-  version: 2.9.0
-  resolution: "@antoniomuso/lz4-napi-linux-arm-gnueabihf@npm:2.9.0"
-  conditions: os=linux & cpu=arm
-  languageName: node
-  linkType: hard
-
-"@antoniomuso/lz4-napi-linux-arm64-gnu@npm:2.9.0":
-  version: 2.9.0
-  resolution: "@antoniomuso/lz4-napi-linux-arm64-gnu@npm:2.9.0"
-  conditions: os=linux & cpu=arm64 & libc=glibc
-  languageName: node
-  linkType: hard
-
-"@antoniomuso/lz4-napi-linux-arm64-musl@npm:2.9.0":
-  version: 2.9.0
-  resolution: "@antoniomuso/lz4-napi-linux-arm64-musl@npm:2.9.0"
-  conditions: os=linux & cpu=arm64 & libc=musl
-  languageName: node
-  linkType: hard
-
-"@antoniomuso/lz4-napi-linux-x64-gnu@npm:2.9.0":
-  version: 2.9.0
-  resolution: "@antoniomuso/lz4-napi-linux-x64-gnu@npm:2.9.0"
-  conditions: os=linux & cpu=x64 & libc=glibc
-  languageName: node
-  linkType: hard
-
-"@antoniomuso/lz4-napi-linux-x64-musl@npm:2.9.0":
-  version: 2.9.0
-  resolution: "@antoniomuso/lz4-napi-linux-x64-musl@npm:2.9.0"
-  conditions: os=linux & cpu=x64 & libc=musl
-  languageName: node
-  linkType: hard
-
-"@antoniomuso/lz4-napi-win32-arm64-msvc@npm:2.9.0":
-  version: 2.9.0
-  resolution: "@antoniomuso/lz4-napi-win32-arm64-msvc@npm:2.9.0"
-  conditions: os=win32 & cpu=arm64
-  languageName: node
-  linkType: hard
-
-"@antoniomuso/lz4-napi-win32-ia32-msvc@npm:2.9.0":
-  version: 2.9.0
-  resolution: "@antoniomuso/lz4-napi-win32-ia32-msvc@npm:2.9.0"
-  conditions: os=win32 & cpu=ia32
-  languageName: node
-  linkType: hard
-
-"@antoniomuso/lz4-napi-win32-x64-msvc@npm:2.9.0":
-  version: 2.9.0
-  resolution: "@antoniomuso/lz4-napi-win32-x64-msvc@npm:2.9.0"
-  conditions: os=win32 & cpu=x64
-  languageName: node
-  linkType: hard
-
 "@epic-web/invariant@npm:^1.0.0":
   version: 1.0.0
   resolution: "@epic-web/invariant@npm:1.0.0"
@@ -348,22 +257,6 @@ __metadata:
     "@jridgewell/resolve-uri": "npm:^3.1.0"
     "@jridgewell/sourcemap-codec": "npm:^1.4.14"
   checksum: 10c0/4b30ec8cd56c5fd9a661f088230af01e0c1a3888d11ffb6b47639700f71225be21d1f7e168048d6d4f9449207b978a235c07c8f15c07705685d16dc06280e9d9
-  languageName: node
-  linkType: hard
-
-"@napi-rs/triples@npm:^1.2.0":
-  version: 1.2.0
-  resolution: "@napi-rs/triples@npm:1.2.0"
-  checksum: 10c0/e8294cc63d36fe0b062dc5293a0a2c72ae9318676dd76168e969a8f47b95180e7fe80a301fc0d9c6688399494744bfe21275b58f247f2981b558898743389e0f
-  languageName: node
-  linkType: hard
-
-"@node-rs/helper@npm:^1.3.3":
-  version: 1.6.0
-  resolution: "@node-rs/helper@npm:1.6.0"
-  dependencies:
-    "@napi-rs/triples": "npm:^1.2.0"
-  checksum: 10c0/f53211b36d0bfbf8ce98b57f2bbffeac6a59528f560a35db15aa5e4716957cd0407a6c08c54459815ccaaeb94bceb33122cf2ab72ff64503aa9e9a5b793ae548
   languageName: node
   linkType: hard
 
@@ -1282,8 +1175,6 @@ __metadata:
     better-sqlite3: "npm:^12.5.0"
     dotenv: "npm:^17.2.3"
     knex: "npm:^3.1.0"
-    lwf: "npm:^2.6.0"
-    lz4-napi: "npm:^2.9.0"
     mitt: "npm:^3.0.1"
     nodemon: "npm:^3.1.11"
     pino: "npm:^10.1.0"
@@ -1864,62 +1755,6 @@ __metadata:
   dependencies:
     yallist: "npm:^4.0.0"
   checksum: 10c0/cb53e582785c48187d7a188d3379c181b5ca2a9c78d2bce3e7dee36f32761d1c42983da3fe12b55cb74e1779fa94cdc2e5367c028a9b35317184ede0c07a30a9
-  languageName: node
-  linkType: hard
-
-"lwf@npm:^2.6.0":
-  version: 2.6.0
-  resolution: "lwf@npm:2.6.0"
-  checksum: 10c0/ae401a77a75bc376ced35eb92466aab3e38a829fd0a4d29d73e3218ad8dd343b761b0c88f244b3bbbfb61c80deb18340abe173a0419886594fecf7ced9e581cd
-  languageName: node
-  linkType: hard
-
-"lz4-napi@npm:^2.9.0":
-  version: 2.9.0
-  resolution: "lz4-napi@npm:2.9.0"
-  dependencies:
-    "@antoniomuso/lz4-napi-android-arm-eabi": "npm:2.9.0"
-    "@antoniomuso/lz4-napi-android-arm64": "npm:2.9.0"
-    "@antoniomuso/lz4-napi-darwin-arm64": "npm:2.9.0"
-    "@antoniomuso/lz4-napi-darwin-x64": "npm:2.9.0"
-    "@antoniomuso/lz4-napi-freebsd-x64": "npm:2.9.0"
-    "@antoniomuso/lz4-napi-linux-arm-gnueabihf": "npm:2.9.0"
-    "@antoniomuso/lz4-napi-linux-arm64-gnu": "npm:2.9.0"
-    "@antoniomuso/lz4-napi-linux-arm64-musl": "npm:2.9.0"
-    "@antoniomuso/lz4-napi-linux-x64-gnu": "npm:2.9.0"
-    "@antoniomuso/lz4-napi-linux-x64-musl": "npm:2.9.0"
-    "@antoniomuso/lz4-napi-win32-arm64-msvc": "npm:2.9.0"
-    "@antoniomuso/lz4-napi-win32-ia32-msvc": "npm:2.9.0"
-    "@antoniomuso/lz4-napi-win32-x64-msvc": "npm:2.9.0"
-    "@node-rs/helper": "npm:^1.3.3"
-  dependenciesMeta:
-    "@antoniomuso/lz4-napi-android-arm-eabi":
-      optional: true
-    "@antoniomuso/lz4-napi-android-arm64":
-      optional: true
-    "@antoniomuso/lz4-napi-darwin-arm64":
-      optional: true
-    "@antoniomuso/lz4-napi-darwin-x64":
-      optional: true
-    "@antoniomuso/lz4-napi-freebsd-x64":
-      optional: true
-    "@antoniomuso/lz4-napi-linux-arm-gnueabihf":
-      optional: true
-    "@antoniomuso/lz4-napi-linux-arm64-gnu":
-      optional: true
-    "@antoniomuso/lz4-napi-linux-arm64-musl":
-      optional: true
-    "@antoniomuso/lz4-napi-linux-x64-gnu":
-      optional: true
-    "@antoniomuso/lz4-napi-linux-x64-musl":
-      optional: true
-    "@antoniomuso/lz4-napi-win32-arm64-msvc":
-      optional: true
-    "@antoniomuso/lz4-napi-win32-ia32-msvc":
-      optional: true
-    "@antoniomuso/lz4-napi-win32-x64-msvc":
-      optional: true
-  checksum: 10c0/a7353c2822155e1cb0471b651d55ba104b63dd7f0dda0fa5dc44c0077ac19b1d78bd4e4bfb614222acb0e9d526ff3b58fe52fe84089bc020c8d3e2fcd0c8b26c
   languageName: node
   linkType: hard
 

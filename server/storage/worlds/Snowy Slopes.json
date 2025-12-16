@@ -1,10 +1,10 @@
 {
   "client": {
-    "fillStyle": "#b3cde0",
-    "strokeStyle": "#011f4b",
-    "areaFill": "#011f4b"
+    "fillStyle": "#a4b1c4",
+    "strokeStyle": "#556784",
+    "areaFill": "#556784"
   },
-  "name": "Celestial Canyon",
+  "name": "Snowy Slopes",
   "areas": [
     {
       "enemies": [

@@ -12,7 +12,8 @@
     "paths": {
       "react": ["./node_modules/preact/compat/"],
       "react-dom": ["./node_modules/preact/compat/"],
-      "@hooks": ["./src/hooks"]
+      "@hooks": ["./src/hooks"],
+      "proto": ["../server/compute/protos"]
     },
 
     /* Bundler mode */
@@ -31,5 +32,5 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src", "../shared/**/*.ts"]
+  "include": ["src", "../shared/**/*.ts", "../server/compute/protos/**/*.js", "../server/compute/protos/**/*.ts"]
 }

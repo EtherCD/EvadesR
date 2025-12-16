@@ -27,9 +27,9 @@ export abstract class Player {
   abstract color: string;
 
   constructor(props: PackedPlayer) {
-    this.x = props.x ? props.x : 0;
-    this.y = props.y ? props.y : 0;
-    this.dt = props.deathTimer ?? 60;
+    this.x = props.x ? props.x  / 10 : 0;
+    this.y = props.y ? props.y / 10 : 0;
+    this.dt = props.deathTimer  ?? 60;
     this.id = props.id;
     this.name = props.name;
     this.area = props.area;
@@ -37,10 +37,10 @@ export abstract class Player {
     this.world = props.world;
     this.regen = new MaxContainer(props.regeneration ?? 1, 7);
     this.speed = new MaxContainer(props.speed ?? 5, 17);
-    this.energy = new MaxContainer(props.energy ?? 0, props.max_energy);
-    this.radius = props.radius ?? 15;
+    this.energy = new MaxContainer(props.energy ?? 0, props.maxEnergy);
+    this.radius = props.radius ?props.radius / 10 : 15;
     this.state = props.state;
-    this.stateMeta = props.state_meta;
+    this.stateMeta = props.stateMeta  / 10;
     this.hero = props.hero;
   }
 
@@ -117,17 +117,18 @@ export abstract class Player {
   ): void;
 
   accept(props: Partial<PackedPlayer>) {
-    this.x = props.x ? props.x : this.x;
-    this.y = props.y ? props.y : this.y;
+    if (props == null) return
+    this.x = props.x ? props.x  / 10 : this.x;
+    this.y = props.y ? props.y  / 10 : this.y;
     this.world = props.world ?? this.world;
     this.area = props.area ?? this.area;
     this.speed.accept(props.speed);
-    this.energy.accept(props.energy, props.max_energy);
+    this.energy.accept(props.energy, props.maxEnergy);
     this.regen.accept(props.regeneration);
     this.dt = props.deathTimer ?? this.dt;
     this.died =
       props.died !== undefined ? (props.died ? true : false) : this.died;
     this.state = props.state ?? this.state;
-    this.stateMeta = props.state_meta ?? this.stateMeta;
+    this.stateMeta = props.stateMeta ? props.stateMeta / 10 : this.stateMeta
   }
 }
