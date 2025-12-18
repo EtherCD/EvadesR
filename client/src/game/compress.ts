@@ -1,7 +1,7 @@
-import { decompress } from "lz4-wasm";
+import { uncompress } from "snappyjs";
 
 export class Compress {
-  static async decode(uint8: Uint8Array) {
-    return await decompress(uint8);
+  static  decode(uint8: Uint8Array) {
+    return uncompress(uint8);
   }
 }

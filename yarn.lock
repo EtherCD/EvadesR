@@ -8,14 +8,5 @@ __metadata:
 "EvadesR@workspace:.":
   version: 0.0.0-use.local
   resolution: "EvadesR@workspace:."
-  dependencies:
-    lwf: "npm:^2.6.0"
   languageName: unknown
   linkType: soft
-
-"lwf@npm:^2.6.0":
-  version: 2.6.0
-  resolution: "lwf@npm:2.6.0"
-  checksum: 10c0/ae401a77a75bc376ced35eb92466aab3e38a829fd0a4d29d73e3218ad8dd343b761b0c88f244b3bbbfb61c80deb18340abe173a0419886594fecf7ced9e581cd
-  languageName: node
-  linkType: hard

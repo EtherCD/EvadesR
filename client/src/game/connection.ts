@@ -3,8 +3,7 @@ import { mouseEvents } from "./events/mouse";
 import { useAuthStore } from "../stores/auth";
 import { useGameStore } from "../stores/game";
 import { config } from "../config";
-// @ts-ignore
-import { game } from "proto";
+import { game } from "../proto";
 
 export class WebSocketConnection {
   open: boolean = false;
@@ -114,7 +113,7 @@ export class WebSocketConnection {
     });
   }
 
-  private onMessage = async (event: MessageEvent) => {
+  private onMessage = (event: MessageEvent) => {
     const uint8 = new Uint8Array(event.data);
     this.kBPerPackage += uint8.byteLength;
     const packages = game.Packages.decode(uint8)
@@ -124,40 +123,43 @@ export class WebSocketConnection {
     for (let index = 0; index < packages.items.length; index++) {
       const data = packages.items[index];
       try {
+
         switch (Object.keys(data)[0]) {
-          case "message":
-            gameService.message(data.message);
-            break;
+          // case "message":
+          //   gameService.message(data.message);
+          //   break;
           case "players":
-            gameService.uplayers(data.players.players);
+            gameService.uplayers(data.players!.players!);
             break;
           case "myself":
-            gameService.self(data.myself);
+            gameService.self(data.myself!);
             break;
           case "areaInit":
-            gameService.areaInit(data.areaInit);
+            gameService.areaInit(data.areaInit!);
             break;
           case "newPlayer":
-            gameService.newPlayer(data.newPlayer);
+            gameService.newPlayer(data.newPlayer!);
             break;
           case "closePlayer":
             gameService.closePlayer(data.closePlayer);
             break;
           case "updatePlayers":
-            gameService.updatePlayers(data.updatePlayers.items);
+            if (data.updatePlayers != null)
+            gameService.updatePlayers(data.updatePlayers.items!);
             break;
           case "newEntities":
-            gameService.newEntities(data.newEntities.entities);
+            if (data.newEntities)
+            gameService.newEntities(data.newEntities.entities!);
             break;
           case "updateEntities":
-            gameService.updateEntities(data.updateEntities.items);
+            gameService.updateEntities(data.updateEntities!);
             break;
           case "closeEntities":
-            gameService.closeEntities(data.closeEntities.ids);
+            gameService.closeEntities(data.closeEntities!.ids!);
             break;
         }
-      } catch {
-
+      } catch (e) {
+        console.error(e);
       }
     }
   };

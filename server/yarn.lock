@@ -260,6 +260,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@napi-rs/triples@npm:^2.1.5":
+  version: 2.1.5
+  resolution: "@napi-rs/triples@npm:2.1.5"
+  checksum: 10c0/b200d3074919650c23b1d85025e1d48d826df364e1b46d013301c379312cb5dd6e1b90761713ae3f0f7ffb12370bd8f87aca2f76f3052882392519d9dec5c50d
+  languageName: node
+  linkType: hard
+
 "@npmcli/agent@npm:^4.0.0":
   version: 4.0.0
   resolution: "@npmcli/agent@npm:4.0.0"
@@ -1165,6 +1172,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "evades-reload-server@workspace:."
   dependencies:
+    "@napi-rs/triples": "npm:^2.1.5"
     "@types/better-sqlite3": "npm:^7.6.13"
     "@types/dotenv": "npm:^8.2.3"
     "@types/lz4": "npm:^0.6.4"

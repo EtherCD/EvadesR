@@ -8,7 +8,7 @@ export default class MaxContainer {
 	}
 
 	accept(cur?: number, max?: number) {
-		this.cur = cur ?? this.cur / 10;
-		this.max = max ?? this.max / 10;
+		this.cur = cur ? cur / 10 : this.cur ;
+		this.max = max ? max / 10 : this.max;
 	}
 }

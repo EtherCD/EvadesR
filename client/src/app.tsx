@@ -4,12 +4,15 @@ import { Home } from "./pages/home";
 import { Register } from "./pages/register";
 import { Suspense } from "preact/compat";
 import { ProfilePage } from "./pages/profile";
+import { useAuthStore } from "./stores/auth.ts";
+import { useEffect } from "preact/hooks";
+import { navigate } from "wouter/use-hash-location";
 
 export const App = () => {
-  // const auth = useAuthStore();
-  // useEffect(() => {
-  //   if (!auth.valid) navigate("/login");
-  // }, [auth.valid]);
+  const auth = useAuthStore();
+  useEffect(() => {
+    navigate("/login");
+  }, [auth.valid]);
   return (
     <Suspense fallback={"Haha"}>
       <Router>

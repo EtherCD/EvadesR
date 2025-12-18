@@ -5,7 +5,8 @@ import Zone from "../game/units/zone";
 import { Spawn } from "../game/spawner";
 import { useKeyboard } from "./keyboard";
 import { useMouseStore } from "./mouse";
-import type { ChatMessage, PackedPlayer, AreaInit, PackedEntity } from "shared";
+import { game } from "../proto";
+import type { ChatMessage } from "../../../shared";
 
 export interface GameState {
   areaBoundary: { w: number; h: number };
@@ -42,14 +43,14 @@ interface State {
   reason?: string;
 
   message(data: ChatMessage): void;
-  uplayers(data: Record<number, PackedPlayer>): void;
-  self(data: PackedPlayer): void;
-  areaInit(data: AreaInit): void;
-  newPlayer(data: PackedPlayer): void;
-  closePlayer(data: number): void;
-  updatePlayers(data: Record<number, Partial<PackedPlayer>>): void;
-  newEntities(data: Record<number, PackedEntity>): void;
-  updateEntities(data: Record<number, Partial<PackedEntity>>): void;
+  uplayers(data: game.IPlayers): void;
+  self(data: game.IPackedPlayer): void;
+  areaInit(data: game.IPackedArea): void;
+  newPlayer(data: game.IPackedPlayer): void;
+  closePlayer(data: number | Long | null | undefined): void;
+  updatePlayers(data: game.IUpdatePlayersMap): void;
+  newEntities(data: Record<number, game.IPackedEntity>): void;
+  updateEntities(data: game.IUpdateEntitiesMap): void;
   closeEntities(data: number[]): void;
   close(reason: string): void;
   clear(): void;
@@ -66,7 +67,7 @@ export const useGameStore = create<State>((set, get) => ({
       messages: [...old.messages, data],
     });
   },
-  uplayers(data: Record<number, PackedPlayer>) {
+  uplayers(data: Record<number, game.PackedPlayer>) {
     for (const p in data) {
       const player = data[p];
       gameState.players[p] = Spawn.player(player);
@@ -85,13 +86,13 @@ export const useGameStore = create<State>((set, get) => ({
     }
   },
   self(data) {
-    set({ selfId: data.id, isGameInit: true });
-    gameState.players[data.id] = Spawn.player(data);
+    set({ selfId: data.id!, isGameInit: true });
+    gameState.players[data.id!] = Spawn.player(data as game.PackedPlayer);
   },
   areaInit(data) {
     gameState.entities = {};
-    for (const e in data.entities) {
-      gameState.entities[e] = new Entity(data.entities[e]);
+    for (const key in Object.keys(data.entities!)) {
+      gameState.entities[key] = new Entity(data.entities![key] as game.PackedEntity);
     }
     // let clientData: ClientArea | undefined;
     // const areas = useAssetsStore.getState().worlds[data.world].areas;
@@ -104,21 +105,21 @@ export const useGameStore = create<State>((set, get) => ({
         x: -10 * 32,
         y: 0,
         w: 2 * 32,
-        h: data.h,
+        h: data.h!,
         type: "teleport",
       }),
       new Zone({
         x: -8 * 32,
         y: 0,
-        w: data.w + 16 * 32,
-        h: data.h,
+        w: data.w! + 16 * 32,
+        h: data.h!,
         type: "victory",
       }),
       new Zone({
-        x: data.w + 8 * 32,
+        x: data.w! + 8 * 32,
         y: 0,
         w: 2 * 32,
-        h: data.h,
+        h: data.h!,
         type: "exit",
       }),
     ];
@@ -137,12 +138,12 @@ export const useGameStore = create<State>((set, get) => ({
               x: -10 * 32,
               y: 2 * 32,
               w: 10 * 32,
-              h: data.h - 2 * 32,
+              h: data.h! - 2 * 32,
               type: "safe",
             }),
             new Zone({
               x: -10 * 32,
-              y: data.h - 2 * 32,
+              y: data.h! - 2 * 32,
               w: 10 * 32,
               h: 2 * 32,
               type: "teleport_world",
@@ -153,60 +154,60 @@ export const useGameStore = create<State>((set, get) => ({
               x: -10 * 32,
               y: 0,
               w: 2 * 32,
-              h: data.h,
+              h: data.h!,
               type: "teleport",
             }),
             new Zone({
               x: -8 * 32,
               y: 0,
               w: 8 * 32,
-              h: data.h,
+              h: data.h!,
               type: "safe",
             }),
           ]),
       new Zone({
         x: 0,
         y: 0,
-        w: data.w,
-        h: data.h,
+        w: data.w!,
+        h: data.h!,
         type: "active",
       }),
       new Zone({
-        x: data.w,
+        x: data.w!,
         y: 0,
         w: 8 * 32,
-        h: data.h,
+        h: data.h!,
         type: "safe",
       }),
       new Zone({
-        x: data.w + 8 * 32,
+        x: data.w! + 8 * 32,
         y: 0,
         w: 2 * 32,
-        h: data.h,
+        h: data.h!,
         type: "teleport",
       }),
     ];
 
-    gameState.world = data.world;
-    gameState.area = data.area;
+    gameState.world = data.world!;
+    gameState.area = data.area! as number;
     gameState.areaBoundary = {
-      w: data.w,
-      h: data.h,
+      w: data.w!,
+      h: data.h!,
     };
   },
   newPlayer(data) {
-    gameState.players[data.id] = Spawn.player(data);
+    gameState.players[data.id!] = Spawn.player(data as game.PackedPlayer);
     const players = get().players;
     set({
       players: {
         ...players,
-        [data.id]: data,
+        [data.id!]: data,
       },
     });
   },
   closePlayer(data) {
     if (Object.keys(gameState.players).includes(data + "")) {
-      delete gameState.players[data];
+      delete gameState.players[data as number];
       let players = get().players;
       let out: Record<number, ShortPlayer> = {};
       for (const i in players) {
@@ -219,29 +220,31 @@ export const useGameStore = create<State>((set, get) => ({
   },
   updatePlayers(data) {
     for (const p in data) {
-      gameState.players[p].accept(data[p]);
+      //@ts-ignore
+      const val = data[p] as any
+      gameState.players[p as any as number].accept(val);
       const state = get().players;
       if (
-        (data[p].deathTimer !== undefined &&
-          state[p].dt !== data[p].deathTimer) ||
-        (data[p].died !== undefined &&
-          state[p].died !== Boolean(data[p].died)) ||
-        (data[p].world !== undefined && state[p].world !== data[p].world) ||
-        (data[p].area !== undefined && state[p].area !== data[p].area)
+        (val!.deathTimer !== undefined &&
+          state[p].dt !== val.deathTimer) ||
+        (val!.died !== undefined &&
+          state[p].died !== Boolean(val.died)) ||
+        (val!.world !== undefined && state[p].world !== val.world) ||
+        (val!.area !== undefined && state[p].area !== val.area)
       ) {
         set({
           players: {
             ...state,
             [p]: {
               ...state[p],
-              name: data[p].name ?? state[p].name,
-              world: data[p].world ?? state[p].world,
-              area: data[p].area ?? state[p].area,
+              name: val.name ?? state[p].name,
+              world: val.world ?? state[p].world,
+              area: val.area ?? state[p].area,
               dt:
-                data[p].deathTimer !== undefined
-                  ? data[p].deathTimer
+                val.deathTimer !== undefined
+                  ? val.deathTimer
                   : state[p].dt,
-              died: Boolean(data[p].died) ?? state[p].died,
+              died: val.died != undefined  ? val.died : state[p].died,
             },
           },
         });
@@ -251,11 +254,12 @@ export const useGameStore = create<State>((set, get) => ({
   newEntities(data) {
     for (const id in data) {
       gameState.entities[id] = Spawn.entity(data[id]);
+
     }
   },
   updateEntities(data) {
-    for (const e in data) {
-      gameState.entities[e].accept(data[e]);
+    for (const e in data.items) {
+      gameState.entities[e as any as number].accept(data.items[e] as any);
     }
   },
   closeEntities(data) {

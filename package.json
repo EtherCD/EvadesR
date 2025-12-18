@@ -6,9 +6,6 @@
   "author": "EtherCD <ethernetcoder@gmail.com>",
   "license": "GPLv3",
   "private": true,
-  "dependencies": {
-    "lwf": "^2.6.0"
-  },
   "scripts": {
     "start:all": "npm run start:client & npm run start:server",
     "start:client": "cd client && npm start",

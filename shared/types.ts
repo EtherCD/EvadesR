@@ -1,50 +1,3 @@
-export interface PackedEntity {
-  id: number;
-  typeId: number;
-  x: number;
-  y: number;
-  aura?: number;
-  radius: number;
-  harmless: boolean;
-  state: number;
-  stateMetadata: number;
-  alpha: number;
-}
-
-export interface PackedPlayer {
-  id: number;
-  name: string;
-  x: number;
-  y: number;
-  radius: number;
-  speed: number;
-  energy: number;
-  maxEnergy: number;
-  died: boolean;
-  regeneration: number;
-  area: number;
-  world: string;
-  deathTimer: number;
-  aura: number;
-  auraColor: string;
-  firstAbilityLvl: number;
-  firstAbilityMaxLvl: number;
-  firstAbilityActive: boolean;
-  secondAbilityLvl: number;
-  secondAbilityMaxLvl: number;
-  secondAbilityActive: boolean;
-  state: number;
-  stateMeta: number;
-  hero: number;
-  role: AccountRole;
-}
-
-export interface PackedAbility {
-  level: number;
-  maxLevel: number;
-  active: boolean;
-}
-
 export interface ChatMessage {
   author: string;
   msg: string;
@@ -58,14 +11,6 @@ export enum AccountRole {
   None = 0,
   MapMaker,
   Dev,
-}
-
-export interface AreaInit {
-  world: string;
-  area: number;
-  w: number;
-  h: number;
-  entities: Record<number, PackedEntity>;
 }
 
 export interface RawClient {

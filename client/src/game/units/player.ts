@@ -1,6 +1,6 @@
-import type { PackedPlayer } from "shared";
 import Camera from "../storages/camera";
 import MaxContainer from "./maxcur";
+import { game } from "../../proto.ts";
 
 export abstract class Player {
   x: number;
@@ -14,7 +14,7 @@ export abstract class Player {
   radius: number;
   energy: MaxContainer;
 
-  died: boolean;
+  died: undefined | boolean;
   /**
    * Died Timer
    */
@@ -26,22 +26,22 @@ export abstract class Player {
 
   abstract color: string;
 
-  constructor(props: PackedPlayer) {
+  constructor(props: game.IPackedPlayer) {
     this.x = props.x ? props.x  / 10 : 0;
     this.y = props.y ? props.y / 10 : 0;
     this.dt = props.deathTimer  ?? 60;
-    this.id = props.id;
-    this.name = props.name;
-    this.area = props.area;
-    this.died = props.died ? true : false;
-    this.world = props.world;
-    this.regen = new MaxContainer(props.regeneration ?? 1, 7);
+    this.id = props.id ?? 0;
+    this.name = props.name ?? "";
+    this.area = props.area ?? 0;
+    this.died = props.died ?? false;
+    this.world = props.world ?? "";
+    this.regen = new MaxContainer(1, 7);
     this.speed = new MaxContainer(props.speed ?? 5, 17);
-    this.energy = new MaxContainer(props.energy ?? 0, props.maxEnergy);
+    this.energy = new MaxContainer(props.energy ?? 0, props.maxEnergy ?? 0);
     this.radius = props.radius ?props.radius / 10 : 15;
-    this.state = props.state;
-    this.stateMeta = props.stateMeta  / 10;
-    this.hero = props.hero;
+    this.state = props.state ?? 0 ;
+    this.stateMeta = props.stateMeta ?? 0 / 10;
+    this.hero = props.hero ?? 0;
   }
 
   draw(ctx: CanvasRenderingContext2D, sid: number) {
@@ -116,18 +116,17 @@ export abstract class Player {
     renderPos: { x: number; y: number }
   ): void;
 
-  accept(props: Partial<PackedPlayer>) {
+  accept(props: game.IPartialPlayer) {
     if (props == null) return
     this.x = props.x ? props.x  / 10 : this.x;
     this.y = props.y ? props.y  / 10 : this.y;
     this.world = props.world ?? this.world;
     this.area = props.area ?? this.area;
-    this.speed.accept(props.speed);
-    this.energy.accept(props.energy, props.maxEnergy);
-    this.regen.accept(props.regeneration);
-    this.dt = props.deathTimer ?? this.dt;
-    this.died =
-      props.died !== undefined ? (props.died ? true : false) : this.died;
+    this.speed.accept(props.speed ?? 0);
+    this.energy.accept(props.energy ?? 0, props.maxEnergy ?? 0);
+    // this.regen.accept(props.regeneration);
+    this.dt = props.deathTimer ? props.deathTimer : this.dt;
+    this.died = props.died !== null ? props.died : this.died;
     this.state = props.state ?? this.state;
     this.stateMeta = props.stateMeta ? props.stateMeta / 10 : this.stateMeta
   }

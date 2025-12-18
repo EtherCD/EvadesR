@@ -12,7 +12,7 @@ Status: **Currently in deep development and finalization**
 
 | Parameter | Status |
 |-----|--------|
-| Performance | 🟢     |
+| Performance  | ⚡⚡⚡    |
 | Playable | 🔴       |
 
 # Usage

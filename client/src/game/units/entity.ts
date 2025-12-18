@@ -1,11 +1,10 @@
-import type { PackedEntity } from "shared";
-import { GlobalAssets } from "shared/assets";
 import Camera from "../storages/camera";
+import { GlobalAssets } from "../../../../shared/assets.ts";
+import { game } from "../../proto.ts";
 
 export default class Entity {
   harmless: boolean;
   radius: number;
-  aura: number;
   type: number;
   x: number;
   y: number;
@@ -13,16 +12,15 @@ export default class Entity {
   state: number;
   stateMetadata: number;
 
-  constructor(props: PackedEntity) {
-    this.x = props.x / 10;
-    this.y = props.y / 10;
-    this.aura = props.aura ? props.aura/10 : 0;
-    this.type = props.typeId;
-    this.radius = props.radius / 10;
+  constructor(props: game.IPackedEntity) {
+    this.x = (props.x ?? 0) / 10;
+    this.y = (props.y  ?? 0 ) / 10;
+    this.type = props.typeId ?? 0;
+    this.radius = (props.radius ?? 0 )/ 10;
     this.harmless = props.harmless ?? false;
-    this.alpha = props.alpha / 10;
-    this.state = props.state;
-    this.stateMetadata = props.stateMetadata / 10;
+    this.alpha = (props.alpha ?? 0) / 100;
+    this.state = props.state ?? 0;
+    this.stateMetadata = props.stateMetadata  ?? 0/ 10;
   }
 
   draw(ctx: CanvasRenderingContext2D, _: number) {
@@ -58,12 +56,11 @@ export default class Entity {
     ctx.closePath();
   }
 
-  accept(props: Partial<PackedEntity>) {
+  accept(props: game.IPartialEntity) {
     this.x = props.x ? props.x / 10: this.x;
     this.y = props.y ? props.y /10: this.y;
-    this.type = props.typeId ?? this.type;
     this.radius = props.radius ? props.radius / 10 : this.radius;
     this.harmless = props.harmless ?? this.harmless;
-    this.alpha = props.alpha != undefined ? props.alpha / 100: this.alpha;
+    this.alpha = props.alpha != null ? props.alpha / 100 : this.alpha;
   }
 }
