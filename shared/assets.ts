@@ -56,5 +56,6 @@ export const GlobalAssets: Assets = {
     ["#d0e2ed"], // cloud 21
     ["#78148C"], // pull 22
     ["#6A6084"], // fade 23
+    ["#F27743"] // sizer 24
   ],
 };

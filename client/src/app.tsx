@@ -11,7 +11,7 @@ import { navigate } from "wouter/use-hash-location";
 export const App = () => {
   const auth = useAuthStore();
   useEffect(() => {
-    navigate("/login");
+    if (!auth.valid) navigate("/login");
   }, [auth.valid]);
   return (
     <Suspense fallback={"Haha"}>

@@ -27,8 +27,8 @@ export abstract class Player {
   abstract color: string;
 
   constructor(props: game.IPackedPlayer) {
-    this.x = props.x ? props.x  / 10 : 0;
-    this.y = props.y ? props.y / 10 : 0;
+    this.x = props.x ? props.x  / 2 : 0;
+    this.y = props.y ? props.y / 2 : 0;
     this.dt = props.deathTimer  ?? 60;
     this.id = props.id ?? 0;
     this.name = props.name ?? "";
@@ -38,7 +38,7 @@ export abstract class Player {
     this.regen = new MaxContainer(1, 7);
     this.speed = new MaxContainer(props.speed ?? 5, 17);
     this.energy = new MaxContainer(props.energy ?? 0, props.maxEnergy ?? 0);
-    this.radius = props.radius ?props.radius / 10 : 15;
+    this.radius = props.radius ?props.radius / 2 : 15;
     this.state = props.state ?? 0 ;
     this.stateMeta = props.stateMeta ?? 0 / 10;
     this.hero = props.hero ?? 0;
@@ -118,8 +118,22 @@ export abstract class Player {
 
   accept(props: game.IPartialPlayer) {
     if (props == null) return
-    this.x = props.x ? props.x  / 10 : this.x;
-    this.y = props.y ? props.y  / 10 : this.y;
+  this.x = props.x ? props.x / 2 : this.x;
+    this.y = props.y ? props.y / 2 : this.y;
+    // if (props.x) {
+    // if (Math.abs(props.x) < 34.0) {
+    //   this.x = (props.x /2);
+    // }else {
+    //   this.x = props.x / 2;
+    // }
+    //   }
+    // if (props.y) {
+    //   if (Math.abs(props.y) < 34.0)  {
+    //     this.y =(props.y / 2);
+    //   } else {
+    //     this.y = props.y;
+    //   }
+    // }
     this.world = props.world ?? this.world;
     this.area = props.area ?? this.area;
     this.speed.accept(props.speed ?? 0);
@@ -128,6 +142,6 @@ export abstract class Player {
     this.dt = props.deathTimer ? props.deathTimer : this.dt;
     this.died = props.died !== null ? props.died : this.died;
     this.state = props.state ?? this.state;
-    this.stateMeta = props.stateMeta ? props.stateMeta / 10 : this.stateMeta
+    this.stateMeta = props.stateMeta ? props.stateMeta / 2 : this.stateMeta
   }
 }

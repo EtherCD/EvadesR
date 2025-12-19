@@ -10,11 +10,11 @@ import { mouseEnable } from "./handlers/mouseenable";
 import { mousePos } from "./handlers/mousepos";
 import { ability } from "./handlers/ability";
 import { database } from "../../services/db";
-import { InputProps } from "compute/index";
+import { Input } from "compute/index";
 
 export interface Client {
   id: number;
-  input: InputProps;
+  input: Input;
   packages: object[];
   username: string;
 }
@@ -29,7 +29,7 @@ export class WebSocketServer {
       open: (ws) => {
         const data = ws.getUserData();
         data.id = this.nextId++;
-        data.input = new InputProps();
+        data.input = new Input();
         data.packages = [];
         data.username = "";
         logger.info(`User connected ${data.id}`);

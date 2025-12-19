@@ -5,6 +5,7 @@ import { Game } from "../components/game";
 import { useGameStore } from "../stores/game";
 import { useAssetsStore } from "../stores/assets";
 import { useLocation } from "wouter";
+import { Window } from "../components/basic/window.tsx";
 
 export const Home = () => {
   const auth = useAuthStore();
@@ -17,7 +18,7 @@ export const Home = () => {
 
   useEffect(() => {
     useAssetsStore.getState().fetch();
-    if (inGame == false) setInGame(game.isGameInit && assets.loaded);
+    if (!inGame) setInGame(game.isGameInit && assets.loaded);
   }, [game.isGameInit, assets.loaded]);
 
   if (inGame) {
@@ -27,35 +28,45 @@ export const Home = () => {
   return (
     <main
       className={
-        "min-h-screen w-full flex flex-col gap-1 justify-center items-center text-center text-2xl"
+        "min-h-screen w-full flex flex-row gap-1 justify-center items-center text-center text-2xl"
       }
     >
-      <img src="/logotype.svg" alt="" />
-      <p class={"text-2xl"}>Welcome {auth.profile?.username}</p>
-      <div className={"flex w-20 flex-col gap-0.5"}>
-        <div className={"flex gap-0.5"}>
-          <Button
-            onClick={() => {
-              setInGame(true);
-            }}
-          >
-            Play
-          </Button>
-          <Button
-            onClick={() => setLocation("profile/" + auth.profile?.username)}
-          >
-            Profile
-          </Button>
+      <Window className={"w-[300px] h-[400px]"}>
+        <h1>News and changelog</h1>
+        <p className={"mt-[140px]"}>Nothing here!</p>
+      </Window>
+      <div className={"flex flex-col gap-1 items-center"}>
+        <img src="/logotype.svg" alt="" />
+        <p class={"text-2xl"}>Welcome {auth.profile?.username}</p>
+        <div className={"flex w-20 flex-col gap-0.5"}>
+          <div className={"flex gap-0.5"}>
+            <Button
+              onClick={() => {
+                setInGame(true);
+              }}
+            >
+              Play
+            </Button>
+            <Button
+              onClick={() => setLocation("profile/" + auth.profile?.username)}
+            >
+              Profile
+            </Button>
+          </div>
+          <div className={"flex gap-0.5"}>
+            <Button onClick={() => {}}>Accessories</Button>
+            <Button onClick={auth.logout}>Logout</Button>
+          </div>
         </div>
-        <div className={"flex gap-0.5"}>
-          <Button onClick={() => {}}>Accessories</Button>
-          <Button onClick={auth.logout}>Logout</Button>
+        <div class={"p-1 block w-15 font-bold border-2 rounded-xl "}>
+          <h1>Warning!</h1>
+          <p className={"text-yellow-300"}>Game still in developing.</p>
         </div>
       </div>
-      <div class={"p-1 block w-15 font-bold border-2 rounded-xl "}>
-        <h1>Warning!</h1>
-        <p className={"text-yellow-300"}>Game still in developing.</p>
-      </div>
+      <Window className={"w-[300px] h-[400px]"}>
+        <h1>Profile</h1>
+        <p className={"mt-[140px]"}>Nothing here!</p>
+      </Window>
     </main>
   );
 };

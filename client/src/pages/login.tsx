@@ -1,8 +1,8 @@
-import { useEffect, useState } from "preact/hooks";
+import { useState } from "preact/hooks";
 import { TextField } from "../components/basic/text";
 import { Button } from "../components/basic/button";
 import { useAuthStore } from "../stores/auth";
-import { Link, useLocation } from "wouter";
+import { Link } from "wouter";
 
 export const Login = () => {
   const [username, setUsername] = useState("");
@@ -32,11 +32,11 @@ export const Login = () => {
     setError(error);
   };
 
-  const [_, navigate] = useLocation();
+  // const [_, navigate] = useLocation();
 
-  useEffect(() => {
-    if (auth.valid) navigate("/");
-  }, [auth.valid]);
+  // useEffect(() => {
+  //   if (auth.valid) navigate("/");
+  // }, [auth.valid]);
 
   return (
     <main

@@ -1032,6 +1032,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/lz4js@npm:^0.2.2":
+  version: 0.2.2
+  resolution: "@types/lz4js@npm:0.2.2"
+  checksum: 10c0/62a13e2efc30c25e4790e51c659cc85aa06652a36e50e592eb1c32fb2011408edf03361b39719d5db0988716a72a74c9b38889126ba5b4fe0c066674670030fd
+  languageName: node
+  linkType: hard
+
 "@types/node@npm:>=13.7.0":
   version: 25.0.2
   resolution: "@types/node@npm:25.0.2"
@@ -1196,8 +1203,11 @@ __metadata:
     "@preact/preset-vite": "npm:^2.10.2"
     "@rollup/plugin-alias": "npm:^6.0.0"
     "@tailwindcss/vite": "npm:^4.1.17"
+    "@types/lz4js": "npm:^0.2.2"
     "@types/node": "npm:^24.10.1"
     "@types/snappyjs": "npm:^0.7.1"
+    lz4-wasm: "npm:^0.9.2"
+    lz4js: "npm:^0.2.0"
     mitt: "npm:^3.0.1"
     preact: "npm:^10.27.2"
     protobufjs: "npm:^7.5.4"
@@ -1815,6 +1825,20 @@ __metadata:
   dependencies:
     yallist: "npm:^3.0.2"
   checksum: 10c0/89b2ef2ef45f543011e38737b8a8622a2f8998cddf0e5437174ef8f1f70a8b9d14a918ab3e232cb3ba343b7abddffa667f0b59075b2b80e6b4d63c3de6127482
+  languageName: node
+  linkType: hard
+
+"lz4-wasm@npm:^0.9.2":
+  version: 0.9.2
+  resolution: "lz4-wasm@npm:0.9.2"
+  checksum: 10c0/eb89b9ee10e96e7307990cf41e7758192ad414803e081b8671466ec6d86a0069c939d2d406f750d30f92c03db07c55d9d4fa104a300ade17c0f11cc8d026a67a
+  languageName: node
+  linkType: hard
+
+"lz4js@npm:^0.2.0":
+  version: 0.2.0
+  resolution: "lz4js@npm:0.2.0"
+  checksum: 10c0/73c6dd5117a6fa465e6be1bd5ae34ef4f02e4eb164a47d77f8c2483ccdde43cbdf8509a5e5a4480ef812e5c7a2cb946e026b9c784533775ee5c91861edaefb39
   languageName: node
   linkType: hard
 

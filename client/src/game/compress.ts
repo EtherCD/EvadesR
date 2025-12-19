@@ -1,7 +1,7 @@
-import { uncompress } from "snappyjs";
+import { decompress } from "lz4js";
 
 export class Compress {
   static  decode(uint8: Uint8Array) {
-    return uncompress(uint8);
+    return decompress(uint8);
   }
 }

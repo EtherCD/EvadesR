@@ -4,6 +4,7 @@ import { useAuthStore } from "../stores/auth";
 import { useGameStore } from "../stores/game";
 import { config } from "../config";
 import { game } from "../proto";
+import { Compress } from "./compress.ts";
 
 export class WebSocketConnection {
   open: boolean = false;
@@ -64,6 +65,7 @@ export class WebSocketConnection {
       this.kBPerPackage = 0;
       this.packagesPerSecond = this.rawPPS;
       this.rawPPS = 0;
+      console.log(this.kBPerSecond)
     }, 1000);
   }
 
@@ -116,7 +118,7 @@ export class WebSocketConnection {
   private onMessage = (event: MessageEvent) => {
     const uint8 = new Uint8Array(event.data);
     this.kBPerPackage += uint8.byteLength;
-    const packages = game.Packages.decode(uint8)
+    const packages = game.Packages.decode(Compress.decode(uint8))
     const gameService = useGameStore.getState();
     this.rawPPS++;
 
