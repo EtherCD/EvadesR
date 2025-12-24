@@ -1,15 +1,7 @@
 import { HttpResponse, TemplatedApp } from "uWebSockets.js";
 import { getBody } from "./body";
-import {
-  bodyLoginValidate,
-  bodyRegisterValidate,
-  bodySessionValidate,
-} from "../../shared/http/schema";
-import {
-  AccountProps,
-  RegisterProps,
-  ResponseMessage,
-} from "../../shared/http/types";
+import { bodyLoginValidate, bodyRegisterValidate, bodySessionValidate } from "../../shared/http/schema";
+import { AccountProps, RegisterProps, ResponseMessage } from "../../shared/http/types";
 import { database } from "../../services/db";
 import { Env } from "../../services/env";
 import { makeResponse } from "./res";
@@ -23,102 +15,126 @@ export class HTTPServer {
     });
     app
       .post("/register", (res, req) => {
-        res.cork(async () => {
-          this.setCorsHeaders(res);
-          try {
-            res.writeHeader("Content-Type", "application/json");
+        this.setCorsHeaders(res);
+        res.writeHeader("Content-Type", "application/json");
 
-            const json = (await getBody(res)) as RegisterProps;
+        getBody(res)
+          .then((json: RegisterProps) => {
             const valid = bodyRegisterValidate(json);
 
             if (valid && json.registerToken === Env.registerToken) {
-              const output = await database.register(json);
-
-              makeResponse(
-                res,
-                output.message === ResponseMessage.Ok,
-                200,
-                output
-              );
-              return;
+              -database.register(json).then((output) => {
+                makeResponse(
+                  res,
+                  output.message === ResponseMessage.Ok,
+                  200,
+                  output,
+                );
+              });
             }
             makeResponse(res, false, 400, {
               message: ResponseMessage.InvalidBody,
             });
-          } catch (e) {
+          })
+          .catch((e) => {
             makeResponse(res, false, 500, {
               message: ResponseMessage.InternalError,
             });
-          }
-        });
+          });
       })
       .post("/login", (res, req) => {
-        res.cork(async () => {
-          this.setCorsHeaders(res);
-          try {
-            res.writeHeader("Content-Type", "application/json");
-            const json = (await getBody(res)) as AccountProps;
+        this.setCorsHeaders(res);
+        res.writeHeader("Content-Type", "application/json");
+
+        res.onAborted(() => {
+          makeResponse(res, false, 500, {
+            message: ResponseMessage.InternalError,
+          });
+        });
+
+        getBody(res)
+          .then((json: AccountProps) => {
             const valid = bodyLoginValidate(json);
 
             if (valid) {
-              const output = await database.login(json);
-
-              if (output.message === ResponseMessage.Ok)
-                makeResponse(res, true, 200, output);
-              else makeResponse(res, false, 401, output);
-              return;
+              database.login(json).then((output) => {
+                if (output.message === ResponseMessage.Ok)
+                  makeResponse(res, true, 200, output);
+                else makeResponse(res, false, 401, output);
+              });
+            } else {
+              makeResponse(res, false, 400, {
+                message: ResponseMessage.InvalidBody,
+              });
             }
-            makeResponse(res, false, 400, {
-              message: ResponseMessage.InvalidBody,
-            });
-          } catch (e) {
+          })
+          .catch(() => {
             makeResponse(res, false, 500, {
               message: ResponseMessage.InternalError,
             });
-          }
-        });
+          });
       })
       .post("/check", (res, req) => {
-        res.cork(async () => {
-          this.setCorsHeaders(res);
-          try {
-            res.writeHeader("Content-Type", "application/json");
+        this.setCorsHeaders(res);
+        res.writeHeader("Content-Type", "application/json");
 
-            const json = (await getBody(res)) as {
-              token: string;
-            };
+        res.onAborted(() => {
+          makeResponse(res, false, 500, {
+            message: ResponseMessage.InternalError,
+          });
+        });
+
+        getBody(res)
+          .then((json: any) => {
             const valid = bodySessionValidate(json);
-
             if (valid) {
-              makeResponse(res, true, 200, {
+              database
                 // @ts-ignore
-                valid: await database.checkAuth(json.token),
-              });
-              return;
+                .checkAuth(json.token)
+                .then((valid) => {
+                  makeResponse(res, true, 200, {
+                    // @ts-ignore
+                    valid,
+                  });
+                })
+                .catch(() => {
+                  makeResponse(res, false, 400, {
+                    message: ResponseMessage.InvalidBody,
+                  });
+                });
             }
-            makeResponse(res, false, 400, {
-              message: ResponseMessage.InvalidBody,
-            });
-          } catch (e) {
+          })
+          .catch(() => {
             makeResponse(res, false, 500, {
               message: ResponseMessage.InternalError,
             });
-          }
-        });
+          });
       })
       .get("/worlds", (res) => {
         this.setCorsHeaders(res);
         res.writeHeader("Content-Type", "application/json");
-        res.writeStatus("200")
-        console.log(Loader.worldsProps)
+        res.writeStatus("200");
         res.write(JSON.stringify(Loader.worldsProps));
         res.end();
       })
-      .get("/profile", (res, req) => {
+      // .get("/online", (res) => {
+      //   this.setCorsHeaders(res);
+      //   res.writeHeader("Content-Type", "application/json");
+      //   res.writeStatus("200");
+      //   res.write(JSON.stringify({
+      //     online:
+      //   }));
+      //   res.end();
+      // })
+      .get("/profile/:username", (res, req) => {
         this.setCorsHeaders(res);
-        const username = req.getParameter("username") + "";
+        const username = req.getParameter(0) + "";
 
-        console.log(username);
+        res.onAborted(() => {
+          makeResponse(res, false, 500, {
+            message: ResponseMessage.InternalError,
+          });
+        });
 
         database
           .getProfile(username)
@@ -140,34 +156,33 @@ export class HTTPServer {
               message: ResponseMessage.InternalError,
             });
           });
+      })
+      .post("/logout", (res, req) => {
+        res.cork(async () => {
+          this.setCorsHeaders(res);
+          try {
+            res.writeHeader("Content-Type", "application/json");
+
+            const json = (await getBody(res)) as {
+              token: string;
+            };
+            const valid = bodySessionValidate(json);
+
+            if (valid) {
+              await database.logout(json.token);
+              makeResponse(res, true, 200);
+              return;
+            }
+            makeResponse(res, false, 400, {
+              message: ResponseMessage.InvalidBody,
+            });
+          } catch (e) {
+            makeResponse(res, false, 500, {
+              message: ResponseMessage.InternalError,
+            });
+          }
+        });
       });
-
-    // .post("/logout", (res, req) => {
-    //   res.cork(async () => {
-    //     this.setCorsHeaders(res);
-    //     try {
-    //       res.writeHeader("Content-Type", "application/json");
-
-    //       const json = (await getBody(res)) as {
-    //         token: string;
-    //       };
-    //       const valid = bodySessionValidate(json);
-
-    //       if (valid) {
-    //         await database.logout(json.token);
-    //         makeResponse(res, true, 200);
-    //         return;
-    //       }
-    //       makeResponse(res, false, 400, {
-    //         message: ResponseMessage.InvalidBody,
-    //       });
-    //     } catch (e) {
-    //       makeResponse(res, false, 500, {
-    //         message: ResponseMessage.InternalError,
-    //       });
-    //     }
-    //   });
-    // });
   }
 
   setCorsHeaders(response: HttpResponse) {
@@ -178,11 +193,11 @@ export class HTTPServer {
     }
     response.writeHeader(
       "Access-Control-Allow-Methods",
-      "GET, POST, PUT, DELETE, OPTIONS"
+      "GET, POST, PUT, DELETE, OPTIONS",
     );
     response.writeHeader(
       "Access-Control-Allow-Headers",
-      "origin, content-type, accept, x-requested-with"
+      "origin, content-type, accept, x-requested-with",
     );
     response.writeHeader("Access-Control-Max-Age", "3600");
   }

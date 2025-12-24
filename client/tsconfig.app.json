@@ -12,7 +12,12 @@
       "react": ["./node_modules/preact/compat/"],
       "react-dom": ["./node_modules/preact/compat/"],
       "@hooks": ["./src/hooks"],
-      "proto": ["../server/compute/protos"],
+      "@game": ["./src/game"],
+      "@pages": ["./src/pages"],
+      "@components": ["./src/components"],
+      "@stores": ["./src/stores"],
+      "@resources": ["./src/resources"],
+      "proto": ["../server/compute/protos"]
     },
 
     /* Bundler mode */
@@ -31,9 +36,5 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": [
-    "src/**/*",
-    "../shared/**/*",
-    "../server/compute/protos/**/*"
-  ]
+  "include": ["src/**/*", "../shared/**/*", "../server/compute/protos/**/*"]
 }

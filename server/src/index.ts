@@ -14,10 +14,12 @@ logger.info(`
 const core = new Core();
 const network = new Network();
 
-setInterval(() => {
+const tick = () => {
   for (const [index, client] of network.wss.clients) {
     core.input(index, client.getUserData().input);
   }
   core.tick();
   network.wss.tick();
-}, 1000 / Env.tickRate);
+  setTimeout(tick, 1000 / Env.tickRate);
+};
+tick();

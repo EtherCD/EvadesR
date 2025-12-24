@@ -12,6 +12,7 @@
     "start:server": "cd server && npm start",
     "build:proto": "cd server/compute && npm run build:proto",
     "build:compute": "cd server/compute && npm run build",
+    "build:server": "cd server && npm run build",
     "dev:server": "cd server && npm run dev",
     "dev:client": "cd client && npm run dev"
   }

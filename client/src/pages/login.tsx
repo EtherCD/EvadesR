@@ -1,8 +1,8 @@
-import { useState } from "preact/hooks";
-import { TextField } from "../components/basic/text";
+import { useEffect, useState } from "preact/hooks";
+import { TextField } from "../components/basic/text.tsx";
 import { Button } from "../components/basic/button";
 import { useAuthStore } from "../stores/auth";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 
 export const Login = () => {
   const [username, setUsername] = useState("");
@@ -32,11 +32,11 @@ export const Login = () => {
     setError(error);
   };
 
-  // const [_, navigate] = useLocation();
+  const [_, navigate] = useLocation();
 
-  // useEffect(() => {
-  //   if (auth.valid) navigate("/");
-  // }, [auth.valid]);
+  useEffect(() => {
+    if (auth.valid) navigate("/");
+  }, [auth.valid]);
 
   return (
     <main
@@ -45,7 +45,9 @@ export const Login = () => {
       }
     >
       <form class={"flex flex-col gap-1 items-center"}>
-        <img src="/logotype.svg" alt="" />
+        <h1 className={"text-[40px] h-[100px] text-center pt-1 w-[280px]"}>
+          <b className={"pl-1 text-(--logo-accent) "}>Alt</b>Verse
+        </h1>
         <TextField
           placeholder={"Username"}
           onInput={(value) => {
@@ -60,7 +62,9 @@ export const Login = () => {
           }}
         />
 
-        <Button onClick={validate}>Login</Button>
+        <Button onClick={validate} className={"w-[280px]"}>
+          Login
+        </Button>
 
         <Link href={"/register"} className={"text-2xl"}>
           Register account

@@ -1,12 +1,13 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { Profile, LoginProps, RegisterProps } from "../api/types";
+import type { LoginProps, Profile, RegisterProps } from "../api/types";
 import { ApiRequests } from "../api/requests";
 
 export interface AuthState {
   token: string;
   valid: boolean;
   profile?: Profile;
+  logged: boolean;
 
   validate: (token: string) => void;
   login: (obj: LoginProps) => Promise<string>;
@@ -16,9 +17,10 @@ export interface AuthState {
 
 export const useAuthStore = create(
   persist<AuthState>(
-    (set) => ({
+    (set, get) => ({
       token: "",
       valid: false,
+      logged: false,
       validate: async (token: string) => {
         if (token.length === 0) return;
         const response = await ApiRequests.check(token);
@@ -33,6 +35,7 @@ export const useAuthStore = create(
             valid: response.successful,
             token: response.data.token,
             profile: response.data.profile,
+            logged: true,
           });
           return "";
         }
@@ -46,13 +49,16 @@ export const useAuthStore = create(
             valid: response.successful,
             token: response.data.token,
             profile: response.data.profile,
+            logged: true,
           });
           return "";
         }
         return response.data.message;
       },
-      logout: () => {
+      logout: async () => {
+        ApiRequests.logout(get().token);
         set({ token: "", valid: false });
+        console.log("logout");
       },
     }),
     {
@@ -63,6 +69,6 @@ export const useAuthStore = create(
         state.valid = false;
         state.validate(state.token);
       },
-    }
-  )
+    },
+  ),
 );

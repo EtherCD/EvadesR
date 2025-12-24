@@ -11,8 +11,8 @@
       "enemies": [
         {
           "types": ["drop"],
-          "radius": 10,
-          "speed": 5,
+          "radius": 15,
+          "speed": 10,
           "count": 10
         },
 

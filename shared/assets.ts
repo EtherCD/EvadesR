@@ -53,9 +53,12 @@ export const GlobalAssets: Assets = {
     ["#D53E07"], // flame 18
     ["#D53E07"], // trail, 19
     ["#F86630"], // flame_sniper 20
-    ["#d0e2ed"], // cloud 21
+    ["#92b6f0"], // cloud 21
     ["#78148C"], // pull 22
     ["#6A6084"], // fade 23
-    ["#F27743"] // sizer 24
+    ["#F27743"], // sizer 24
+    ["#adf8ff"], // icicle 25
+    ["#0000ff"], // draining 26
+    ["#4A5F90"], // storm_cloud 27
   ],
 };

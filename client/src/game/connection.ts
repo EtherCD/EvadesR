@@ -65,7 +65,6 @@ export class WebSocketConnection {
       this.kBPerPackage = 0;
       this.packagesPerSecond = this.rawPPS;
       this.rawPPS = 0;
-      console.log(this.kBPerSecond)
     }, 1000);
   }
 

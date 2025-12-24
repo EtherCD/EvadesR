@@ -1,5 +1,5 @@
 import { useEffect, useState } from "preact/hooks";
-import { TextField } from "../components/basic/text";
+import { TextField } from "../components/basic/text.tsx";
 import { Button } from "../components/basic/button";
 import { useAuthStore } from "../stores/auth";
 import { Link, useLocation } from "wouter";
@@ -54,7 +54,9 @@ export const Register = () => {
       }
     >
       <form class={"flex flex-col gap-1 items-center"}>
-        <h1 class={"text-5xl "}>Altverse</h1>
+        <h1 className={"text-[40px] h-[100px] text-center pt-1 w-[280px]"}>
+          <b className={"pl-1 text-(--logo-accent) "}>Alt</b>Verse
+        </h1>
         <TextField
           placeholder={"Username"}
           onInput={(value) => {
@@ -74,13 +76,12 @@ export const Register = () => {
             setToken(value);
           }}
         />
-
-        <Button onClick={validate}>Register</Button>
-
+        <Button onClick={validate} className={"w-[280px]"}>
+          Register
+        </Button>
         <Link href={"/login"} className={"text-2xl"}>
           Login to account
         </Link>
-
         {error.length !== 0 && (
           <div
             className={

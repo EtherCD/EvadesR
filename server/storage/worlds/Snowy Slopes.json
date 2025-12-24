@@ -9,7 +9,7 @@
     {
       "enemies": [
         {
-          "types": ["homing", "sniper", "immune"],
+          "types": ["icicle"],
           "radius": 15,
           "speed": 5,
           "count": 10

@@ -12,14 +12,10 @@ export function TextField(props: Props) {
   return (
     <input
       type={props.type ?? "text"}
-      className={
-        "p-0.5 bg-(--window-bg) border-2 text-2xl rounded-xl"
-      }
+      className={"p-0.5 bg-(--window-bg) border-2 text-2xl rounded-xl"}
       value={props.value}
       placeholder={props.placeholder}
-      onInput={(event) =>
-        props.onInput(event.currentTarget.value)
-      }
+      onInput={(event) => props.onInput(event.currentTarget.value)}
       defaultValue={props.defaultValue}
       minLength={props.min}
       maxLength={props.max}

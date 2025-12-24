@@ -92,7 +92,7 @@ export const useGameStore = create<State>((set, get) => ({
   areaInit(data) {
     gameState.entities = {};
     for (const key in Object.keys(data.entities!)) {
-      gameState.entities[key] = new Entity(data.entities![key] as game.PackedEntity);
+      gameState.entities[key] = Spawn.entity(data.entities![key] as game.PackedEntity);
     }
     // let clientData: ClientArea | undefined;
     // const areas = useAssetsStore.getState().worlds[data.world].areas;

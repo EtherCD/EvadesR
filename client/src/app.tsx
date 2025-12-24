@@ -4,9 +4,9 @@ import { Home } from "./pages/home";
 import { Register } from "./pages/register";
 import { Suspense } from "preact/compat";
 import { ProfilePage } from "./pages/profile";
-import { useAuthStore } from "./stores/auth.ts";
 import { useEffect } from "preact/hooks";
-import { navigate } from "wouter/use-hash-location";
+import { useAuthStore } from "./stores/auth.ts";
+import { navigate } from "wouter/use-browser-location";
 
 export const App = () => {
   const auth = useAuthStore();
@@ -19,7 +19,7 @@ export const App = () => {
         <Route path={"/"} component={Home} />
         <Route path={"/login"} component={Login} />
         <Route path={"/register"} component={Register} />
-        <Route path={"/profile/:username"} component={ProfilePage} />
+        <Route path={"/profile/:?username"} component={ProfilePage} />
       </Router>
     </Suspense>
   );

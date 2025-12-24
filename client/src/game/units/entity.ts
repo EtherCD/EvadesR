@@ -20,7 +20,7 @@ export default class Entity {
     this.harmless = props.harmless ?? false;
     this.alpha = (props.alpha ?? 0) / 20;
     this.state = props.state ?? 0;
-    this.stateMetadata = props.stateMetadata  ?? 0/ 2;
+    this.stateMetadata = (props.stateMetadata  ?? 0) / 2;
   }
 
   draw(ctx: CanvasRenderingContext2D, _: number) {
@@ -28,11 +28,13 @@ export default class Entity {
     ctx.lineWidth = 2 * Camera.s;
     const ent = GlobalAssets.entities[this.type];
     ctx.fillStyle = (ent ?? ["#fff"])[0];
-    ctx.strokeStyle = "#000000";
+    ctx.strokeStyle = (ent ?? ["#fff"])[0];
     ctx.globalAlpha = this.alpha !== 1 ? this.alpha : this.harmless ? 0.4 : 1;
     const pos = Camera.transform(this);
     ctx.arc(pos.x, pos.y, this.radius * Camera.s, 0, Math.PI * 2);
     ctx.fill();
+    ctx.stroke();
+    ctx.strokeStyle = "#00000077";
     ctx.stroke();
     ctx.closePath();
     ctx.globalAlpha = 1;

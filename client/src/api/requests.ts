@@ -33,10 +33,16 @@ export class ApiRequests {
     return ApiRequests.get<ProfileResponse>("/profile/" + username);
   }
 
+  public static logout(token: string): Promise<CheckResponse> {
+    return ApiRequests.post<CheckResponse>("/logout", {
+      token,
+    });
+  }
+
   private static post = <T extends ApiResponse<{}>>(
     url: string,
     body: unknown,
-    withCredentials: boolean = false
+    withCredentials: boolean = false,
   ) =>
     ApiRequests.fetch<T>({
       url,
@@ -59,7 +65,7 @@ export class ApiRequests {
 
   private static get = <T extends object>(
     url: string,
-    withCredentials: boolean = false
+    withCredentials: boolean = false,
   ) =>
     ApiRequests.fetch<T>({
       url,

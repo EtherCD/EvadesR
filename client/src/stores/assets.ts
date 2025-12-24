@@ -14,6 +14,7 @@ export const useAssetsStore = create<State>((set) => ({
   fetch() {
     ApiRequests.worlds().then((worlds) => {
       set({ worlds, loaded: true });
+      console.log(worlds);
     });
   },
 }));
